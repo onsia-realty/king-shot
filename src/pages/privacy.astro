@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Breadcrumb from '@/components/Breadcrumb.astro';
-import { SITE_NAME } from '@/data/nav';
+import { SITE_NAME, KAKAO_OPENCHAT } from '@/data/nav';
 
 const description = `${SITE_NAME} 개인정보처리방침. 수집 항목, 이용 목적, 보관 기간, 쿠키 설정과 문의처를 안내합니다.`;
 const effectiveDate = '2026년 9월 10일';
@@ -45,7 +45,7 @@ const effectiveDate = '2026년 9월 10일';
       <ul>
         <li>접속 분석 데이터: 수집일로부터 <strong>최대 14개월</strong> 보관 후 파기</li>
         <li>분석 쿠키: 브라우저에 저장된 시점부터 <strong>최대 12개월</strong></li>
-        <li>문의 메일 내용: 처리 완료 후 <strong>1년</strong> 보관 후 파기</li>
+        <li>오픈채팅으로 접수한 문의 내용: 처리 완료 후 <strong>1년</strong> 보관 후 파기</li>
       </ul>
       <p>보관 기간이 지난 정보는 지체 없이 파기합니다.</p>
 
@@ -81,8 +81,13 @@ const effectiveDate = '2026년 9월 10일';
 
       <h2>8. 개인정보 보호책임자 및 문의처</h2>
       <p>
-        개인정보 처리와 관련한 문의, 불만, 피해 구제는 아래로 연락 주세요.<br />
-        <strong>문의: (배포 시 기입)</strong>
+        개인정보 처리와 관련한 문의, 불만, 피해 구제는 아래 카카오톡 오픈채팅방으로 연락 주세요.<br />
+        <strong>
+          <a href={KAKAO_OPENCHAT.url} target="_blank" rel="noopener noreferrer">
+            {KAKAO_OPENCHAT.roomName}
+            <span class="sr-only">(새 창 열림)</span>
+          </a>
+        </strong>
       </p>
       <p>
         만족스러운 답변을 받지 못했다면 개인정보 침해신고센터(privacy.kisa.or.kr, 국번 없이 118)나
