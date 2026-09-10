@@ -112,7 +112,9 @@ export default function GiftCodeTable({ codes, expired = false, emptyMessage }: 
                 </div>
                 {c.note && <p className="mt-1 text-xs text-muted">{c.note}</p>}
               </td>
-              <td className="px-4 py-3 text-muted">{c.rewards}</td>
+              <td className="px-4 py-3 text-muted">
+                {c.rewards.trim() || '보상 미확인'}
+              </td>
               <td className="px-4 py-3 whitespace-nowrap text-muted">
                 {c.expiresAt ?? (expired ? '-' : '기한 미확인')}
               </td>

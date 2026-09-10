@@ -115,6 +115,42 @@ related: []              # 다른 guides 슬러그 배열
 - **확인 안 된 코드는 올리지 않는다.** [공식 교환 페이지](https://ks-giftcode.centurygame.com)에서
   실제로 교환되는지 확인한 것만 추가하고, 확인할 때마다 `lastChecked` 를 그날 날짜로 바꾼다.
 - `codes` 가 빈 배열이면 페이지에 "현재 확인된 코드가 없습니다" 안내가 뜬다.
+- `rewards` 는 필수 필드지만 **모르면 빈 문자열 `""` 로 둔다.** 표에 `보상 미확인` 으로
+  나온다. 추측한 보상을 적지 않는다.
+
+### 자동 동기화
+
+공식 위키에서 코드를 긁어와 `gift-codes.json` 에 **병합**하는 스크립트가 있다.
+
+```powershell
+node scripts/sync-gift-codes.mjs
+```
+
+`.github/workflows/sync-gift-codes.yml` 이 매일 **한국 시간 오전 9시**
+(cron `0 0 * * *`, UTC 기준 00:00)에 자동으로 돌리고, `gift-codes.json` 에
+변경이 있을 때만 커밋·푸시한다. 푸시되면 Vercel 이 재배포한다.
+Actions 탭에서 **Run workflow** 로 수동 실행도 된다.
+
+병합 규칙
+
+- 새 코드만 덧붙인다. 위키에서 사라진 코드도 **지우지 않는다** —
+  만료된 건지 파싱이 실패한 건지 구분할 수 없기 때문.
+- 이미 있는 코드의 `rewards` / `note` / `expiresAt` 은 덮어쓰지 않는다.
+  손으로 채워 넣은 값이 날아가지 않게 하기 위한 것.
+- `lastChecked` 는 실행할 때마다 오늘(한국 시간)로 갱신한다.
+
+안전장치 — 다음 경우 **파일을 쓰지 않고 exit 1** 로 죽고, 워크플로도 같이 실패한다.
+
+- HTTP 응답이 200이 아님
+- 추출된 코드가 0개 (사이트 구조 변경으로 본다)
+- 추출된 값이 코드 형식(영숫자 4~20자)에 맞지 않음
+
+조용히 빈 배열로 덮어써서 페이지를 비워 버리는 일이 없어야 한다는 게 요점이다.
+
+**위키 구조가 바뀌면** `scripts/sync-gift-codes.mjs` 의 `CODE_PATTERN` 을 고친다.
+현재 파서는 본문의 `<span class="code">KS0909</span>` 마크업 하나만 본다.
+고치기 전에 `curl -A "Mozilla/5.0" https://kingshotwiki.com/ko/giftcode/` 로 받아
+실제 HTML을 눈으로 확인할 것. URL 자체가 바뀌었다면 `SOURCE_URL` 도 같이 고친다.
 
 ## 배포 전 체크리스트
 

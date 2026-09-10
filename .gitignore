@@ -31,3 +31,4 @@ Thumbs.db
 # screenshot / MCP scratch output (root only; public/ and src/assets/ images stay tracked)
 .playwright-mcp/
 /*.png
+/*.mp4

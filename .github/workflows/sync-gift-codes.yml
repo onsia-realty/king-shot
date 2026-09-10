@@ -1,0 +1,59 @@
+name: 기프트 코드 동기화
+
+# 공식 위키(kingshotwiki.com/ko/giftcode)에서 새 코드를 긁어와
+# src/data/gift-codes.json 에 병합하고, 변경이 있을 때만 커밋·푸시한다.
+# 푸시되면 Vercel 이 알아서 재배포한다.
+
+on:
+  schedule:
+    # cron 은 UTC 기준이다. 00:00 UTC = 한국 시간 오전 9시.
+    - cron: '0 0 * * *'
+  workflow_dispatch: # 손으로도 돌릴 수 있게
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-gift-codes
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # 스크립트가 exit 1 이면 여기서 워크플로가 실패한다.
+      # 파싱 실패를 조용히 넘기지 않기 위한 것이므로 continue-on-error 를 붙이지 말 것.
+      - name: 위키에서 코드 동기화
+        id: sync
+        run: node scripts/sync-gift-codes.mjs | tee sync-output.txt
+
+      - name: 변경 확인
+        id: diff
+        run: |
+          if git diff --quiet -- src/data/gift-codes.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "변경 없음 — 커밋하지 않는다."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            # 스크립트가 출력한 요약 첫 줄을 커밋 메시지 본문으로 쓴다.
+            echo "summary=$(head -n 1 sync-output.txt)" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: 커밋 & 푸시
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          rm -f sync-output.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/gift-codes.json
+          git commit -m "데이터: 기프트 코드 갱신 — ${{ steps.diff.outputs.summary }}"
+          git push
