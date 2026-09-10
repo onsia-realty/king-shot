@@ -1,0 +1,65 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+import HeroCard from '@/components/HeroCard.astro';
+import Disclaimer from '@/components/Disclaimer.astro';
+import HeroFilter from '@/components/islands/HeroFilter';
+
+const heroes = (await getCollection('heroes')).sort((a, b) => a.data.order - b.data.order);
+
+const site = Astro.site ?? new URL('https://example.com');
+
+const title = '킹샷 영웅 도감';
+const description = `킹샷 영웅 ${heroes.length}명을 세대·등급·병종별로 정리했습니다. 곰사냥 집결, 수성, 아레나, 무과금 가치까지 한눈에 비교하세요.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: title,
+  description,
+  numberOfItems: heroes.length,
+  itemListElement: heroes.map((hero, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: `${hero.data.name} (${hero.data.nameEn})`,
+    url: new URL(`/heroes/${hero.id}/`, site).href,
+  })),
+};
+
+const GRID_ID = 'hero-grid';
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <div class="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
+    <Breadcrumb items={[{ label: '홈', href: '/' }, { label: '영웅' }]} class="mb-6" />
+
+    <header class="mb-8">
+      <h1 class="text-3xl font-extrabold sm:text-4xl">영웅 도감</h1>
+      <p class="mt-3 max-w-2xl text-muted">
+        킹샷에 등장하는 영웅 {heroes.length}명입니다. 세대가 올라갈수록 기본 능력치가 계단식으로
+        붙으니, 지금 내 서버 진도에 맞는 세대부터 훑어보세요. 이름은 한국어와 영문을 함께 적어
+        두었습니다.
+      </p>
+    </header>
+
+    <div class="mb-8">
+      <HeroFilter client:load targetId={GRID_ID} total={heroes.length} />
+    </div>
+
+    <div
+      id={GRID_ID}
+      class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+    >
+      {heroes.map((hero) => <HeroCard hero={hero} />)}
+    </div>
+
+    <div class="mt-12 border-t border-border pt-6">
+      <p class="mb-3 text-sm text-muted">
+        영웅별 상세 수치(스탯·스킬 배율)는 게임 내 확인을 거쳐 순차적으로 채웁니다. 지금은 역할과
+        투자 우선순위 위주로 정리돼 있습니다.
+      </p>
+      <Disclaimer />
+    </div>
+  </div>
+</BaseLayout>

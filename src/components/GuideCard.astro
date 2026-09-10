@@ -1,0 +1,82 @@
+---
+import {
+  CATEGORY_EMOJI,
+  DIFFICULTY_STYLES,
+  categoryHref,
+  formatDate,
+  guideHref,
+  isoDate,
+  lastUpdated,
+  type Guide,
+} from '@/lib/guides';
+
+interface Props {
+  entry: Guide;
+  /** 카드 제목 태그 (목록 안에서 의미 맞추기용) */
+  headingLevel?: 'h2' | 'h3';
+  /** 검색 아일랜드가 쓰는 data-search 속성을 붙일지 */
+  searchable?: boolean;
+  class?: string;
+}
+
+const { entry, headingLevel = 'h3', searchable = false, class: className = '' } = Astro.props;
+const { title, description, category, tags, difficulty } = entry.data;
+
+const Heading = headingLevel;
+const href = guideHref(entry);
+const date = lastUpdated(entry);
+const isRevised = Boolean(entry.data.updated);
+const searchIndex = searchable
+  ? [title, description, category, difficulty, ...tags].join(' ').toLowerCase()
+  : undefined;
+---
+
+<article
+  class:list={[
+    'group relative flex h-full flex-col rounded-xl border border-border bg-surface p-5 transition-colors hover:border-accent/50 hover:bg-raised',
+    className,
+  ]}
+  data-guide-card={searchable ? '' : undefined}
+  data-search={searchIndex}
+>
+  <div class="mb-3 flex flex-wrap items-center gap-2">
+    <a
+      href={categoryHref(category)}
+      class="relative z-10 inline-flex items-center gap-1 rounded-md border border-accent/40 bg-accent/12 px-2 py-0.5 text-xs font-bold text-accent no-underline hover:bg-accent/20 hover:text-accent"
+    >
+      <span aria-hidden="true">{CATEGORY_EMOJI[category]}</span>{category}
+    </a>
+    <span
+      class:list={[
+        'inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-bold',
+        DIFFICULTY_STYLES[difficulty],
+      ]}
+      title={`난이도 ${difficulty}`}
+    >
+      {difficulty}
+    </span>
+  </div>
+
+  <Heading class="text-lg font-extrabold text-text">
+    <a href={href} class="text-text no-underline before:absolute before:inset-0 hover:text-accent">
+      {title}
+    </a>
+  </Heading>
+
+  <p class="mt-2 line-clamp-3 flex-1 text-sm leading-relaxed text-muted">{description}</p>
+
+  <div class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-muted">
+    <time datetime={isoDate(date)}>
+      {isRevised ? '수정' : '발행'} {formatDate(date)}
+    </time>
+    {
+      tags.length > 0 && (
+        <ul class="flex flex-wrap gap-1.5">
+          {tags.slice(0, 4).map((tag) => (
+            <li class="rounded border border-border px-1.5 py-0.5 text-[11px] text-muted">#{tag}</li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
+</article>

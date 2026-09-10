@@ -1,0 +1,154 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+import Disclaimer from '@/components/Disclaimer.astro';
+import GiftCodeTable, { type GiftCode } from '@/components/islands/GiftCodeTable';
+import giftCodes from '@/data/gift-codes.json';
+
+interface GiftCodeFile {
+  lastChecked: string;
+  codes: GiftCode[];
+}
+
+const data = giftCodes as GiftCodeFile;
+
+/** 빌드 시각 기준으로 유효/만료를 가른다. expiresAt 이 없으면 유효로 본다. */
+const today = new Date().toISOString().slice(0, 10);
+const active = data.codes.filter((c) => !c.expiresAt || c.expiresAt >= today);
+const expired = data.codes.filter((c) => c.expiresAt && c.expiresAt < today);
+
+const REDEEM_URL = 'https://ks-giftcode.centurygame.com';
+
+const title = '킹샷 기프트 코드';
+const description =
+  '킹샷(Kingshot) 기프트 코드 목록과 교환 방법입니다. 확인된 코드만 올리고, 마지막 확인일을 함께 표기합니다.';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: '킹샷 기프트 코드는 어디서 입력하나요?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: `공식 교환 페이지(${REDEEM_URL})에 게임 내 플레이어 ID와 코드를 입력하면 우편함으로 보상이 들어옵니다.`,
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '내 플레이어 ID는 어디서 확인하나요?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '게임에서 좌측 상단 프로필(캐릭터 초상)을 눌러 프로필 창을 열면 이름 아래에 숫자로 된 ID가 보입니다.',
+      },
+    },
+  ],
+};
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <div class="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
+    <Breadcrumb items={[{ label: '홈', href: '/' }, { label: '기프트코드' }]} class="mb-6" />
+
+    <header class="mb-6">
+      <h1 class="text-3xl font-extrabold sm:text-4xl">기프트 코드</h1>
+      <p class="mt-3 max-w-2xl text-muted">
+        확인된 코드만 올립니다. 커뮤니티에 도는 코드를 그대로 옮겨 적는 대신, 실제로 교환이 되는지
+        확인한 것만 여기에 남깁니다.
+      </p>
+      <p class="mt-3 text-sm text-muted">
+        마지막 확인일 <strong class="text-text tabular-nums">{data.lastChecked}</strong>
+      </p>
+    </header>
+
+    <section class="mt-10">
+      <h2 class="text-xl font-bold">사용 가능한 코드</h2>
+      <div class="mt-3">
+        <GiftCodeTable
+          client:load
+          codes={active}
+          emptyMessage="현재 확인된 코드가 없습니다. 새 코드가 풀리면 이 자리에 올라옵니다."
+        />
+      </div>
+    </section>
+
+    {expired.length > 0 && (
+      <section class="mt-10">
+        <h2 class="text-xl font-bold">만료된 코드</h2>
+        <p class="mt-2 text-sm text-muted">
+          이미 기간이 지난 코드입니다. 기록 삼아 남겨 둡니다.
+        </p>
+        <div class="mt-3">
+          <GiftCodeTable
+            client:load
+            codes={expired}
+            expired
+            emptyMessage="만료된 코드가 없습니다."
+          />
+        </div>
+      </section>
+    )}
+
+    <section class="mt-12">
+      <h2 class="text-xl font-bold">교환하는 방법</h2>
+      <ol class="mt-4 space-y-3">
+        <li class="flex gap-3 rounded-xl border border-border bg-surface px-4 py-3">
+          <span
+            class="flex size-6 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-extrabold text-on-accent"
+            aria-hidden="true">1</span
+          >
+          <span class="text-sm leading-relaxed">
+            게임에서 좌측 상단 초상을 눌러 프로필을 열고, 이름 아래 <strong>플레이어 ID</strong>를
+            확인합니다.
+          </span>
+        </li>
+        <li class="flex gap-3 rounded-xl border border-border bg-surface px-4 py-3">
+          <span
+            class="flex size-6 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-extrabold text-on-accent"
+            aria-hidden="true">2</span
+          >
+          <span class="text-sm leading-relaxed">
+            <a href={REDEEM_URL} target="_blank" rel="noopener noreferrer">공식 교환 페이지</a>에
+            들어가 플레이어 ID로 로그인합니다.
+          </span>
+        </li>
+        <li class="flex gap-3 rounded-xl border border-border bg-surface px-4 py-3">
+          <span
+            class="flex size-6 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-extrabold text-on-accent"
+            aria-hidden="true">3</span
+          >
+          <span class="text-sm leading-relaxed">
+            코드를 붙여넣고 교환을 누르면 게임 <strong>우편함</strong>으로 보상이 들어옵니다.
+          </span>
+        </li>
+      </ol>
+
+      <p class="mt-4">
+        <a
+          href={REDEEM_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 font-bold text-on-accent no-underline hover:bg-accent-strong hover:text-on-accent"
+        >
+          공식 교환 페이지 열기
+          <span aria-hidden="true">↗</span>
+        </a>
+      </p>
+    </section>
+
+    <section class="mt-12 border-t border-border pt-8">
+      <h2 class="text-xl font-bold">코드가 안 먹힐 때</h2>
+      <ul class="mt-3 space-y-2 text-sm leading-relaxed text-muted">
+        <li>· 이미 사용한 코드는 계정당 한 번만 됩니다. 다른 계정으로 다시 쓸 수는 있습니다.</li>
+        <li>· 대소문자를 그대로 옮겨야 합니다. 복사 버튼을 쓰면 실수가 없습니다.</li>
+        <li>· 기간이 지난 코드는 오류 메시지가 뜹니다. 아래 만료 목록을 확인하세요.</li>
+        <li>· 신규 계정은 일정 레벨 이상이어야 교환이 열리는 코드도 있습니다.</li>
+      </ul>
+    </section>
+
+    <div class="mt-10 border-t border-border pt-6">
+      <Disclaimer />
+    </div>
+  </div>
+</BaseLayout>

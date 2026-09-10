@@ -1,0 +1,198 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Disclaimer from '@/components/Disclaimer.astro';
+import GuideCard from '@/components/GuideCard.astro';
+import {
+  CATEGORIES,
+  CATEGORY_DESCRIPTIONS,
+  CATEGORY_EMOJI,
+  categoryHref,
+  sortByPublished,
+} from '@/lib/guides';
+import { SITE_NAME, SITE_DESCRIPTION } from '@/data/nav';
+
+const guides = sortByPublished(await getCollection('guides', ({ data }) => !data.draft));
+const featured = guides.filter((g) => g.data.featured).slice(0, 3);
+const latest = guides.slice(0, 6);
+
+const counts = new Map<string, number>();
+for (const g of guides) counts.set(g.data.category, (counts.get(g.data.category) ?? 0) + 1);
+
+const site = Astro.site ?? new URL('https://example.com');
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: SITE_NAME,
+  alternateName: '킹샷 한국어 공략',
+  url: site.href,
+  inLanguage: 'ko-KR',
+  description: SITE_DESCRIPTION,
+};
+
+const entryButtons = [
+  { label: '공략 보기', href: '/guides/', primary: true },
+  { label: '영웅 도감', href: '/heroes/' },
+  { label: '건물 정보', href: '/buildings/' },
+  { label: '기프트 코드', href: '/gift-codes/' },
+];
+
+const database = [
+  {
+    label: '영웅',
+    href: '/heroes/',
+    emoji: '🦸',
+    desc: '등급·병종·스킬과 티어 평가를 한 표로.',
+  },
+  {
+    label: '건물',
+    href: '/buildings/',
+    emoji: '🏰',
+    desc: '해금 조건과 효과, 올리는 순서까지.',
+  },
+  { label: '펫', href: '/pets/', emoji: '🐾', desc: '펫 등급과 스킬, 우선순위 정리.' },
+  {
+    label: '기프트 코드',
+    href: '/gift-codes/',
+    emoji: '🎁',
+    desc: '지금 쓸 수 있는 코드와 입력 방법.',
+  },
+];
+---
+
+<BaseLayout title="킹샷 한국어 공략" description={SITE_DESCRIPTION} jsonLd={jsonLd}>
+  {/* 1. 히어로 */}
+  <section class="mx-auto max-w-6xl px-4 pt-14 pb-12 sm:pt-20">
+    <p class="mb-3 text-sm font-bold tracking-widest text-accent uppercase">Kingshot</p>
+    <h1 class="text-4xl leading-tight font-extrabold sm:text-5xl">
+      킹샷 공략, <span class="text-accent">한국어로 한 곳에서</span>
+    </h1>
+    <p class="mt-5 max-w-2xl text-base text-muted sm:text-lg">
+      영웅 티어, 건물 순서, 곰사냥, 기프트 코드까지. 게임 안에서 직접 확인한 내용만 골라 정리했습니다.
+    </p>
+
+    <div class="mt-8 flex flex-wrap gap-3">
+      {
+        entryButtons.map((btn) =>
+          btn.primary ? (
+            <a
+              href={btn.href}
+              class="rounded-lg bg-accent px-5 py-2.5 font-bold text-on-accent no-underline hover:bg-accent-strong hover:text-on-accent"
+            >
+              {btn.label}
+            </a>
+          ) : (
+            <a
+              href={btn.href}
+              class="rounded-lg border border-border bg-surface px-5 py-2.5 font-bold text-text no-underline hover:bg-raised hover:text-accent"
+            >
+              {btn.label}
+            </a>
+          )
+        )
+      }
+    </div>
+  </section>
+
+  {/* 2. 추천 공략 */}
+  {
+    featured.length > 0 && (
+      <section aria-labelledby="featured" class="mx-auto max-w-6xl px-4 py-10">
+        <div class="mb-5 flex items-end justify-between gap-4">
+          <h2 id="featured" class="text-2xl font-extrabold">
+            먼저 읽으면 좋은 글
+          </h2>
+        </div>
+        <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {featured.map((entry) => (
+            <li>
+              <GuideCard entry={entry} />
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  {/* 3. 최신 공략 */}
+  {
+    latest.length > 0 && (
+      <section aria-labelledby="latest" class="mx-auto max-w-6xl px-4 py-10">
+        <div class="mb-5 flex items-end justify-between gap-4">
+          <h2 id="latest" class="text-2xl font-extrabold">
+            새로 올라온 공략
+          </h2>
+          <a href="/guides/" class="text-sm font-bold text-link no-underline hover:underline">
+            전체 보기 →
+          </a>
+        </div>
+        <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {latest.map((entry) => (
+            <li>
+              <GuideCard entry={entry} />
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  {/* 4. 카테고리 바로가기 */}
+  <section aria-labelledby="categories" class="mx-auto max-w-6xl px-4 py-10">
+    <h2 id="categories" class="mb-5 text-2xl font-extrabold">주제별로 찾기</h2>
+    <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        CATEGORIES.map((category) => (
+          <li>
+            <a
+              href={categoryHref(category)}
+              class="flex h-full flex-col rounded-xl border border-border bg-surface p-4 no-underline transition-colors hover:border-accent/50 hover:bg-raised"
+            >
+              <span class="flex items-center gap-2 font-bold text-text">
+                <span aria-hidden="true">{CATEGORY_EMOJI[category]}</span>
+                {category}
+                <span class="ml-auto text-xs font-normal text-muted">
+                  {counts.get(category) ?? 0}편
+                </span>
+              </span>
+              <span class="mt-1 line-clamp-2 text-sm text-muted">
+                {CATEGORY_DESCRIPTIONS[category]}
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  {/* 5. 데이터베이스 */}
+  <section aria-labelledby="database" class="mx-auto max-w-6xl px-4 py-10">
+    <h2 id="database" class="mb-5 text-2xl font-extrabold">데이터베이스</h2>
+    <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        database.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class="flex h-full flex-col rounded-xl border border-border bg-surface p-5 no-underline transition-colors hover:border-accent/50 hover:bg-raised"
+            >
+              <span class="text-3xl" aria-hidden="true">
+                {item.emoji}
+              </span>
+              <span class="mt-3 text-lg font-extrabold text-text">{item.label}</span>
+              <span class="mt-1 text-sm text-muted">{item.desc}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  {/* 6. 고지 */}
+  <section class="mx-auto max-w-6xl px-4 pt-4 pb-16">
+    <div class="rounded-xl border border-border bg-surface p-5">
+      <Disclaimer />
+    </div>
+  </section>
+</BaseLayout>

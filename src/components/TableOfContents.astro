@@ -1,0 +1,124 @@
+---
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  headings: MarkdownHeading[];
+  /** mobile: 본문 위 접기 / desktop: 우측 sticky */
+  variant?: 'mobile' | 'desktop';
+  class?: string;
+}
+
+const { headings, variant = 'desktop', class: className = '' } = Astro.props;
+
+const items = headings.filter((h) => h.depth === 2 || h.depth === 3);
+const show = items.length > 1;
+---
+
+{
+  show && variant === 'mobile' && (
+    <details class:list={['ks-toc-mobile mb-8 rounded-xl border border-border bg-surface', className]}>
+      <summary class="cursor-pointer list-none px-4 py-3 text-sm font-bold text-text">
+        <span class="mr-1" aria-hidden="true">
+          📑
+        </span>
+        목차 <span class="font-normal text-muted">({items.length})</span>
+      </summary>
+      <nav aria-label="목차" class="border-t border-border px-4 py-3">
+        <ol class="space-y-1.5">
+          {items.map((h) => (
+            <li class={h.depth === 3 ? 'pl-4' : ''}>
+              <a
+                href={`#${h.slug}`}
+                class="text-sm text-muted no-underline hover:text-link hover:underline"
+              >
+                {h.text}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+    </details>
+  )
+}
+
+{
+  show && variant === 'desktop' && (
+    <nav aria-label="목차" class:list={['ks-toc', className]} data-toc>
+      <div class="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto rounded-xl border border-border bg-surface p-4">
+        <p class="mb-3 text-xs font-bold tracking-widest text-muted uppercase">목차</p>
+        <ol class="space-y-1.5">
+          {items.map((h) => (
+            <li class={h.depth === 3 ? 'pl-3' : ''}>
+              <a
+                href={`#${h.slug}`}
+                data-toc-link={h.slug}
+                class:list={[
+                  'block border-l-2 border-transparent py-0.5 pl-2 leading-snug no-underline transition-colors hover:text-link',
+                  h.depth === 3 ? 'text-[13px] text-muted' : 'text-sm font-semibold text-muted',
+                ]}
+              >
+                {h.text}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </nav>
+  )
+}
+
+<style>
+  .ks-toc-mobile > summary::-webkit-details-marker {
+    display: none;
+  }
+  .ks-toc-mobile > summary::after {
+    content: '▾';
+    float: right;
+    color: var(--ks-muted);
+    transition: transform 0.15s ease;
+  }
+  .ks-toc-mobile[open] > summary::after {
+    transform: rotate(180deg);
+  }
+
+  /* 현재 읽는 위치 */
+  .ks-toc a[aria-current='true'] {
+    border-left-color: var(--ks-accent);
+    color: var(--ks-accent);
+  }
+</style>
+
+<script>
+  // 스크롤에 따라 현재 항목 표시. JS가 없어도 목차 링크 자체는 동작한다.
+  const nav = document.querySelector<HTMLElement>('[data-toc]');
+  if (nav) {
+    const links = new Map<string, HTMLAnchorElement>();
+    nav.querySelectorAll<HTMLAnchorElement>('[data-toc-link]').forEach((a) => {
+      const key = a.dataset.tocLink;
+      if (key) links.set(key, a);
+    });
+
+    const targets = [...links.keys()]
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+
+    const setActive = (id: string) => {
+      links.forEach((a, key) => {
+        if (key === id) a.setAttribute('aria-current', 'true');
+        else a.removeAttribute('aria-current');
+      });
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+        if (visible) setActive(visible.target.id);
+      },
+      { rootMargin: '-88px 0px -70% 0px', threshold: 0 }
+    );
+
+    targets.forEach((el) => observer.observe(el));
+  }
+</script>

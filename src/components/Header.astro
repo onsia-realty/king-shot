@@ -1,0 +1,109 @@
+---
+import { mainNav, isActive, SITE_NAME } from '@/data/nav';
+
+const pathname = Astro.url.pathname;
+---
+
+<header
+  class="sticky top-0 z-50 border-b border-border bg-bg/85 backdrop-blur supports-[backdrop-filter]:bg-bg/70"
+>
+  <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
+    <a
+      href="/"
+      class="flex items-center gap-2 text-lg font-extrabold tracking-tight text-text no-underline hover:text-accent"
+    >
+      <span aria-hidden="true" class="text-accent">👑</span>
+      <span>{SITE_NAME}</span>
+    </a>
+
+    <!-- 데스크톱 네비 -->
+    <nav aria-label="주요 메뉴" class="hidden md:block">
+      <ul class="flex items-center gap-1">
+        {
+          mainNav.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                aria-current={isActive(item, pathname) ? 'page' : undefined}
+                class:list={[
+                  'rounded-lg px-3 py-2 text-sm font-semibold no-underline transition-colors',
+                  isActive(item, pathname)
+                    ? 'bg-raised text-accent'
+                    : 'text-muted hover:bg-surface hover:text-text',
+                ]}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <!-- 모바일 토글: JS 없이 details/summary -->
+    <details class="ks-menu relative md:hidden">
+      <summary
+        class="flex cursor-pointer list-none items-center gap-2 rounded-lg border border-border bg-surface px-3 py-2 text-sm font-semibold text-text"
+        aria-label="메뉴 열기"
+      >
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <path d="M3 6h18M3 12h18M3 18h18" />
+        </svg>
+        <span>메뉴</span>
+      </summary>
+      <nav
+        aria-label="모바일 메뉴"
+        class="absolute right-0 top-[calc(100%+0.5rem)] w-52 rounded-xl border border-border bg-surface p-2 shadow-2xl shadow-black/50"
+      >
+        <ul class="flex flex-col">
+          {
+            mainNav.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  aria-current={isActive(item, pathname) ? 'page' : undefined}
+                  class:list={[
+                    'block rounded-lg px-3 py-2 text-sm font-semibold no-underline',
+                    isActive(item, pathname)
+                      ? 'bg-raised text-accent'
+                      : 'text-text hover:bg-raised',
+                  ]}
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </details>
+  </div>
+</header>
+
+<style>
+  .ks-menu > summary::-webkit-details-marker {
+    display: none;
+  }
+</style>
+
+<script is:inline>
+  // 메뉴 밖 클릭 / ESC 로 닫기 (details 기본 동작 보완)
+  document.addEventListener('click', (e) => {
+    document.querySelectorAll('details.ks-menu[open]').forEach((d) => {
+      if (!d.contains(e.target)) d.removeAttribute('open');
+    });
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    document.querySelectorAll('details.ks-menu[open]').forEach((d) => d.removeAttribute('open'));
+  });
+</script>

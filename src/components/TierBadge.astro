@@ -1,0 +1,41 @@
+---
+export type Tier = 'S+' | 'S' | 'A' | 'B' | 'C' | 'D';
+
+interface Props {
+  tier: Tier;
+  /** 배지 앞에 붙일 설명 (예: "곰 집결") */
+  label?: string;
+  size?: 'sm' | 'md';
+  class?: string;
+}
+
+const { tier, label, size = 'md', class: className = '' } = Astro.props;
+
+const styles: Record<Tier, string> = {
+  'S+': 'text-[#ffe08a] border-[#ffb020]/60 bg-[#ffb020]/18',
+  S: 'text-rarity-ssr border-rarity-ssr/50 bg-rarity-ssr/12',
+  A: 'text-rarity-sr border-rarity-sr/50 bg-rarity-sr/12',
+  B: 'text-rarity-r border-rarity-r/50 bg-rarity-r/12',
+  C: 'text-success border-success/50 bg-success/12',
+  D: 'text-rarity-n border-rarity-n/50 bg-rarity-n/12',
+};
+
+const sizes = {
+  sm: 'text-[11px] min-w-[1.75rem] px-1.5 py-0.5',
+  md: 'text-xs min-w-[2rem] px-2 py-0.5',
+};
+---
+
+<span class:list={['inline-flex items-center gap-1.5', className]}>
+  {label && <span class="text-xs text-muted">{label}</span>}
+  <span
+    class:list={[
+      'inline-flex items-center justify-center rounded-md border font-extrabold tabular-nums',
+      styles[tier],
+      sizes[size],
+    ]}
+    title={label ? `${label} ${tier}티어` : `${tier}티어`}
+  >
+    {tier}
+  </span>
+</span>

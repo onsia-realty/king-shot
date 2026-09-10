@@ -1,0 +1,89 @@
+---
+import { Image } from 'astro:assets';
+import RarityBadge from '@/components/RarityBadge.astro';
+import ClassIcon from '@/components/ClassIcon.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  hero: CollectionEntry<'heroes'>;
+}
+
+const { hero } = Astro.props;
+const d = hero.data;
+
+/** 초상 이미지가 아직 없는 영웅은 등급색 그라데이션 + 이니셜로 대체한다. */
+const rarityVar = `var(--ks-rarity-${d.rarity.toLowerCase()})`;
+const placeholderStyle = `background-image: linear-gradient(150deg, color-mix(in oklab, ${rarityVar} 42%, transparent), color-mix(in oklab, ${rarityVar} 8%, transparent) 65%, transparent); color: ${rarityVar};`;
+const initial = d.name.trim().slice(0, 1);
+
+/** 초상 테두리를 등급색으로 둘러 목록에서 등급이 바로 보이게 한다. */
+const RARITY_RING = {
+  SSR: 'ring-rarity-ssr',
+  SR: 'ring-rarity-sr',
+  R: 'ring-rarity-r',
+  N: 'ring-rarity-n',
+} as const;
+---
+
+<article
+  class="group relative flex flex-col gap-3 rounded-xl border border-border bg-surface p-4 transition-colors hover:border-accent/50 hover:bg-raised"
+  data-hero-card
+  data-gen={String(d.generation)}
+  data-rarity={d.rarity}
+  data-class={d.troopClass}
+  data-order={String(d.order)}
+  data-name={d.name}
+  data-name-en={d.nameEn.toLowerCase()}
+>
+  <div class="flex items-center gap-3">
+    <div
+      class:list={[
+        'flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-lg text-xl font-extrabold',
+        d.portrait
+          ? ['bg-raised ring-2 ring-inset', RARITY_RING[d.rarity]]
+          : 'border border-border',
+      ]}
+      style={d.portrait ? undefined : placeholderStyle}
+      aria-hidden={d.portrait ? undefined : 'true'}
+    >
+      {d.portrait ? (
+        <Image
+          src={d.portrait}
+          alt={`${d.name} (${d.nameEn}) 초상`}
+          width={128}
+          height={128}
+          loading="lazy"
+          decoding="async"
+          class="size-14 object-cover"
+        />
+      ) : (
+        initial
+      )}
+    </div>
+
+    <div class="min-w-0">
+      <h3 class="truncate text-base font-bold leading-tight">
+        <a
+          href={`/heroes/${hero.id}/`}
+          class="text-text no-underline after:absolute after:inset-0 hover:text-accent"
+        >
+          {d.name}
+        </a>
+      </h3>
+      <p class="truncate text-xs text-muted">{d.nameEn}</p>
+    </div>
+  </div>
+
+  <div class="flex flex-wrap items-center gap-1.5">
+    <RarityBadge rarity={d.rarity} size="sm" />
+    <ClassIcon troopClass={d.troopClass} size="sm" />
+    <span class="inline-flex items-center rounded-md border border-border bg-raised px-1.5 py-0.5 text-[11px] font-bold text-muted">
+      {d.generation}세대
+    </span>
+    <span class="inline-flex items-center rounded-md border border-border px-1.5 py-0.5 text-[11px] text-muted">
+      {d.acquisition}
+    </span>
+  </div>
+
+  <p class="text-sm leading-relaxed text-muted">{d.summary}</p>
+</article>

@@ -1,0 +1,270 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+/* ------------------------------------------------------------------
+   디자인 토큰
+   원시 팔레트는 :root 에 두고, @theme inline 이 그것을 참조한다.
+   → 나중에 [data-theme="light"] 블록만 추가하면 라이트 테마가 얹힌다.
+   ------------------------------------------------------------------ */
+:root {
+  color-scheme: dark;
+
+  /* 배경 3단계 */
+  --ks-bg: #0b0f14;        /* 딥 차콜 네이비 (거의 검정) */
+  --ks-surface: #141b23;   /* 카드 */
+  --ks-raised: #1e2833;    /* 호버 / 강조 표면 */
+
+  /* 선 & 텍스트 */
+  --ks-border: #2b3846;
+  --ks-text: #e7edf4;      /* on bg: 15.4:1 */
+  --ks-muted: #9fb0c0;     /* on bg: 7.9:1 */
+
+  /* 강조 */
+  --ks-accent: #f5b642;       /* 골드/앰버 — on bg 10.6:1 */
+  --ks-accent-strong: #ffd27a;
+  --ks-on-accent: #1a1205;    /* 앰버 배경 위 텍스트 */
+  --ks-link: #5cd0e8;         /* 시안 — on bg 10.1:1 */
+  --ks-link-hover: #9be6f5;
+
+  /* 등급색 */
+  --ks-rarity-ssr: #f7c245;
+  --ks-rarity-sr: #c08cf5;
+  --ks-rarity-r: #63a9f7;
+  --ks-rarity-n: #a3aeb9;
+
+  /* 병종색 */
+  --ks-class-infantry: #ff8a63; /* 보병 */
+  --ks-class-archer: #62d999;   /* 궁병 */
+  --ks-class-cavalry: #7ab8ff;  /* 기병 */
+
+  /* 상태 */
+  --ks-success: #56d98b;
+  --ks-warning: #f5b642;
+  --ks-danger: #ff7b7b;
+
+  /* 폰트 */
+  --ks-font-sans: 'Pretendard Variable', Pretendard, system-ui, -apple-system,
+    'Segoe UI', 'Malgun Gothic', sans-serif;
+  --ks-font-mono: ui-monospace, SFMono-Regular, 'Cascadia Mono', Consolas,
+    'D2Coding', monospace;
+}
+
+@theme inline {
+  --color-bg: var(--ks-bg);
+  --color-surface: var(--ks-surface);
+  --color-raised: var(--ks-raised);
+  --color-border: var(--ks-border);
+  --color-text: var(--ks-text);
+  --color-muted: var(--ks-muted);
+
+  --color-accent: var(--ks-accent);
+  --color-accent-strong: var(--ks-accent-strong);
+  --color-on-accent: var(--ks-on-accent);
+  --color-link: var(--ks-link);
+  --color-link-hover: var(--ks-link-hover);
+
+  --color-rarity-ssr: var(--ks-rarity-ssr);
+  --color-rarity-sr: var(--ks-rarity-sr);
+  --color-rarity-r: var(--ks-rarity-r);
+  --color-rarity-n: var(--ks-rarity-n);
+
+  --color-class-infantry: var(--ks-class-infantry);
+  --color-class-archer: var(--ks-class-archer);
+  --color-class-cavalry: var(--ks-class-cavalry);
+
+  --color-success: var(--ks-success);
+  --color-warning: var(--ks-warning);
+  --color-danger: var(--ks-danger);
+
+  --font-sans: var(--ks-font-sans);
+  --font-mono: var(--ks-font-mono);
+}
+
+/* ------------------------------------------------------------------
+   base
+   ------------------------------------------------------------------ */
+@layer base {
+  html {
+    color-scheme: dark;
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--ks-bg);
+    color: var(--ks-text);
+    font-family: var(--ks-font-sans);
+    line-height: 1.75;
+    /* 한국어 가독성 */
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    line-height: 1.35;
+    font-weight: 700;
+    word-break: keep-all;
+    text-wrap: balance;
+  }
+
+  p, li {
+    text-wrap: pretty;
+  }
+
+  a {
+    color: var(--ks-link);
+    text-underline-offset: 3px;
+  }
+  a:hover {
+    color: var(--ks-link-hover);
+  }
+
+  hr {
+    border-color: var(--ks-border);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ks-accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: var(--ks-accent);
+    color: var(--ks-on-accent);
+  }
+
+  img, svg, video {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* ------------------------------------------------------------------
+   유틸 / 컴포넌트
+   ------------------------------------------------------------------ */
+
+/* 넓은 표·코드블록을 감싸 가로 스크롤을 만든다 */
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--ks-border);
+  border-radius: 0.75rem;
+  background: var(--ks-surface);
+}
+.table-wrap > table {
+  margin: 0;
+  min-width: 34rem;
+}
+
+/* 스크린리더 전용 + 스킵 링크 */
+.skip-link {
+  position: absolute;
+  left: 0.5rem;
+  top: -100%;
+  z-index: 100;
+  padding: 0.6rem 1rem;
+  border-radius: 0.5rem;
+  background: var(--ks-accent);
+  color: var(--ks-on-accent);
+  font-weight: 700;
+  transition: top 0.15s ease;
+}
+.skip-link:focus {
+  top: 0.5rem;
+  color: var(--ks-on-accent);
+}
+
+/* ------------------------------------------------------------------
+   .prose 다크 오버라이드
+   ------------------------------------------------------------------ */
+.prose {
+  --tw-prose-body: var(--ks-text);
+  --tw-prose-headings: #ffffff;
+  --tw-prose-lead: var(--ks-muted);
+  --tw-prose-links: var(--ks-link);
+  --tw-prose-bold: #ffffff;
+  --tw-prose-counters: var(--ks-muted);
+  --tw-prose-bullets: var(--ks-border);
+  --tw-prose-hr: var(--ks-border);
+  --tw-prose-quotes: var(--ks-text);
+  --tw-prose-quote-borders: var(--ks-accent);
+  --tw-prose-captions: var(--ks-muted);
+  --tw-prose-code: var(--ks-accent-strong);
+  --tw-prose-pre-code: #e7edf4;
+  --tw-prose-pre-bg: #0d1117;
+  --tw-prose-th-borders: var(--ks-border);
+  --tw-prose-td-borders: var(--ks-border);
+
+  max-width: none;
+  line-height: 1.8;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.prose :where(h2):not(:where(.not-prose *)) {
+  margin-top: 2.5em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--ks-border);
+}
+
+.prose :where(blockquote):not(:where(.not-prose *)) {
+  font-style: normal;
+  background: var(--ks-surface);
+  border-radius: 0 0.5rem 0.5rem 0;
+  padding: 0.75rem 1.25rem;
+}
+
+.prose :where(code):not(:where(pre *, .not-prose *)) {
+  background: var(--ks-raised);
+  border: 1px solid var(--ks-border);
+  border-radius: 0.375rem;
+  padding: 0.15em 0.4em;
+  font-weight: 500;
+}
+.prose :where(code):not(:where(pre *, .not-prose *))::before,
+.prose :where(code):not(:where(pre *, .not-prose *))::after {
+  content: none;
+}
+
+.prose :where(pre):not(:where(.not-prose *)) {
+  border: 1px solid var(--ks-border);
+  border-radius: 0.75rem;
+}
+
+.prose :where(table):not(:where(.not-prose *)) {
+  font-size: 0.925rem;
+}
+.prose :where(thead th):not(:where(.not-prose *)) {
+  background: var(--ks-raised);
+  color: #ffffff;
+  white-space: nowrap;
+}
+.prose :where(th, td):not(:where(.not-prose *)) {
+  padding: 0.6rem 0.9rem;
+  vertical-align: top;
+}
+.prose :where(tbody tr):not(:where(.not-prose *)):hover {
+  background: color-mix(in oklab, var(--ks-raised) 55%, transparent);
+}
+
+/* 마크다운 표는 자동으로 가로 스크롤 가능하게 */
+.prose :where(table):not(:where(.not-prose *)) {
+  display: block;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

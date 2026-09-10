@@ -1,0 +1,11 @@
+---
+interface Props {
+  class?: string;
+}
+const { class: className = '' } = Astro.props;
+---
+
+<p class={`text-sm leading-relaxed text-muted ${className}`}>
+  본 사이트는 Kingshot 이용자가 운영하는 비공식 팬 사이트입니다. Kingshot 및 관련 이미지·명칭의 모든 권리는 Century
+  Games에 있습니다. 게임 내 수치는 업데이트로 변경될 수 있습니다.
+</p>

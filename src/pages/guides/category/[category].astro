@@ -1,0 +1,110 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+import GuideCard from '@/components/GuideCard.astro';
+import {
+  CATEGORIES,
+  CATEGORY_DESCRIPTIONS,
+  CATEGORY_EMOJI,
+  CATEGORY_SLUGS,
+  categoryHref,
+  guideHref,
+  sortByPublished,
+  type Guide,
+  type GuideCategory,
+} from '@/lib/guides';
+import { SITE_NAME } from '@/data/nav';
+
+export const getStaticPaths = (async () => {
+  const guides = await getCollection('guides', ({ data }) => !data.draft);
+
+  return CATEGORIES.map((category) => ({
+    params: { category: CATEGORY_SLUGS[category] },
+    props: {
+      category,
+      entries: sortByPublished(guides.filter((g) => g.data.category === category)),
+    },
+  }));
+}) satisfies GetStaticPaths;
+
+type Props = {
+  category: GuideCategory;
+  entries: Guide[];
+};
+
+const { category, entries } = Astro.props;
+
+const site = Astro.site ?? new URL('https://example.com');
+const description = `킹샷 ${category} 공략 모음. ${CATEGORY_DESCRIPTIONS[category]}`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: `${SITE_NAME} — ${category} 공략`,
+  numberOfItems: entries.length,
+  itemListElement: entries.map((g, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: g.data.title,
+    url: new URL(guideHref(g), site).href,
+  })),
+};
+
+const others = CATEGORIES.filter((c) => c !== category);
+---
+
+<BaseLayout title={`${category} 공략`} description={description} jsonLd={jsonLd}>
+  <div class="mx-auto max-w-6xl px-4 py-8">
+    <Breadcrumb
+      items={[{ label: '홈', href: '/' }, { label: '공략', href: '/guides/' }, { label: category }]}
+      class="mb-6"
+    />
+
+    <header class="mb-8">
+      <h1 class="flex items-center gap-2 text-3xl font-extrabold sm:text-4xl">
+        <span aria-hidden="true">{CATEGORY_EMOJI[category]}</span>
+        {category} 공략
+      </h1>
+      <p class="mt-3 max-w-2xl text-muted">{CATEGORY_DESCRIPTIONS[category]}</p>
+      <p class="mt-2 text-sm text-muted">{entries.length}편</p>
+    </header>
+
+    {
+      entries.length === 0 ? (
+        <div class="rounded-xl border border-border bg-surface p-8 text-center">
+          <p class="font-bold text-text">이 카테고리는 아직 준비 중입니다</p>
+          <p class="mt-1 text-sm text-muted">다른 카테고리를 먼저 둘러보세요.</p>
+        </div>
+      ) : (
+        <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {entries.map((entry) => (
+            <li>
+              <GuideCard entry={entry} headingLevel="h2" />
+            </li>
+          ))}
+        </ul>
+      )
+    }
+
+    <nav aria-label="다른 카테고리" class="mt-12 border-t border-border pt-6">
+      <h2 class="mb-3 text-sm font-bold text-text">다른 카테고리</h2>
+      <ul class="flex flex-wrap gap-2">
+        {
+          others.map((c) => (
+            <li>
+              <a
+                href={categoryHref(c)}
+                class="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-1.5 text-sm text-muted no-underline hover:border-accent/50 hover:text-accent"
+              >
+                <span aria-hidden="true">{CATEGORY_EMOJI[c]}</span>
+                {c}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</BaseLayout>

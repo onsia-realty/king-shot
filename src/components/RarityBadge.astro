@@ -1,0 +1,39 @@
+---
+import { RARITY_LABEL, type Rarity } from '@/lib/labels';
+
+export type { Rarity };
+
+interface Props {
+  rarity: Rarity;
+  size?: 'sm' | 'md';
+  class?: string;
+}
+
+const { rarity, size = 'md', class: className = '' } = Astro.props;
+
+const styles: Record<Rarity, string> = {
+  SSR: 'text-rarity-ssr border-rarity-ssr/45 bg-rarity-ssr/12',
+  SR: 'text-rarity-sr border-rarity-sr/45 bg-rarity-sr/12',
+  R: 'text-rarity-r border-rarity-r/45 bg-rarity-r/12',
+  N: 'text-rarity-n border-rarity-n/45 bg-rarity-n/12',
+};
+
+const sizes = {
+  sm: 'text-[11px] px-1.5 py-0.5',
+  md: 'text-xs px-2 py-0.5',
+};
+
+const label = RARITY_LABEL[rarity] ?? rarity;
+---
+
+<span
+  class:list={[
+    'inline-flex items-center rounded-md border font-bold tracking-wide',
+    styles[rarity],
+    sizes[size],
+    className,
+  ]}
+  title={`${label} 등급 (${rarity})`}
+>
+  {label}
+</span>

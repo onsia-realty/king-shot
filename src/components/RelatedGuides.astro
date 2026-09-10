@@ -1,0 +1,41 @@
+---
+import { getCollection } from 'astro:content';
+import { CATEGORY_EMOJI, guideHref, pickRelated, type Guide } from '@/lib/guides';
+
+interface Props {
+  entry: Guide;
+  max?: number;
+  class?: string;
+}
+
+const { entry, max = 4, class: className = '' } = Astro.props;
+
+const pool = await getCollection('guides', ({ data }) => !data.draft);
+const related = pickRelated(entry, pool, max);
+---
+
+{
+  related.length > 0 && (
+    <section aria-labelledby="related-guides" class:list={['mt-14', className]}>
+      <h2 id="related-guides" class="mb-4 text-xl font-extrabold text-text">
+        이어서 볼 공략
+      </h2>
+      <ul class="grid gap-3 sm:grid-cols-2">
+        {related.map((g) => (
+          <li>
+            <a
+              href={guideHref(g)}
+              class="flex h-full flex-col rounded-xl border border-border bg-surface p-4 no-underline transition-colors hover:border-accent/50 hover:bg-raised"
+            >
+              <span class="text-xs font-bold text-accent">
+                <span aria-hidden="true">{CATEGORY_EMOJI[g.data.category]}</span> {g.data.category}
+              </span>
+              <span class="mt-1 font-bold text-text">{g.data.title}</span>
+              <span class="mt-1 line-clamp-2 text-sm text-muted">{g.data.description}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}

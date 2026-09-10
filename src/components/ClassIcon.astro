@@ -1,0 +1,39 @@
+---
+import { TROOP_CLASS_GLYPH, type TroopClass } from '@/lib/labels';
+
+export type { TroopClass };
+
+interface Props {
+  troopClass: TroopClass;
+  /** 아이콘만 표시할지 여부 */
+  iconOnly?: boolean;
+  size?: 'sm' | 'md';
+  class?: string;
+}
+
+const { troopClass, iconOnly = false, size = 'md', class: className = '' } = Astro.props;
+
+const styles: Record<TroopClass, string> = {
+  보병: 'text-class-infantry border-class-infantry/45 bg-class-infantry/12',
+  궁병: 'text-class-archer border-class-archer/45 bg-class-archer/12',
+  기병: 'text-class-cavalry border-class-cavalry/45 bg-class-cavalry/12',
+};
+
+const sizes = {
+  sm: 'text-[11px] px-1.5 py-0.5 gap-1',
+  md: 'text-xs px-2 py-0.5 gap-1.5',
+};
+---
+
+<span
+  class:list={[
+    'inline-flex items-center rounded-md border font-bold',
+    styles[troopClass],
+    sizes[size],
+    className,
+  ]}
+  title={troopClass}
+>
+  <span aria-hidden="true">{TROOP_CLASS_GLYPH[troopClass]}</span>
+  {iconOnly ? <span class="sr-only">{troopClass}</span> : <span>{troopClass}</span>}
+</span>
