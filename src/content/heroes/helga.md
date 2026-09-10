@@ -6,7 +6,7 @@ rarity: SSR
 troopClass: 보병
 portrait: ../../assets/heroes/helga.webp
 acquisition: 패키지
-summary: 병력 전체 스탯을 끌어올리는 1세대 패키지 보병 SSR
+summary: 병력 전체 스탯을 끌어올리는 1세대 패키지 전설 보병
 ratings:
   bearRally: B
   garrison: A
