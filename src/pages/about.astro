@@ -2,7 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Breadcrumb from '@/components/Breadcrumb.astro';
 import Disclaimer from '@/components/Disclaimer.astro';
-import { SITE_NAME } from '@/data/nav';
+import { SITE_NAME, KAKAO_OPENCHAT } from '@/data/nav';
 
 const description = `${SITE_NAME} 소개. 사이트를 만든 이유, 정보를 확인하는 방법, 저작권 문의와 삭제 요청 절차를 안내합니다.`;
 ---
@@ -90,6 +90,14 @@ const description = `${SITE_NAME} 소개. 사이트를 만든 이유, 정보를 
       <p>
         수치가 틀렸거나, 다뤘으면 하는 주제가 있으면 같은 연락처로 보내주세요. 제보한 내용은 확인 후
         본문에 반영합니다.
+      </p>
+      <p>
+        간단한 질문이나 제보는 카카오톡 오픈채팅방
+        <a href={KAKAO_OPENCHAT.url} target="_blank" rel="noopener noreferrer">
+          {KAKAO_OPENCHAT.roomName}<span class="sr-only"> (새 창 열림)</span>
+        </a>
+        에서 바로 말씀해 주셔도 됩니다. 연맹을 구하거나 다른 이용자와 정보를 나누는 곳으로도 쓰고
+        있습니다.
       </p>
     </div>
 

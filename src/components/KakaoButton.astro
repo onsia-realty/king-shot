@@ -1,0 +1,46 @@
+---
+/**
+ * 카카오톡 오픈채팅 참여 버튼.
+ * 링크·문구는 @/data/nav 의 KAKAO_OPENCHAT 한 곳에서만 가져온다.
+ */
+import { KAKAO_OPENCHAT } from '@/data/nav';
+
+interface Props {
+  /** full: 아이콘 + 글자, icon: 아이콘만 (모바일 헤더용) */
+  variant?: 'full' | 'icon';
+  /** 버튼에 보일 글자 (variant=full 일 때만) */
+  text?: string;
+  size?: 'sm' | 'md';
+  class?: string;
+}
+
+const { variant = 'full', text = '오픈채팅', size = 'sm', class: className = '' } = Astro.props;
+
+const pad = size === 'md' ? 'px-5 py-2.5 text-base' : 'px-3 py-2 text-sm';
+const iconSize = size === 'md' ? 20 : 18;
+
+const base =
+  'inline-flex items-center justify-center gap-1.5 rounded-lg bg-kakao font-bold text-kakao-ink no-underline transition-opacity hover:text-kakao-ink hover:opacity-85';
+---
+
+<a
+  href={KAKAO_OPENCHAT.url}
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label={`${KAKAO_OPENCHAT.label} 참여하기 (새 창 열림)`}
+  class:list={[base, variant === 'icon' ? 'h-9 w-9' : pad, className]}
+>
+  <svg
+    width={iconSize}
+    height={iconSize}
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    aria-hidden="true"
+    class="shrink-0"
+  >
+    <path
+      d="M12 3C6.477 3 2 6.477 2 10.8c0 2.77 1.86 5.2 4.66 6.57-.2.72-.74 2.68-.85 3.1-.13.52.19.51.4.37.17-.11 2.6-1.77 3.65-2.49.69.1 1.4.15 2.14.15 5.523 0 10-3.477 10-7.7S17.523 3 12 3Z"
+    ></path>
+  </svg>
+  {variant === 'full' && <span>{text}</span>}
+</a>

@@ -10,7 +10,8 @@ import {
   categoryHref,
   sortByPublished,
 } from '@/lib/guides';
-import { SITE_NAME, SITE_DESCRIPTION } from '@/data/nav';
+import KakaoButton from '@/components/KakaoButton.astro';
+import { SITE_NAME, SITE_DESCRIPTION, KAKAO_OPENCHAT } from '@/data/nav';
 
 const guides = sortByPublished(await getCollection('guides', ({ data }) => !data.draft));
 const featured = guides.filter((g) => g.data.featured).slice(0, 3);
@@ -189,7 +190,25 @@ const database = [
     </ul>
   </section>
 
-  {/* 6. 고지 */}
+  {/* 6. 커뮤니티 */}
+  <section aria-labelledby="community" class="mx-auto max-w-6xl px-4 py-10">
+    <div
+      class="flex flex-col gap-4 rounded-xl border border-border bg-surface p-6 sm:flex-row sm:items-center sm:justify-between"
+    >
+      <div>
+        <h2 id="community" class="text-xl font-extrabold sm:text-2xl">
+          <span aria-hidden="true">💬</span> 같이 하실 분 찾습니다
+        </h2>
+        <p class="mt-2 text-sm font-semibold text-text">{KAKAO_OPENCHAT.roomName}</p>
+        <p class="mt-1 text-sm text-muted">
+          막히는 부분을 물어보고, 연맹원을 구하고, 새 정보를 먼저 받아보세요.
+        </p>
+      </div>
+      <KakaoButton variant="full" size="md" text="오픈채팅 참여" class="shrink-0 self-start sm:self-auto" />
+    </div>
+  </section>
+
+  {/* 7. 고지 */}
   <section class="mx-auto max-w-6xl px-4 pt-4 pb-16">
     <div class="rounded-xl border border-border bg-surface p-5">
       <Disclaimer />

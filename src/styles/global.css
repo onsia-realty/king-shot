@@ -37,6 +37,10 @@
   --ks-class-archer: #62d999;   /* 궁병 */
   --ks-class-cavalry: #7ab8ff;  /* 기병 */
 
+  /* 브랜드 (카카오 식별용 고정 컬러 — 테마와 무관하게 유지) */
+  --ks-kakao: #fee500;
+  --ks-kakao-ink: #191600;
+
   /* 상태 */
   --ks-success: #56d98b;
   --ks-warning: #f5b642;
@@ -71,6 +75,9 @@
   --color-class-infantry: var(--ks-class-infantry);
   --color-class-archer: var(--ks-class-archer);
   --color-class-cavalry: var(--ks-class-cavalry);
+
+  --color-kakao: var(--ks-kakao);
+  --color-kakao-ink: var(--ks-kakao-ink);
 
   --color-success: var(--ks-success);
   --color-warning: var(--ks-warning);

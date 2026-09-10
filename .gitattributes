@@ -1,0 +1,14 @@
+# 저장소에는 항상 LF로 저장한다.
+# 윈도우에서 작업해도 다른 PC·CI에서 전체 파일이 바뀐 것처럼 보이지 않게 한다.
+* text=auto eol=lf
+
+# 바이너리 — 줄바꿈 변환 대상이 아니다.
+*.webp binary
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.woff binary
+*.woff2 binary
+*.pdf  binary

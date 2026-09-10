@@ -21,6 +21,14 @@ export const mainNav: NavItem[] = [
   { label: '기프트코드', href: '/gift-codes/' },
 ];
 
+/** 커뮤니티(카카오톡 오픈채팅) 단일 소스 */
+export const KAKAO_OPENCHAT = {
+  url: 'https://open.kakao.com/o/gSpop0Mi',
+  label: '카카오톡 오픈채팅',
+  roomName: '[킹샷] 초보 공략 & 한국인 국왕·신입 연맹 환영',
+  blurb: '질문·연맹 모집·정보 공유',
+} as const;
+
 export const footerNav: NavItem[] = [
   { label: '소개', href: '/about/' },
   { label: '개인정보처리방침', href: '/privacy/' },

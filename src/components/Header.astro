@@ -1,5 +1,6 @@
 ---
-import { mainNav, isActive, SITE_NAME } from '@/data/nav';
+import KakaoButton from '@/components/KakaoButton.astro';
+import { mainNav, isActive, SITE_NAME, KAKAO_OPENCHAT } from '@/data/nav';
 
 const pathname = Astro.url.pathname;
 ---
@@ -7,15 +8,16 @@ const pathname = Astro.url.pathname;
 <header
   class="sticky top-0 z-50 border-b border-border bg-bg/85 backdrop-blur supports-[backdrop-filter]:bg-bg/70"
 >
-  <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
+  <div class="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3 sm:gap-4">
     <a
       href="/"
-      class="flex items-center gap-2 text-lg font-extrabold tracking-tight text-text no-underline hover:text-accent"
+      class="flex shrink-0 items-center gap-2 text-lg font-extrabold tracking-tight whitespace-nowrap text-text no-underline hover:text-accent"
     >
       <span aria-hidden="true" class="text-accent">👑</span>
       <span>{SITE_NAME}</span>
     </a>
 
+    <div class="flex items-center gap-2 sm:gap-3">
     <!-- 데스크톱 네비 -->
     <nav aria-label="주요 메뉴" class="hidden md:block">
       <ul class="flex items-center gap-1">
@@ -39,6 +41,10 @@ const pathname = Astro.url.pathname;
         }
       </ul>
     </nav>
+
+    <!-- 오픈채팅: 데스크톱은 글자 버튼, 모바일은 메뉴를 열지 않아도 보이는 아이콘 버튼 -->
+    <span class="hidden md:inline-flex"><KakaoButton variant="full" text="오픈채팅" /></span>
+    <span class="inline-flex md:hidden"><KakaoButton variant="icon" /></span>
 
     <!-- 모바일 토글: JS 없이 details/summary -->
     <details class="ks-menu relative md:hidden">
@@ -84,8 +90,18 @@ const pathname = Astro.url.pathname;
             ))
           }
         </ul>
+        <a
+          href={KAKAO_OPENCHAT.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`${KAKAO_OPENCHAT.label} 참여하기 (새 창 열림)`}
+          class="mt-2 block rounded-lg border-t border-border px-3 pt-3 text-sm font-semibold text-kakao no-underline hover:text-kakao"
+        >
+          카카오톡 오픈채팅 참여
+        </a>
       </nav>
     </details>
+    </div>
   </div>
 </header>
 
