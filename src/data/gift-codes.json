@@ -9,12 +9,648 @@
     {
       "code": "Kingshot888",
       "rewards": "",
-      "addedAt": "2026-09-11"
+      "addedAt": "2026-09-11",
+      "startsAt": "2026-06-04",
+      "expiresAt": "2026-08-05"
     },
     {
       "code": "VIP777",
       "rewards": "",
-      "addedAt": "2026-09-11"
+      "addedAt": "2026-09-11",
+      "startsAt": "2026-06-01",
+      "expiresAt": "2026-12-31"
+    },
+    {
+      "code": "KS0803",
+      "rewards": "",
+      "startsAt": "2026-08-03",
+      "expiresAt": "2026-08-09",
+      "addedAt": "2026-08-03",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "JPJULSEA26KS",
+      "rewards": "",
+      "startsAt": "2026-07-20",
+      "expiresAt": "2026-07-26",
+      "addedAt": "2026-07-20",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "HAPPYEMOJIDAY",
+      "rewards": "",
+      "startsAt": "2026-07-17",
+      "expiresAt": "2026-07-23",
+      "addedAt": "2026-07-17",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "KS0715",
+      "rewards": "",
+      "startsAt": "2026-07-15",
+      "expiresAt": "2026-07-21",
+      "addedAt": "2026-07-15",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "KS0713",
+      "rewards": "",
+      "startsAt": "2026-07-13",
+      "expiresAt": "2026-07-19",
+      "addedAt": "2026-07-13",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "3wQjqX84a",
+      "rewards": "",
+      "startsAt": "2026-07-11",
+      "expiresAt": "2026-07-17",
+      "addedAt": "2026-07-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "3wQjq8W4a",
+      "rewards": "",
+      "startsAt": "2026-07-11",
+      "expiresAt": "2026-07-17",
+      "addedAt": "2026-07-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "KS0709",
+      "rewards": "",
+      "startsAt": "2026-07-09",
+      "expiresAt": "2026-07-15",
+      "addedAt": "2026-07-09",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "OFFICIALSTORE0709",
+      "rewards": "",
+      "startsAt": "2026-07-09",
+      "expiresAt": "2026-07-15",
+      "addedAt": "2026-07-09",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "KS0706",
+      "rewards": "",
+      "startsAt": "2026-07-06",
+      "expiresAt": "2026-07-08",
+      "addedAt": "2026-07-06",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "0706FORU",
+      "rewards": "",
+      "startsAt": "2026-07-06",
+      "expiresAt": "2026-07-08",
+      "addedAt": "2026-07-06",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "DC600KTHANKS",
+      "rewards": "",
+      "startsAt": "2026-06-28",
+      "expiresAt": "2026-07-04",
+      "addedAt": "2026-06-28",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "BESTDAD0621",
+      "rewards": "",
+      "startsAt": "2026-06-21",
+      "expiresAt": "2026-06-27",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "AJISAI26JP",
+      "rewards": "",
+      "startsAt": "2026-06-20",
+      "expiresAt": "2026-06-26",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "KS0615",
+      "rewards": "",
+      "startsAt": "2026-06-05",
+      "expiresAt": "2026-06-18",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "PROTECTNATURE",
+      "rewards": "",
+      "startsAt": "2026-06-04",
+      "expiresAt": "2026-06-10",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "N4rG26aVj",
+      "rewards": "",
+      "startsAt": "2026-06-03",
+      "expiresAt": "2026-06-09",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "KS0603",
+      "rewards": "",
+      "startsAt": "2026-06-03",
+      "expiresAt": "2026-06-09",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "7VAEDbAV7",
+      "rewards": "",
+      "startsAt": "2026-06-02",
+      "expiresAt": "2026-06-08",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "CHILDFUN2026",
+      "rewards": "",
+      "startsAt": "2026-06-01",
+      "expiresAt": "2026-06-06",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "EIDALADHA0527",
+      "rewards": "",
+      "startsAt": "2026-05-27",
+      "expiresAt": "2026-06-03",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "OFFICIALSTORE27",
+      "rewards": "",
+      "startsAt": "2026-05-27",
+      "expiresAt": "2026-06-03",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "rK9e6vKXu",
+      "rewards": "",
+      "startsAt": "2026-05-21",
+      "expiresAt": "2026-05-28",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "847EadKex",
+      "rewards": "",
+      "startsAt": "2026-05-19",
+      "expiresAt": "2026-05-26",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "KS0518",
+      "rewards": "",
+      "startsAt": "2026-05-18",
+      "expiresAt": "2026-05-25",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "OFFICIALSTORE516",
+      "rewards": "",
+      "startsAt": "2026-05-16",
+      "expiresAt": "2026-05-23",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "LOVEFAMILY",
+      "rewards": "",
+      "startsAt": "2026-05-15",
+      "expiresAt": "2026-05-22",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "BESTMOM2026",
+      "rewards": "",
+      "startsAt": "2026-05-10",
+      "expiresAt": "2026-05-17",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "Childrenday0505",
+      "rewards": "",
+      "startsAt": "2026-05-05",
+      "expiresAt": "2026-05-13",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "WORKERPOWER",
+      "rewards": "",
+      "startsAt": "2026-05-01",
+      "expiresAt": "2026-05-06",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "KSGW26JP",
+      "rewards": "",
+      "startsAt": "2026-04-30",
+      "expiresAt": "2026-05-07",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "OFFICIALSTORE9",
+      "rewards": "",
+      "startsAt": "2026-04-28",
+      "expiresAt": "2026-05-05",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "KS0426",
+      "rewards": "",
+      "startsAt": "2026-04-26",
+      "expiresAt": "2026-05-03",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "0425FORU",
+      "rewards": "",
+      "startsAt": "2026-04-25",
+      "expiresAt": "2026-05-02",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "LOVETHEPLANET",
+      "rewards": "",
+      "startsAt": "2026-04-20",
+      "expiresAt": "2026-04-27",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "KS0420",
+      "rewards": "",
+      "startsAt": "2026-04-20",
+      "expiresAt": "2026-04-23",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "KSPRAWNING",
+      "rewards": "",
+      "startsAt": "2026-04-17",
+      "expiresAt": "2026-04-27",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "WEEKENDPLAN",
+      "rewards": "",
+      "startsAt": "2026-04-11",
+      "expiresAt": "2026-04-17",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "KS0408",
+      "rewards": "",
+      "startsAt": "2026-04-08",
+      "expiresAt": "2026-04-15",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "BUNNY405",
+      "rewards": "",
+      "startsAt": "2026-04-05",
+      "expiresAt": "2026-04-10",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "NOFOOLIN",
+      "rewards": "",
+      "startsAt": "2026-04-01",
+      "expiresAt": "2026-04-07",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "OFFICIALSTORE04",
+      "rewards": "",
+      "startsAt": "2026-04-01",
+      "expiresAt": "2026-04-07",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "KS0330",
+      "rewards": "",
+      "startsAt": "2026-03-30",
+      "expiresAt": "2026-04-06",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "FIREFRIDAY",
+      "rewards": "",
+      "startsAt": "2026-03-27",
+      "expiresAt": "2026-04-01",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "syunnbun26jp",
+      "rewards": "",
+      "startsAt": "2026-03-20",
+      "expiresAt": "2026-03-27",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "EIDMUB2026",
+      "rewards": "",
+      "startsAt": "2026-03-19",
+      "expiresAt": "2026-03-24",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "KINGSHOTHBD",
+      "rewards": "",
+      "startsAt": "2026-03-17",
+      "expiresAt": "2026-03-22",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "OFFICIALSTORE",
+      "rewards": "",
+      "startsAt": "2026-03-17",
+      "expiresAt": "2026-03-27",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "DC500KWEMADEIT",
+      "rewards": "",
+      "startsAt": "2026-03-08",
+      "expiresAt": "2026-03-14",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "CELEBRATEHER",
+      "rewards": "",
+      "startsAt": "2026-03-07",
+      "expiresAt": "2026-03-13",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "THUR0305",
+      "rewards": "",
+      "startsAt": "2026-03-05",
+      "expiresAt": "2026-03-12",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "0302FORU",
+      "rewards": "",
+      "startsAt": "2026-03-02",
+      "expiresAt": "2026-03-09",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "KS0302",
+      "rewards": "",
+      "startsAt": "2026-03-02",
+      "expiresAt": "2026-03-09",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "KS0225",
+      "rewards": "",
+      "startsAt": "2026-02-25",
+      "expiresAt": "2026-03-02",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "RAMADAN",
+      "rewards": "",
+      "startsAt": "2026-02-17",
+      "expiresAt": "2026-02-24",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "SPRINGFES217",
+      "rewards": "",
+      "startsAt": "2026-02-17",
+      "expiresAt": "2026-02-24",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "LOVEKS2026",
+      "rewards": "",
+      "startsAt": "2026-02-14",
+      "expiresAt": "2026-02-21",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "KS260213",
+      "rewards": "",
+      "startsAt": "2026-02-13",
+      "expiresAt": "2026-02-20",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "THANKSJP26",
+      "rewards": "",
+      "startsAt": "2026-02-11",
+      "expiresAt": "2026-02-17",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "KINGSTORE210",
+      "rewards": "",
+      "startsAt": "2026-02-10",
+      "expiresAt": "2026-03-01",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "TGIFBOOST26",
+      "rewards": "",
+      "startsAt": "2026-02-08",
+      "expiresAt": "2026-02-15",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "KS26TGS",
+      "rewards": "",
+      "startsAt": "2026-01-29",
+      "expiresAt": "2026-02-06",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "TACODE0127",
+      "rewards": "",
+      "startsAt": "2026-01-27",
+      "expiresAt": "2026-02-04",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "WEEKENDJOY",
+      "rewards": "",
+      "startsAt": "2026-01-24",
+      "expiresAt": "2026-02-01",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "SAYCHEESE26",
+      "rewards": "",
+      "startsAt": "2026-01-21",
+      "expiresAt": "2026-01-28",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "KINGDOMSTAR",
+      "rewards": "",
+      "startsAt": "2026-01-19",
+      "expiresAt": "2026-01-26",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "ENERGY0112",
+      "rewards": "",
+      "startsAt": "2026-01-12",
+      "expiresAt": "2026-01-19",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "jpseijin26",
+      "rewards": "",
+      "startsAt": "2026-01-12",
+      "expiresAt": "2026-01-19",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "THURMADNESS",
+      "rewards": "",
+      "startsAt": "2026-01-09",
+      "expiresAt": "2026-01-16",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "SEEYOUIN2026",
+      "rewards": "",
+      "startsAt": "2026-01-01",
+      "expiresAt": "2026-01-06",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "JPX27KFOLLOW",
+      "rewards": "",
+      "startsAt": "2025-12-30",
+      "expiresAt": "2026-01-06",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "KINGSHOTXMAS",
+      "rewards": "",
+      "startsAt": "2025-12-27",
+      "expiresAt": "2026-01-05",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "THEKINGSTORE",
+      "rewards": "",
+      "startsAt": "2025-01-01",
+      "expiresAt": "2026-01-06",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "KINGSHOT13M",
+      "rewards": "",
+      "startsAt": "2025-12-18",
+      "expiresAt": "2025-12-25",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "STORELAUNCH",
+      "rewards": "",
+      "startsAt": "2025-12-18",
+      "expiresAt": "2025-12-25",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "JackKaoAndKS",
+      "rewards": "",
+      "startsAt": "2025-12-03",
+      "expiresAt": "2025-12-31",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "TGIFISBACK",
+      "rewards": "",
+      "startsAt": "2025-12-02",
+      "expiresAt": "2025-12-09",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "casualgame25",
+      "rewards": "",
+      "startsAt": "2025-12-02",
+      "expiresAt": "2025-12-09",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "TOGOVERNOR",
+      "rewards": "",
+      "startsAt": "2025-12-01",
+      "expiresAt": "2025-12-08",
+      "addedAt": "2026-09-11",
+      "note": "출처: ks.h5joy-games.com"
     }
   ]
 }

@@ -3,6 +3,8 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import Breadcrumb from '@/components/Breadcrumb.astro';
 import Disclaimer from '@/components/Disclaimer.astro';
 import GiftCodeTable, { type GiftCode } from '@/components/islands/GiftCodeTable';
+import GiftCodeCalendar from '@/components/islands/GiftCodeCalendar';
+import { todayKST, statusOf } from '@/lib/gift-codes';
 import giftCodes from '@/data/gift-codes.json';
 
 interface GiftCodeFile {
@@ -12,10 +14,28 @@ interface GiftCodeFile {
 
 const data = giftCodes as GiftCodeFile;
 
-/** 빌드 시각 기준으로 유효/만료를 가른다. expiresAt 이 없으면 유효로 본다. */
-const today = new Date().toISOString().slice(0, 10);
-const active = data.codes.filter((c) => !c.expiresAt || c.expiresAt >= today);
-const expired = data.codes.filter((c) => c.expiresAt && c.expiresAt < today);
+/**
+ * 상태 판정은 전부 src/lib/gift-codes.ts 에 맡긴다.
+ * 예전에는 이 파일이 빌드 시각 UTC 로 직접 만료를 갈랐는데, 동기화 스크립트는 KST 를
+ * 써서 하루가 어긋날 수 있었다.
+ */
+const today = todayKST();
+const active = data.codes.filter((c) => statusOf(c, today) === '활성');
+const upcoming = data.codes.filter((c) => statusOf(c, today) === '예정');
+const expired = data.codes.filter((c) => statusOf(c, today) === '만료');
+
+/** 만료 코드는 82개 중 대부분이라 한 표에 쏟으면 못 읽는다. 월별로 접어 둔다. */
+const monthKeyOf = (c: GiftCode) => (c.startsAt ?? c.expiresAt ?? c.addedAt).slice(0, 7);
+const expiredByMonth = [...new Set(expired.map(monthKeyOf))]
+  .sort()
+  .reverse()
+  .map((month) => ({
+    month,
+    label: `${Number(month.slice(0, 4))}년 ${Number(month.slice(5, 7))}월`,
+    codes: expired
+      .filter((c) => monthKeyOf(c) === month)
+      .sort((a, b) => (b.startsAt ?? '').localeCompare(a.startsAt ?? '')),
+  }));
 
 const REDEEM_URL = 'https://ks-giftcode.centurygame.com';
 /** 코드 출처. scripts/sync-gift-codes.mjs 가 매일 이 주소를 확인한다. */
@@ -25,7 +45,7 @@ const title = '킹샷 기프트 코드';
 const description =
   '킹샷(Kingshot) 기프트 코드 목록과 교환 방법입니다. 확인된 코드만 올리고, 마지막 확인일을 함께 표기합니다.';
 
-const jsonLd = {
+const faqLd = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
   mainEntity: [
@@ -47,9 +67,48 @@ const jsonLd = {
     },
   ],
 };
+
+/**
+ * 코드 목록을 ItemList 로도 내보낸다. 날짜가 없는 코드는 validFrom/validThrough 를
+ * 아예 빼야 한다 — 빈 문자열을 넣으면 구조화 데이터 검사에서 오류가 난다.
+ */
+const itemListLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: '킹샷 기프트 코드 목록',
+  numberOfItems: data.codes.length,
+  itemListElement: data.codes.map((c, i) => {
+    const status = statusOf(c, today);
+    const offer: Record<string, unknown> = {
+      '@type': 'Offer',
+      sku: c.code,
+      availability:
+        status === '만료'
+          ? 'https://schema.org/Discontinued'
+          : status === '예정'
+            ? 'https://schema.org/PreOrder'
+            : 'https://schema.org/InStock',
+      price: 0,
+      priceCurrency: 'KRW',
+    };
+    if (c.startsAt) offer.validFrom = c.startsAt;
+    if (c.expiresAt) offer.validThrough = c.expiresAt;
+
+    return {
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'Product',
+        name: `킹샷 기프트 코드 ${c.code}`,
+        sku: c.code,
+        offers: offer,
+      },
+    };
+  }),
+};
 ---
 
-<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+<BaseLayout title={title} description={description} jsonLd={[faqLd, itemListLd]}>
   <div class="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
     <Breadcrumb items={[{ label: '홈', href: '/' }, { label: '기프트코드' }]} class="mb-6" />
 
@@ -59,8 +118,15 @@ const jsonLd = {
         확인된 코드만 올립니다. 커뮤니티에 도는 코드를 그대로 옮겨 적는 대신, 실제로 교환이 되는지
         확인한 것만 여기에 남깁니다.
       </p>
-      <p class="mt-3 text-sm text-muted">
-        마지막 확인일 <strong class="text-text tabular-nums">{data.lastChecked}</strong>
+      <p class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-muted">
+        <span>
+          마지막 확인일 <strong class="text-text tabular-nums">{data.lastChecked}</strong>
+        </span>
+        <span
+          class="rounded-full border border-success/50 px-2.5 py-0.5 text-xs font-bold text-success tabular-nums"
+        >
+          활성 {active.length}
+        </span>
       </p>
     </header>
 
@@ -79,22 +145,85 @@ const jsonLd = {
       </p>
     </section>
 
-    {expired.length > 0 && (
-      <section class="mt-10">
-        <h2 class="text-xl font-bold">만료된 코드</h2>
-        <p class="mt-2 text-sm text-muted">
-          이미 기간이 지난 코드입니다. 기록 삼아 남겨 둡니다.
-        </p>
-        <div class="mt-3">
-          <GiftCodeTable
-            client:load
-            codes={expired}
-            expired
-            emptyMessage="만료된 코드가 없습니다."
-          />
-        </div>
-      </section>
-    )}
+    {
+      upcoming.length > 0 && (
+        <section class="mt-10">
+          <h2 class="text-xl font-bold">곧 시작하는 코드</h2>
+          <p class="mt-2 text-sm text-muted">
+            아직 시작 전이라 지금 넣으면 오류가 납니다. 시작일을 확인하세요.
+          </p>
+          <div class="mt-3">
+            <GiftCodeTable
+              client:load
+              codes={upcoming}
+              emptyMessage="예정된 코드가 없습니다."
+            />
+          </div>
+        </section>
+      )
+    }
+
+    <section class="mt-10">
+      <h2 class="text-xl font-bold">월별 캘린더</h2>
+      <p class="mt-2 text-sm text-muted">
+        코드는 유효 시작일 칸에 놓입니다. 날짜를 누르면 그 날 풀린 코드를 아래에서 볼 수 있습니다.
+      </p>
+      <div class="mt-3">
+        <GiftCodeCalendar client:load codes={data.codes} today={today} />
+      </div>
+    </section>
+
+    {
+      expiredByMonth.length > 0 && (
+        <section class="mt-10">
+          <h2 class="text-xl font-bold">만료된 코드</h2>
+          <p class="mt-2 text-sm text-muted">
+            이미 기간이 지난 코드입니다. 기록 삼아 월별로 접어 남겨 둡니다.
+          </p>
+          <div class="mt-3 space-y-2">
+            {expiredByMonth.map((group, i) => (
+              <details
+                class="overflow-hidden rounded-xl border border-border bg-surface"
+                open={i === 0}
+              >
+                <summary class="cursor-pointer list-none px-4 py-3 text-sm font-bold hover:bg-raised">
+                  <span class="tabular-nums">{group.label}</span>
+                  <span class="ml-2 font-normal text-muted">{group.codes.length}개</span>
+                </summary>
+                <div class="overflow-x-auto border-t border-border">
+                  <table class="w-full border-collapse text-sm">
+                    <thead>
+                      <tr class="bg-raised text-left">
+                        <th class="px-4 py-2.5 font-bold whitespace-nowrap">코드</th>
+                        <th class="px-4 py-2.5 font-bold">보상</th>
+                        <th class="px-4 py-2.5 font-bold whitespace-nowrap">유효 기간</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {group.codes.map((c) => (
+                        <tr class="border-t border-border align-top">
+                          <td class="px-4 py-2.5">
+                            <code class="rounded-md border border-border px-2 py-1 font-mono text-sm font-bold text-muted line-through">
+                              {c.code}
+                            </code>
+                            {c.note && <p class="mt-1 text-xs text-muted">{c.note}</p>}
+                          </td>
+                          <td class="px-4 py-2.5 text-muted">{c.rewards.trim() || '보상 미확인'}</td>
+                          <td class="px-4 py-2.5 text-muted tabular-nums">
+                            {c.startsAt ? `${c.startsAt} ~ ` : ''}
+                            {c.expiresAt ?? '-'}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </details>
+            ))}
+          </div>
+        </section>
+      )
+    }
 
     <section class="mt-12">
       <h2 class="text-xl font-bold">교환하는 방법</h2>
