@@ -19,32 +19,38 @@ heroClass: 전투
 skills:
   - name: 파도의 의지
     nameEn: Tidewill
+    icon: ../../assets/skills/tidewill.webp
     mode: 토벌
     description: "트리톤이 앞으로 밀려드는 파도의 장벽에 둘러싸여 2초 동안 무적이 된 뒤, 공격력 * {v1}의 광역 피해를 줍니다."
     levels: ["100%", "110%", "120%", "130%", "140%"]
   - name: 제왕의 분노
     nameEn: Regal Wrath
+    icon: ../../assets/skills/regal-wrath.webp
     mode: 토벌
     description: "트리톤이 내면에 잠든 지배자의 분노를 끌어올려 4초 동안 공격력을 {v1}, 방어력을 {v2} 증가시킵니다."
     levels: ["8%", "12%", "16%", "20%", "24%"]
     levels2: ["16%", "24%", "32%", "40%", "48%"]
   - name: 강력한 타격
     nameEn: Striking Hit
+    icon: ../../assets/skills/striking-hit.webp
     mode: 토벌
     description: "트리톤이 불복종하는 자들을 산산조각 낼 기세로 후려쳐, 일반 공격마다 무작위 적에게 공격력 * {v1}의 피해를 줍니다."
     levels: ["20%", "22%", "24%", "26%", "28%"]
   - name: 권력의 지휘
     nameEn: Command of Power
+    icon: ../../assets/skills/command-of-power.webp
     mode: 원정
     description: "트리톤의 권위를 받아들인 자는 그 결실을 함께 나눕니다. 모든 부대의 방어력이 {v1} 증가합니다."
     levels: ["5%", "10%", "15%", "20%", "25%"]
   - name: 권력의 전쟁
     nameEn: Warfare of Power
+    icon: ../../assets/skills/warfare-of-power.webp
     mode: 원정
     description: "전쟁의 힘은 전투 앞에서 두려움 없는 마음을 함께 나누는 데서 나옵니다. 모든 부대가 주는 스킬 피해량이 {v1} 증가합니다."
     levels: ["6%", "12%", "18%", "24%", "30%"]
   - name: 권력의 맹세
     nameEn: Oath of Power
+    icon: ../../assets/skills/oath-of-power.webp
     mode: 원정
     description: "강대한 힘은 맹세를 지키려는 의지에서 비롯됩니다. 보병의 HP를 {v1}, 기병과 궁병의 HP를 {v2} 증가시킵니다."
     levels: ["4%", "8%", "12%", "16%", "20%"]
@@ -52,6 +58,7 @@ skills:
 exclusiveGear:
   name: 파도의 홀
   nameEn: Tidal Scepter
+  icon: ../../assets/gear/tidal-scepter.webp
   exploration:
     attack: 921
     defense: 1201
@@ -63,11 +70,13 @@ exclusiveGear:
   skills:
     - name: 자기 재형성
       nameEn: Magnetic Reformation
+      icon: ../../assets/skills/magnetic-reformation.webp
       mode: 토벌
       description: "고대 개조 기술이 깃든 홀이 트리톤이 주는 피해량을 {v1} 증가시킵니다."
       levels: ["10%", "15%", "20%", "25%", "30%"]
     - name: 고래의 부름
       nameEn: Whale Call
+      icon: ../../assets/skills/whale-call.webp
       mode: 원정
       description: "트리톤의 오래된 고래 울음이 바리케이드 너머까지 울려 퍼져 병사들의 각오를 굳히고, 방어 중인 부대의 방어력을 {v1} 증가시킵니다."
       levels: ["5%", "7.5%", "10%", "12.5%", "15%"]

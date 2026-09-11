@@ -19,32 +19,38 @@ heroClass: 전투
 skills:
   - name: 영광의 징표
     nameEn: Glorious Mark
+    icon: ../../assets/skills/glorious-mark.webp
     mode: 토벌
     description: 알카가 무적 상태(이동·스킬 사용 불가, 제어 효과 면역)가 되어 2초 동안 주변 아군 부대가 받는 피해를 {v1} 줄인다.
     levels: ["30%", "40%", "50%", "60%", "70%"]
   - name: 뼈 분쇄
     nameEn: Boneshatter
+    icon: ../../assets/skills/boneshatter.webp
     mode: 토벌
     description: 알카가 일직선상의 적을 창으로 꿰뚫어 공격력 * {v1}의 피해를 주고, 2초 동안 적중한 적이 받는 피해를 20% 늘린다.
     levels: ["70%", "77%", "84%", "91%", "98%"]
   - name: 재기
     nameEn: Second Wind
+    icon: ../../assets/skills/second-wind.webp
     mode: 토벌
     description: "'영광의 징표' 발동 중 5초 동안 매초 공격력 * {v1}만큼 HP를 회복한다."
     levels: ["30%", "33%", "36%", "39%", "42%"]
   - name: 구원의 손길
     nameEn: Rescuing Hands
+    icon: ../../assets/skills/rescuing-hands.webp
     mode: 원정
     description: 5턴마다 2턴 동안 보병과 궁병이 받는 피해를 {v1} 줄인다.
     levels: ["14%", "28%", "42%", "56%", "70%"]
   - name: 근위대의 의지
     nameEn: Praetorian Will
+    icon: ../../assets/skills/praetorian-will.webp
     mode: 원정
     description: 보병이 주는 피해를 {v1} 늘리고, 기병과 궁병이 주는 피해를 {v2} 늘린다.
     levels: ["20%", "40%", "60%", "80%", "100%"]
     levels2: ["2%", "4%", "6%", "8%", "10%"]
   - name: 카르페 디엠
     nameEn: Capre Diem
+    icon: ../../assets/skills/capre-diem.webp
     mode: 원정
     description: 1턴 동안 보병이 공격할 때마다 주는 피해를 {v1} 늘리고, 대상이 받는 피해를 {v2} 늘린다.
     levels: ["12%", "24%", "36%", "48%", "60%"]
@@ -52,6 +58,7 @@ skills:
 exclusiveGear:
   name: 근위대
   nameEn: Praetorian Guard
+  icon: ../../assets/gear/praetorian-guard.webp
   exploration:
     attack: 638
     defense: 832
@@ -63,11 +70,13 @@ exclusiveGear:
   skills:
     - name: 기수
       nameEn: Flagbearer
+      icon: ../../assets/skills/flagbearer.webp
       mode: 토벌
       description: "'영광의 징표'가 2.5초 동안 아군 부대의 공격력을 {v1} 올린다."
       levels: ["30%", "33%", "36%", "39%", "42%"]
     - name: 명예의 맹세
       nameEn: Vow of Honor
+      icon: ../../assets/skills/vow-of-honor.webp
       mode: 원정
       description: 방어 중인 부대의 HP를 {v1} 올린다.
       levels: ["5%", "7.5%", "10%", "12.5%", "15%"]

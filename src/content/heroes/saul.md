@@ -19,39 +19,46 @@ heroClass: 전투
 skills:
   - name: 속사
     nameEn: Rapidfire
+    icon: ../../assets/skills/rapidfire.webp
     mode: 토벌
     description: 살로가 연속으로 화살을 날려 매번 공격력 * {v1}의 피해를 주고 2초 동안 대상을 기절시킨다.
     levels: ["55%", "60%", "65%", "70%", "75%"]
   - name: 마지막 기도
     nameEn: Final Prayer
+    icon: ../../assets/skills/final-prayer.webp
     mode: 토벌
     description: HP가 50% 아래로 떨어지면 살로의 방어력이 {v1} 오른다.
     levels: ["50%", "75%", "100%", "125%", "150%"]
   - name: 우수한 기술
     nameEn: Superior Techniques
+    icon: ../../assets/skills/superior-techniques.webp
     mode: 토벌
     description: 살로의 공격 속도가 {v1} 오른다.
     levels: ["10%", "15%", "20%", "25%", "30%"]
   - name: 특수부대 훈련
     nameEn: Taskforce Training
+    icon: ../../assets/skills/taskforce-training.webp
     mode: 원정
     description: 특수부대원인 살로의 독자적인 훈련법이 힘을 발휘해 모든 부대의 방어력을 {v1}, HP를 {v2} 올린다.
     levels: ["2%", "4%", "6%", "8%", "10%"]
     levels2: ["3%", "6%", "9%", "12%", "15%"]
   - name: 지략가
     nameEn: Resourceful
+    icon: ../../assets/skills/resourceful.webp
     mode: 원정
     description: 살로의 효율적인 건설 관리로 건설 속도가 {v1} 오르고 건설 비용이 {v2} 줄어든다.
     levels: ["3%", "6%", "9%", "12%", "15%"]
     levels2: ["3%", "6%", "9%", "12%", "15%"]
   - name: 진형 타격수
     nameEn: Positional Batter
+    icon: ../../assets/skills/positional-batter.webp
     mode: 원정
     description: 살로가 전장을 능숙하게 조율해 모든 부대의 파괴력을 {v1} 올린다.
     levels: ["5%", "10%", "15%", "20%", "25%"]
 exclusiveGear:
   name: 래빗기어 캐논
   nameEn: Rabbitgear Cannon
+  icon: ../../assets/gear/rabbitgear-cannon.webp
   exploration:
     attack: 546
     defense: 450
@@ -63,11 +70,13 @@ exclusiveGear:
   skills:
     - name: 두려움 없는 전진
       nameEn: Fearless Advance
+      icon: ../../assets/skills/fearless-advance.webp
       mode: 토벌
       description: 극한 상황에서 터져 나오는 살로의 결의가 공격력을 {v1} 올린다.
       levels: ["10%", "15%", "20%", "25%", "30%"]
     - name: 방어 후 공격
       nameEn: Defend to Attack
+      icon: ../../assets/skills/defend-to-attack.webp
       mode: 원정
       description: 방어 중인 부대의 공격력을 {v1} 올린다.
       levels: ["5%", "7.5%", "10%", "12.5%", "15%"]

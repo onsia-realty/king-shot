@@ -1,5 +1,8 @@
-import { defineCollection, z, reference } from 'astro:content';
+import { defineCollection, z, reference, type SchemaContext } from 'astro:content';
 import { glob } from 'astro/loaders';
+
+/** defineCollection 의 schema 콜백이 넘겨주는 image() 헬퍼 타입 */
+type ImageFn = SchemaContext['image'];
 
 const troopClass = z.enum(['보병', '궁병', '기병']);
 const rarity = z.enum(['SSR', 'SR', 'R', 'N']);
@@ -13,14 +16,16 @@ const statBlock = z.object({ attack: z.number(), defense: z.number(), hp: z.numb
  * 게임은 스킬을 토벌(성 밖 전투)과 원정(전장 편성)으로 나누고,
  * 일부 영웅은 어느 쪽에도 안 들어가는 특성 스킬을 따로 가진다.
  * description 의 {v1}·{v2} 자리표시자를 levels·levels2 값으로 채워 화면에 뿌린다.
+ * icon() 을 쓰려면 schema 콜백의 image 가 필요해서 팩토리 형태로 둔다.
  */
-const heroSkill = z.object({
+const heroSkill = (image: ImageFn) => z.object({
   name: z.string(),            // 한국어 스킬명
   nameEn: z.string(),          // 영문 원문 (대조 및 아이콘 슬러그용)
   mode: z.enum(['토벌', '원정', '특성']),
   description: z.string(),     // {v1}, 필요하면 {v2} 자리표시자를 포함한다
   levels: z.array(z.string()).default([]),   // ["80%","90%","100%","110%","120%"]
   levels2: z.array(z.string()).default([]),  // 두 번째 수치 줄. 대부분 비어 있다
+  icon: image().optional(),    // ../../assets/skills/<스킬 id>.webp
 });
 
 const guides = defineCollection({
@@ -56,14 +61,15 @@ const heroes = defineCollection({
       expedition: z.object({ attack: z.string(), defense: z.string() }).optional(),
     }).optional(),
     heroClass: z.enum(['전투', '성장', '지원']).optional(),
-    skills: z.array(heroSkill).default([]),
+    skills: z.array(heroSkill(image)).default([]),
     exclusiveGear: z.object({
       name: z.string(),
       nameEn: z.string(),
+      icon: image().optional(),   // ../../assets/gear/<장비 id>.webp
       exploration: statBlock.optional(),
       expedition: z.object({ lethality: z.string(), hp: z.string() }).optional(),
       parts: z.array(z.number()).default([]),   // 부속품 수량 [5,10,15,...,50]
-      skills: z.array(heroSkill).default([]),
+      skills: z.array(heroSkill(image)).default([]),
     }).optional(),
     ratings: z.object({
       bearRally: tier.optional(),

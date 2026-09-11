@@ -19,42 +19,50 @@ heroClass: 전투
 skills:
   - name: 뿔 돌진
     nameEn: Antler Assault
+    icon: ../../assets/skills/antler-assault.webp
     mode: 토벌
     description: 헬가가 뿔을 앞세워 돌진해 공격력 * {v1}의 광역 피해를 주고, 적을 밀어내며 1초 동안 기절시킨다.
     levels: ["160%", "176%", "192%", "208%", "224%"]
   - name: 창 돌격
     nameEn: Spear Charge
+    icon: ../../assets/skills/spear-charge.webp
     mode: 토벌
     description: 헬가가 대상에게 공격력 * {v1}의 피해를 준다.
     levels: ["150%", "165%", "180%", "195%", "210%"]
   - name: 분노
     nameEn: Fury
+    icon: ../../assets/skills/fury.webp
     mode: 토벌
     description: 피해를 입으면 헬가가 10% 확률로 3초 동안 공격력을 {v1} 올린다. 최대 5중첩.
     levels: ["4%", "6%", "8%", "10%", "12%"]
   - name: 수호자의 맹세
     nameEn: Oath of Guardian
+    icon: ../../assets/skills/oath-of-guardian.webp
     mode: 원정
     description: 헬가가 {v1} 확률로 모든 부대가 받는 피해를 50% 줄인다.
     levels: ["8%", "16%", "24%", "32%", "40%"]
   - name: 발할라의 메아리
     nameEn: Echoes of Valhalla
+    icon: ../../assets/skills/echoes-of-valhalla.webp
     mode: 원정
     description: 헬가가 뿔나팔을 불어 사기를 끌어올리며 모든 부대의 공격력을 {v1} 올린다.
     levels: ["5%", "10%", "15%", "20%", "25%"]
   - name: 자연의 균형
     nameEn: Nature's Balance
+    icon: ../../assets/skills/natures-balance.webp
     mode: 원정
     description: 헬가가 모두를 자연의 품으로 이끌어 모든 부대의 파괴력을 {v1} 올린다.
     levels: ["5%", "10%", "15%", "20%", "25%"]
   - name: 사슴의 힘
     nameEn: Power of the Deer
+    icon: ../../assets/skills/power-of-the-deer.webp
     mode: 특성
     description: 헬가만이 지닌 재능이 출전한 모든 부대의 공격력과 방어력을 {v1} 올린다.
     levels: ["2%", "4%", "6%", "8%", "10%"]
 exclusiveGear:
   name: 티레의 띠
   nameEn: Bands of Tyre
+  icon: ../../assets/gear/bands-of-tyre.webp
   exploration:
     attack: 379
     defense: 495
@@ -66,11 +74,13 @@ exclusiveGear:
   skills:
     - name: 용맹한 분노
       nameEn: Valiant Fury
+      icon: ../../assets/skills/valiant-fury.webp
       mode: 토벌
       description: 분노에 힘입어 헬가가 주는 피해가 {v1} 늘어난다.
       levels: ["10%", "15%", "20%", "25%", "30%"]
     - name: 열정
       nameEn: Zeal
+      icon: ../../assets/skills/zeal.webp
       mode: 원정
       description: 헬가가 집결에 합류해 집결한 부대의 파괴력을 {v1} 올린다.
       levels: ["5%", "7.5%", "10%", "12.5%", "15%"]

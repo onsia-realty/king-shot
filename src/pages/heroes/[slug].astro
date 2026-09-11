@@ -238,9 +238,22 @@ const description = [
       <section class="mt-10">
         <h2 class="text-xl font-bold">전용 장비</h2>
         <div class="mt-3 rounded-xl border border-border bg-surface p-4">
-          <div class="flex flex-wrap items-baseline gap-x-2">
-            <h3 class="font-bold">{gear.name}</h3>
-            <span class="text-xs text-muted">{gear.nameEn}</span>
+          <div class="flex items-center gap-3">
+            {gear.icon && (
+              <Image
+                src={gear.icon}
+                alt={gear.name}
+                width={160}
+                height={160}
+                loading="lazy"
+                decoding="async"
+                class="size-20 shrink-0 rounded-xl border border-border bg-raised object-contain"
+              />
+            )}
+            <div class="flex min-w-0 flex-wrap items-baseline gap-x-2">
+              <h3 class="font-bold">{gear.name}</h3>
+              <span class="text-xs text-muted">{gear.nameEn}</span>
+            </div>
           </div>
 
           {(gear.exploration || gear.expedition) && (

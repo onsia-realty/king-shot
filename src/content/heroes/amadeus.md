@@ -19,42 +19,50 @@ heroClass: 전투
 skills:
   - name: 연속 베기
     nameEn: Combo Slash
+    icon: ../../assets/skills/combo-slash.webp
     mode: 토벌
     description: 아마데우스가 목표 지역의 적을 공중으로 띄운 뒤 강력한 베기를 세 번 날려 각각 공격력 * {v1}의 피해를 준다.
     levels: ["160%", "176%", "192%", "208%", "224%"]
   - name: 비전 검술
     nameEn: Arcane Swordship
+    icon: ../../assets/skills/arcane-swordship.webp
     mode: 토벌
     description: 아마데우스가 검을 휘두를 때마다 비전 에너지를 뿜어내 전방의 적에게 공격력 * {v1}의 피해를 준다.
     levels: ["15%", "17%", "19%", "21%", "23%"]
   - name: 맹공
     nameEn: Onslaught
+    icon: ../../assets/skills/onslaught.webp
     mode: 토벌
     description: HP가 50% 아래로 떨어지면 아마데우스의 공격력이 {v1} 오른다.
     levels: ["16%", "24%", "32%", "40%", "48%"]
   - name: 전투 준비
     nameEn: Battle Ready
+    icon: ../../assets/skills/battle-ready.webp
     mode: 원정
     description: 사기를 북돋우는 데 능한 아마데우스가 모든 부대의 파괴력을 {v1} 올린다.
     levels: ["5%", "10%", "15%", "20%", "25%"]
   - name: 검의 길
     nameEn: Way of the Blade
+    icon: ../../assets/skills/way-of-the-blade.webp
     mode: 원정
     description: 아마데우스가 검술의 비의를 전수해 모든 부대의 공격력을 {v1} 올린다.
     levels: ["5%", "10%", "15%", "20%", "25%"]
   - name: 불의의 일격
     nameEn: Unrighteous Strike
+    icon: ../../assets/skills/unrighteous-strike.webp
     mode: 원정
     description: 아마데우스 특유의 검술이 {v1} 확률로 모든 부대가 주는 피해를 50% 늘린다.
     levels: ["8%", "16%", "24%", "32%", "40%"]
   - name: 타고난 지휘관
     nameEn: Born Leader
+    icon: ../../assets/skills/born-leader.webp
     mode: 특성
     description: 아마데우스가 언제나 병사들을 고무해 출전한 모든 부대의 파괴력과 HP를 {v1} 올린다.
     levels: ["3%", "6%", "9%", "12%", "15%"]
 exclusiveGear:
   name: 운명의 방패
   nameEn: Aegis of Fate
+  icon: ../../assets/gear/aegis-of-fate.webp
   exploration:
     attack: 431
     defense: 562
@@ -66,11 +74,13 @@ exclusiveGear:
   skills:
     - name: 이중 쳐내기
       nameEn: Double Parry
+      icon: ../../assets/skills/double-parry.webp
       mode: 토벌
       description: 쳐내기의 달인인 아마데우스가 받는 피해를 {v1} 줄인다.
       levels: ["10%", "15%", "20%", "25%", "30%"]
     - name: 통찰
       nameEn: Discernment
+      icon: ../../assets/skills/discernment.webp
       mode: 원정
       description: 아마데우스가 특수 진형으로 공격해 집결한 부대의 공격력을 {v1} 올린다.
       levels: ["5%", "7.5%", "10%", "12.5%", "15%"]

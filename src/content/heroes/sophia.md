@@ -19,39 +19,46 @@ heroClass: 전투
 skills:
   - name: 인형 조종자
     nameEn: Puppet Master
+    icon: ../../assets/skills/puppet-master.webp
     mode: 토벌
     description: 소피아의 은밀한 장미 마법이 적 병사들의 전의를 꺾어 공격력 * {v1}의 광역 피해를 주고 1초 동안 대상을 혼란에 빠뜨린다. 혼란에 빠진 적은 아군과 적을 가리지 않고 주변의 모든 대상을 공격한다.
     levels: ["100%", "110%", "120%", "130%", "140%"]
   - name: 화상 징표
     nameEn: Scalding Mark
+    icon: ../../assets/skills/scalding-mark.webp
     mode: 토벌
     description: 소피아가 마법의 장미로 공격해 대상에게 공격력 * {v1}의 피해를 주고 화상 징표를 남겨, 4초 동안 대상이 받는 피해를 {v2} 늘린다.
     levels: ["50%", "55%", "60%", "65%", "70%"]
     levels2: ["2%", "3%", "4%", "5%", "6%"]
   - name: 화상 징표 – 채찍질
     nameEn: Scalding Mark – Lash
+    icon: ../../assets/skills/scalding-mark-lash.webp
     mode: 토벌
     description: 화상 징표가 소피아의 공격력을 {v1} 올리고, 징표가 남은 대상에게 채찍질을 가해 {v2} 늘어난 피해를 준다.
     levels: ["8%", "12%", "16%", "20%", "24%"]
     levels2: ["4%", "6%", "8%", "10%", "12%"]
   - name: 비전의 계약
     nameEn: Arcane Pact
+    icon: ../../assets/skills/arcane-pact.webp
     mode: 원정
     description: 비전의 계약이 소피아에게 밤의 가호를 내려, 매 턴 {v1} 확률로 받는 피해를 50% 줄인다.
     levels: ["8%", "16%", "24%", "32%", "40%"]
   - name: 공포 – 결정타
     nameEn: Terror – Deathblow
+    icon: ../../assets/skills/terror-deathblow.webp
     mode: 원정
     description: 소피아가 내뿜는 무시무시한 기운이 적에게 공포를 건다. 적은 2턴마다 공포에 걸리며, 다음 턴에 기병에게 받는 피해가 {v1} 늘어난다. 공포는 1턴 동안 유지된다.
     levels: ["40%", "80%", "120%", "160%", "200%"]
   - name: 공포 – 섬멸
     nameEn: Terror – Annihilation
+    icon: ../../assets/skills/terror-annihilation.webp
     mode: 원정
     description: 공포는 대상을 더 취약하게 만든다. 모든 부대가 공포에 걸린 대상에게 주는 피해가 {v1} 늘어난다.
     levels: ["15%", "30%", "45%", "60%", "75%"]
 exclusiveGear:
   name: 진홍의 장미
   nameEn: Scarlet Rose
+  icon: ../../assets/gear/scarlet-rose.webp
   exploration:
     attack: 1201
     defense: 1201
@@ -63,11 +70,13 @@ exclusiveGear:
   skills:
     - name: 복종의 눈동자
       nameEn: Eyes of Obedience
+      icon: ../../assets/skills/eyes-of-obedience.webp
       mode: 토벌
       description: '"여왕을 향한 충성만이 유일한 목적이다." 소피아의 공격이 {v1} 확률로 1초 동안 대상을 혼란에 빠뜨린다. 혼란에 빠진 적은 아군과 적을 가리지 않고 주변의 모든 대상을 공격한다.'
       levels: ["2%", "3.5%", "5%", "6.5%", "8%"]
     - name: 밤의 여왕
       nameEn: Queen of Night
+      icon: ../../assets/skills/queen-of-night.webp
       mode: 원정
       description: 소피아가 밤의 여왕의 힘을 끌어내 병사들의 공격을 북돋우고, 방어 중인 부대의 파괴력을 {v1} 올린다.
       levels: ["5%", "7.5%", "10%", "12.5%", "15%"]
