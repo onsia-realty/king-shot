@@ -1,0 +1,6137 @@
+{
+  "fetchedAt": "2026-09-11",
+  "source": "https://ks.h5joy-games.com/",
+  "heroes": {
+    "alcar": {
+      "generation": 4,
+      "ko": {
+        "id": "alcar",
+        "name": "알카르",
+        "generation": "4",
+        "description": "알카르는 킹샷(Kingshot)의 신화급 4세대 보병 영웅입니다. 일일 특가, 영웅 집결, 지고의 영주 및 최강 왕국 이벤트를 통해 알카르를 잠금 해제할 수 있습니다.",
+        "troop": "infantry",
+        "source": "king",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 3150,
+          "defense": 4106,
+          "health": 61604
+        },
+        "expeditionStats": {
+          "attack": "370.29%",
+          "defense": "370.29%"
+        },
+        "explorationSkills": [
+          {
+            "id": "glorious-mark",
+            "name": "영광의 징표",
+            "effect": "알카르가 무적 상태(이동 또는 스킬 사용 불가, 제어 효과 면역)가 되며, 2초 동안 근처 아군 부대가 받는 피해량을 <value1>{v1}</value1> 감소시킵니다.",
+            "increasing": [
+              [
+                "30%",
+                "40%",
+                "50%",
+                "60%",
+                "70%"
+              ]
+            ]
+          },
+          {
+            "id": "boneshatter",
+            "name": "뼈 부수기",
+            "effect": "알카르가 창으로 일직선상의 적들을 꿰뚫어 공격력 * <value1>{v1}</value1>의 피해를 주고, 2초 동안 적중당한 적들이 받는 피해량을 20% 증가시킵니다.",
+            "increasing": [
+              [
+                "70%",
+                "77%",
+                "84%",
+                "91%",
+                "98%"
+              ]
+            ]
+          },
+          {
+            "id": "second-wind",
+            "name": "재생력",
+            "effect": "'영광의 징표' 발동 중 5초 동안 매초 HP을(를) 공격력 * <value1>{v1}</value1>만큼 회복시킵니다.",
+            "increasing": [
+              [
+                "30%",
+                "33%",
+                "36%",
+                "39%",
+                "42%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "rescuing-hands",
+            "name": "구원의 손길",
+            "effect": "매 5턴마다 2턴 동안 보병 및 궁병이(가) 받는 피해량을 <value1>{v1}</value1>% 감소시킵니다.",
+            "increasing": [
+              [
+                "14%",
+                "28%",
+                "42%",
+                "56%",
+                "70%"
+              ]
+            ]
+          },
+          {
+            "id": "praetorian-will",
+            "name": "근위대의 의지",
+            "effect": "보병이(가) 주는 피해량을 <value1>{v1}</value1> 증가시키고, 기병 및 궁병이(가) 주는 피해량을 <value2>{v2}</value2> 증가시킵니다.",
+            "increasing": [
+              [
+                "20%",
+                "40%",
+                "60%",
+                "80%",
+                "100%"
+              ],
+              [
+                "2%",
+                "4%",
+                "6%",
+                "8%",
+                "10%"
+              ]
+            ]
+          },
+          {
+            "id": "capre-diem",
+            "name": "카르페 디엠",
+            "effect": "1턴 동안 보병의 공격당 주는 피해량을 <value1>{v1}</value1> 증가시키고 대상이 받는 피해량을 <value2>{v2}</value2> 증가시킵니다.",
+            "increasing": [
+              [
+                "12%",
+                "24%",
+                "36%",
+                "48%",
+                "60%"
+              ],
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "praetorian-guard",
+          "name": "근위대",
+          "explorationStats": {
+            "attack": 638,
+            "defense": 832,
+            "health": 12487
+          },
+          "expeditionStats": {
+            "lethality": "92.50%",
+            "health": "92.50%"
+          },
+          "explorationSkill": {
+            "id": "flagbearer",
+            "name": "기수",
+            "effect": "'영광의 징표'가 2.5초 동안 아군 부대의 공격력을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "30%",
+                "33%",
+                "36%",
+                "39%",
+                "42%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "vow-of-honor",
+            "name": "명예의 맹세",
+            "effect": "방어 중인 부대의 HP을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.1"
+      },
+      "en": {
+        "id": "alcar",
+        "name": "Alcar",
+        "generation": "4",
+        "description": "Alcar is a Mythic Generation 4 Infantry Hero in Kingshot. You can unlock Alcar through Daily Deals, Hero Rally, Strongest Governor, and the Kingdom of Power event.",
+        "troop": "infantry",
+        "source": "king",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 3150,
+          "defense": 4106,
+          "health": 61604
+        },
+        "expeditionStats": {
+          "attack": "370.29%",
+          "defense": "370.29%"
+        },
+        "explorationSkills": [
+          {
+            "id": "glorious-mark",
+            "name": "Glorious Mark",
+            "effect": "Alcar enters an invulnerable state (unable to move or cast skills, immune to control effects) and reduces damage taken by <value1>{v1}</value1> for nearby friendly squads for 2s.",
+            "increasing": [
+              [
+                "30%",
+                "40%",
+                "50%",
+                "60%",
+                "70%"
+              ]
+            ]
+          },
+          {
+            "id": "boneshatter",
+            "name": "Boneshatter",
+            "effect": "Alcar spears a line of enemies, dealing Attack * <value1>{v1}</value1> damage and increases damage taken for enemies hit by 20% for 2s.",
+            "increasing": [
+              [
+                "70%",
+                "77%",
+                "84%",
+                "91%",
+                "98%"
+              ]
+            ]
+          },
+          {
+            "id": "second-wind",
+            "name": "Second Wind",
+            "effect": "“Glorious Mark” restores Health equal to Attack * <value1>{v1}</value1> every second for 5s.",
+            "increasing": [
+              [
+                "30%",
+                "33%",
+                "36%",
+                "39%",
+                "42%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "rescuing-hands",
+            "name": "Rescuing Hands",
+            "effect": "Reduces damage taken by Infantry and Archer by <value1>{v1}</value1>% every 5 turns for 2 turns.",
+            "increasing": [
+              [
+                "14%",
+                "28%",
+                "42%",
+                "56%",
+                "70%"
+              ]
+            ]
+          },
+          {
+            "id": "praetorian-will",
+            "name": "Praetorian Will",
+            "effect": "Increases damage dealt by Infantry by <value1>{v1}</value1> and damage dealt by Cavalry and Archer by <value2>{v2}</value2>.",
+            "increasing": [
+              [
+                "20%",
+                "40%",
+                "60%",
+                "80%",
+                "100%"
+              ],
+              [
+                "2%",
+                "4%",
+                "6%",
+                "8%",
+                "10%"
+              ]
+            ]
+          },
+          {
+            "id": "capre-diem",
+            "name": "Capre Diem",
+            "effect": "Increases damage dealt by Infantry per attack by <value1>{v1}</value1> and target damage taken by <value2>{v2}</value2> for 1 turn.",
+            "increasing": [
+              [
+                "12%",
+                "24%",
+                "36%",
+                "48%",
+                "60%"
+              ],
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "praetorian-guard",
+          "name": "Praetorian Guard",
+          "explorationStats": {
+            "attack": 638,
+            "defense": 832,
+            "health": 12487
+          },
+          "expeditionStats": {
+            "lethality": "92.50%",
+            "health": "92.50%"
+          },
+          "explorationSkill": {
+            "id": "flagbearer",
+            "name": "Flagbearer",
+            "effect": "‘Glorious Mark’ increases the Attack of friendly squads by <value1>{v1}</value1> for 2.5s.",
+            "increasing": [
+              [
+                "30%",
+                "33%",
+                "36%",
+                "39%",
+                "42%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "vow-of-honor",
+            "name": "Vow of Honor – Expedition Skill",
+            "effect": "Increases the Health of defending Troop by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.1"
+      }
+    },
+    "amadeus": {
+      "generation": 1,
+      "ko": {
+        "id": "amadeus",
+        "name": "아마데우스",
+        "generation": "1",
+        "description": "아마데우스는 킹샷(Kingshot)의 1세대 보병 영웅입니다. 영주의 전당를 통하거나 VIP 레벨 특별 패키지를 구매하여 아마데우스를 잠금 해제하세요.",
+        "troop": "infantry",
+        "source": "other",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 2128,
+          "defense": 2220,
+          "health": 41624
+        },
+        "expeditionStats": {
+          "attack": "260.2%",
+          "defense": "260.2%"
+        },
+        "explorationSkills": [
+          {
+            "id": "combo-slash",
+            "name": "연속 베기",
+            "effect": "아마데우스가 목표 지역의 적들을 공중으로 띄운 후 세 번의 강력한 베기를 시전하여 각각 공격력 * <value1>{v1}</value1>의 피해를 줍니다.",
+            "increasing": [
+              [
+                "160%",
+                "176%",
+                "192%",
+                "208%",
+                "224%"
+              ]
+            ]
+          },
+          {
+            "id": "arcane-swordship",
+            "name": "아케인 검술",
+            "effect": "아마데우스가 검을 휘두를 때마다 아케인 에너지를 방출하여 전방의 적들에게 공격력 * <value1>{v1}</value1>의 피해를 줍니다.",
+            "increasing": [
+              [
+                "15%",
+                "17%",
+                "19%",
+                "21%",
+                "23%"
+              ]
+            ]
+          },
+          {
+            "id": "onslaught",
+            "name": "맹공",
+            "effect": "HP가 50% 미만일 때 아마데우스의 공격력이(가) <value1>{v1}</value1> 증가합니다.",
+            "increasing": [
+              [
+                "16%",
+                "24%",
+                "32%",
+                "40%",
+                "48%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "battle-ready",
+            "name": "전투 준비",
+            "effect": "아마데우스는 사기 진작에 탁월하여 모든 부대의 파괴력을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          },
+          {
+            "id": "way-of-the-blade",
+            "name": "검의 길",
+            "effect": "아마데우스가 검술의 비법을 전수하여 모든 부대의 공격력을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          },
+          {
+            "id": "unrighteous-strike",
+            "name": "불의의 일격",
+            "effect": "아마데우스의 독특한 검술로 인해 <value1>{v1}</value1>의 확률로 모든 부대가 주는 피해량이 50% 증가합니다.",
+            "increasing": [
+              [
+                "8%",
+                "16%",
+                "24%",
+                "32%",
+                "40%"
+              ]
+            ]
+          }
+        ],
+        "talentSkill": {
+          "id": "born-leader",
+          "name": "타고난 리더",
+          "effect": "아마데우스는 항상 병사들에게 영감을 주어 배치된 모든 부대의 파괴력 및 HP을(를) <value1>{v1}</value1> 증가시킵니다.",
+          "increasing": [
+            [
+              "3%",
+              "6%",
+              "9%",
+              "12%",
+              "15%"
+            ]
+          ]
+        },
+        "special": {
+          "id": "aegis-of-fate",
+          "name": "운명의 방패",
+          "explorationStats": {
+            "attack": 431,
+            "defense": 562,
+            "health": 8437
+          },
+          "expeditionStats": {
+            "lethality": "62.50%",
+            "health": "62.50%"
+          },
+          "explorationSkill": {
+            "id": "double-parry",
+            "name": "이중 쳐내기",
+            "effect": "아마데우스는 쳐내기의 달인으로 받는 피해량을 <value1>{v1}</value1> 감소시킵니다.",
+            "increasing": [
+              [
+                "10%",
+                "15%",
+                "20%",
+                "25%",
+                "30%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "discernment",
+            "name": "통찰력",
+            "effect": "아마데우스가 특수 진형으로 공격하여 집결한 부대의 공격력을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.1"
+      },
+      "en": {
+        "id": "amadeus",
+        "name": "Amadeus",
+        "generation": "1",
+        "description": "Amadeus is a Generation 1 Infantry Hero in Kingshot. Unlock Amadeus through the Hall Of Governors or by purchasing VIP Level special gift packages.",
+        "troop": "infantry",
+        "source": "other",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 2128,
+          "defense": 2220,
+          "health": 41624
+        },
+        "expeditionStats": {
+          "attack": "260.2%",
+          "defense": "260.2%"
+        },
+        "explorationSkills": [
+          {
+            "id": "combo-slash",
+            "name": "Combo Slash",
+            "effect": "Amadeus casts enemies in the target area upward followed by three powerful slashes, each dealing Attack * <value1>{v1}</value1> damage.",
+            "increasing": [
+              [
+                "160%",
+                "176%",
+                "192%",
+                "208%",
+                "224%"
+              ]
+            ]
+          },
+          {
+            "id": "arcane-swordship",
+            "name": "Arcane Swordship",
+            "effect": "Amadeus releases a burst of arcane energy with each sword slash, dealing Attack * <value1>{v1}</value1> damage to frontal foes.",
+            "increasing": [
+              [
+                "15%",
+                "17%",
+                "19%",
+                "21%",
+                "23%"
+              ]
+            ]
+          },
+          {
+            "id": "onslaught",
+            "name": "Onslaught",
+            "effect": "Amadeus increases Attack by <value1>{v1}</value1> when Health is below 50%.",
+            "increasing": [
+              [
+                "16%",
+                "24%",
+                "32%",
+                "40%",
+                "48%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "battle-ready",
+            "name": "Battle Ready",
+            "effect": "Amadeus excels in boosting morale, increasing the Lethality of all squads by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          },
+          {
+            "id": "way-of-the-blade",
+            "name": "Way of the Blade",
+            "effect": "Amadeus imparts the secrets of swordsmanship, increasing the Attack of all squads by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          },
+          {
+            "id": "unrighteous-strike",
+            "name": "Unrighteous Strike",
+            "effect": "The unique swordplay of Amadeus has a <value1>{v1}</value1> chance of increasing damage dealt by 50% for all squads.",
+            "increasing": [
+              [
+                "8%",
+                "16%",
+                "24%",
+                "32%",
+                "40%"
+              ]
+            ]
+          }
+        ],
+        "talentSkill": {
+          "id": "born-leader",
+          "name": "Born Leader",
+          "effect": "Amadeus inspires soldiers at all times, boosting the Lethality and Health of all deployed Troop by <value1>{v1}</value1>.",
+          "increasing": [
+            [
+              "3%",
+              "6%",
+              "9%",
+              "12%",
+              "15%"
+            ]
+          ]
+        },
+        "special": {
+          "id": "aegis-of-fate",
+          "name": "Aegis of Fate",
+          "explorationStats": {
+            "attack": 431,
+            "defense": 562,
+            "health": 8437
+          },
+          "expeditionStats": {
+            "lethality": "62.50%",
+            "health": "62.50%"
+          },
+          "explorationSkill": {
+            "id": "double-parry",
+            "name": "Double Parry",
+            "effect": "Amadeus is a skillful parrier, reducing damage taken by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "10%",
+                "15%",
+                "20%",
+                "25%",
+                "30%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "discernment",
+            "name": "Discernment",
+            "effect": "Amadeus attacks in a specialized formation, increasing the Attack of rallied Troop by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.1"
+      }
+    },
+    "eric": {
+      "generation": 3,
+      "ko": {
+        "id": "eric",
+        "name": "에릭",
+        "generation": "3",
+        "description": "에릭는 킹샷(Kingshot)의 신화급 3세대 보병 영웅입니다. 영웅의 전당를 통해 에릭를 잠금 해제할 수 있습니다.",
+        "troop": "infantry",
+        "source": "hall_of_heroes",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 2554,
+          "defense": 3330,
+          "health": 49950
+        },
+        "expeditionStats": {
+          "attack": "290.23%",
+          "defense": "290.23%"
+        },
+        "explorationSkills": [
+          {
+            "id": "ground-shock",
+            "name": "대지 충격",
+            "effect": "에릭가 축복받은 망치의 전능한 강타로 대지를 뒤흔들어 전방의 대상에게 공격력 * <value1>{v1}</value1>의 피해를 주고 4초 동안 대상의 공격 속도를 50% 감소시킵니다.",
+            "increasing": [
+              [
+                "120%",
+                "132%",
+                "144%",
+                "156%",
+                "168%"
+              ]
+            ]
+          },
+          {
+            "id": "veterancy",
+            "name": "노련함",
+            "effect": "전투의 타격과 갑옷의 상처는 성기사에게 영광일 뿐입니다. 에릭에 대한 공격은 <value1>{v1}</value1>의 확률로 2초 동안 방어력을(를) <value2>{v2}</value2> 증가시킵니다 (최대 5회 중첩).",
+            "increasing": [
+              [
+                "8%",
+                "10%",
+                "12%",
+                "14%",
+                "16%"
+              ],
+              [
+                "8%",
+                "11%",
+                "14%",
+                "17%",
+                "20%"
+              ]
+            ]
+          },
+          {
+            "id": "hammer-of-justice",
+            "name": "정의의 망치",
+            "effect": "에릭가 전투 망치를 땅에 내리꽂아 부채꼴 모양으로 공격력 * <value1>{v1}</value1>의 피해를 주며, 30%의 확률로 대상을 1초 동안 기절시킵니다.",
+            "increasing": [
+              [
+                "80%",
+                "88%",
+                "96%",
+                "104%",
+                "112%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "holy-warrior",
+            "name": "신성한 전사",
+            "effect": "에릭의 순수한 신앙은 적들조차 비틀거리게 만들어 적 부대의 공격력을(를) <value1>{v1}</value1> 감소시킵니다.",
+            "increasing": [
+              [
+                "4%",
+                "8%",
+                "12%",
+                "16%",
+                "20%"
+              ]
+            ]
+          },
+          {
+            "id": "conviction",
+            "name": "신념",
+            "effect": "신념은 의로운 자를 위한 방패가 되어 모든 부대가 받는 피해량을 <value1>{v1}</value1> 감소시킵니다.",
+            "increasing": [
+              [
+                "4%",
+                "8%",
+                "12%",
+                "16%",
+                "20%"
+              ]
+            ]
+          },
+          {
+            "id": "exhortation",
+            "name": "격려",
+            "effect": "영감을 주는 지도자는 새로운 활력을 불어넣을 수 있습니다. 에릭는 모든 부대의 HP을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "anvil-of-truth",
+          "name": "진실의 모루",
+          "explorationStats": {
+            "attack": 482,
+            "defense": 630,
+            "health": 9450
+          },
+          "expeditionStats": {
+            "lethality": "70.00%",
+            "health": "70.00%"
+          },
+          "explorationSkill": {
+            "id": "blessed-hammer",
+            "name": "축복받은 망치",
+            "effect": "에릭는 자신을 믿지 않고 축복받은 전투 망치를 믿으며, 주는 피해량을 <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "10%",
+                "15%",
+                "20%",
+                "25%",
+                "30%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "vanguard",
+            "name": "선봉",
+            "effect": "성기사는 항상 최전선에서 모범을 보여야 합니다. 에릭는 방어 중인 부대의 방어력을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.1"
+      },
+      "en": {
+        "id": "eric",
+        "name": "Eric",
+        "generation": "3",
+        "description": "Eric is a Mythic Generation 3 Infantry Hero in Kingshot. You can unlock Eric through the Hall of Heroes.",
+        "troop": "infantry",
+        "source": "hall_of_heroes",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 2554,
+          "defense": 3330,
+          "health": 49950
+        },
+        "expeditionStats": {
+          "attack": "290.23%",
+          "defense": "290.23%"
+        },
+        "explorationSkills": [
+          {
+            "id": "ground-shock",
+            "name": "Ground Shock",
+            "effect": "Eric imperils the ground with an almighty smash of a blessed hammer, dealing Attack * <value1>{v1}</value1> damage to the target ahead while reducing Attack Speed of targets by 50% for 4s.",
+            "increasing": [
+              [
+                "120%",
+                "132%",
+                "144%",
+                "156%",
+                "168%"
+              ]
+            ]
+          },
+          {
+            "id": "veterancy",
+            "name": "Veterancy",
+            "effect": "Battle blows and armor scars are naught but glory for a paladin. Attacks against Eric have a <value1>{v1}</value1> chance of increasing Defense by <value2>{v2}</value2> for 2 seconds (max 5 stacks).",
+            "increasing": [
+              [
+                "8%",
+                "10%",
+                "12%",
+                "14%",
+                "16%"
+              ],
+              [
+                "8%",
+                "11%",
+                "14%",
+                "17%",
+                "20%"
+              ]
+            ]
+          },
+          {
+            "id": "hammer-of-justice",
+            "name": "Hammer of Justice",
+            "effect": "Eric casts a warhammer into the ground, dealing Attack * <value1>{v1}</value1> damage in a fan-shaped arc with a 30% chance of stunning the targets for 1s.",
+            "increasing": [
+              [
+                "80%",
+                "88%",
+                "96%",
+                "104%",
+                "112%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "holy-warrior",
+            "name": "Holy Warrior",
+            "effect": "The pure faith of Eric can cause even enemies to stumble, reducing the Attack of enemy squads by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "4%",
+                "8%",
+                "12%",
+                "16%",
+                "20%"
+              ]
+            ]
+          },
+          {
+            "id": "conviction",
+            "name": "Conviction",
+            "effect": "Conviction is a shield for the righteous, reducing damage taken by <value1>{v1}</value1> for all squads.",
+            "increasing": [
+              [
+                "4%",
+                "8%",
+                "12%",
+                "16%",
+                "20%"
+              ]
+            ]
+          },
+          {
+            "id": "exhortation",
+            "name": "Exhortation",
+            "effect": "An inspiring leader can unlock new reserves of vitality. Eric increases the Health of all squads by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "anvil-of-truth",
+          "name": "Anvil of Truth",
+          "explorationStats": {
+            "attack": 482,
+            "defense": 630,
+            "health": 9450
+          },
+          "expeditionStats": {
+            "lethality": "70.00%",
+            "health": "70.00%"
+          },
+          "explorationSkill": {
+            "id": "blessed-hammer",
+            "name": "Blessed Hammer",
+            "effect": "Eric trusts not in self but in a blessed warhammer, increasing damage dealt by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "10%",
+                "15%",
+                "20%",
+                "25%",
+                "30%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "vanguard",
+            "name": "Vanguard",
+            "effect": "A paladin must always lead by example from the front. Eric increases the Defense of defending Troop by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.1"
+      }
+    },
+    "helga": {
+      "generation": 1,
+      "ko": {
+        "id": "helga",
+        "name": "헬가",
+        "generation": "1",
+        "description": "헬가는 킹샷(Kingshot)의 신화급 1세대 보병 영웅입니다. VIP 레벨 특별 패키지를 구매하여 헬가를 잠금 해제할 수 있습니다.",
+        "troop": "infantry",
+        "source": "other",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 1873,
+          "defense": 2220,
+          "health": 36630
+        },
+        "expeditionStats": {
+          "attack": "200.16%",
+          "defense": "200.16%"
+        },
+        "explorationSkills": [
+          {
+            "id": "antler-assault",
+            "name": "뿔 돌진",
+            "effect": "헬가가 뿔로 돌진하여 공격력 * <value1>{v1}</value1>의 광역 피해를 주고 적을 밀어내며 1초 동안 기절시킵니다.",
+            "increasing": [
+              [
+                "160%",
+                "176%",
+                "192%",
+                "208%",
+                "224%"
+              ]
+            ]
+          },
+          {
+            "id": "spear-charge",
+            "name": "창 돌진",
+            "effect": "헬가가 목표에게 공격력 * <value1>{v1}</value1>의 피해를 줍니다.",
+            "increasing": [
+              [
+                "150%",
+                "165%",
+                "180%",
+                "195%",
+                "210%"
+              ]
+            ]
+          },
+          {
+            "id": "fury",
+            "name": "분노",
+            "effect": "피해를 입을 때 헬가는 10%의 확률로 3초 동안 공격력을(를) <value1>{v1}</value1> 증가시킵니다. 최대 5회 중첩 가능합니다.",
+            "increasing": [
+              [
+                "4%",
+                "6%",
+                "8%",
+                "10%",
+                "12%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "oath-of-guardian",
+            "name": "수호자의 맹세",
+            "effect": "헬가가 <value1>{v1}</value1>의 확률로 모든 부대가 받는 피해량을 50% 감소시킵니다.",
+            "increasing": [
+              [
+                "8%",
+                "16%",
+                "24%",
+                "32%",
+                "40%"
+              ]
+            ]
+          },
+          {
+            "id": "echoes-of-valhalla",
+            "name": "발할라의 메아리",
+            "effect": "헬가가 뿔나팔을 불어 부대의 사기를 높이며 모든 부대의 공격력을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          },
+          {
+            "id": "natures-balance",
+            "name": "자연의 균형",
+            "effect": "헬가가 모두를 자연의 품으로 이끌어 모든 부대의 파괴력을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          }
+        ],
+        "talentSkill": {
+          "id": "power-of-the-deer",
+          "name": "사슴의 힘",
+          "effect": "헬가의 고유한 특성으로 배치된 모든 병사의 공격력 및 방어력이(가) <value1>{v1}</value1> 증가합니다.",
+          "increasing": [
+            [
+              "2%",
+              "4%",
+              "6%",
+              "8%",
+              "10%"
+            ]
+          ]
+        },
+        "special": {
+          "id": "bands-of-tyre",
+          "name": "티레의 띠",
+          "explorationStats": {
+            "attack": 379,
+            "defense": 495,
+            "health": 7425
+          },
+          "expeditionStats": {
+            "lethality": "55.50%",
+            "health": "55.50%"
+          },
+          "explorationSkill": {
+            "id": "valiant-fury",
+            "name": "용맹한 분노",
+            "effect": "분노에 이끌려 헬가가 주는 피해량이 <value1>{v1}</value1> 증가합니다.",
+            "increasing": [
+              [
+                "10%",
+                "15%",
+                "20%",
+                "25%",
+                "30%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "zeal",
+            "name": "열정",
+            "effect": "헬가가 집결에 참여하여 집결한 부대의 파괴력을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.1"
+      },
+      "en": {
+        "id": "helga",
+        "name": "Helga",
+        "generation": "1",
+        "description": "Helga is a Mythic Generation 1 Infantry Hero in Kingshot. You can unlock Helga by purchasing VIP Level special gift packages.",
+        "troop": "infantry",
+        "source": "other",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 1873,
+          "defense": 2220,
+          "health": 36630
+        },
+        "expeditionStats": {
+          "attack": "200.16%",
+          "defense": "200.16%"
+        },
+        "explorationSkills": [
+          {
+            "id": "antler-assault",
+            "name": "Antler Assault",
+            "effect": "Helga performs an antler charge, dealing Attack * <value1>{v1}</value1> area of effect damage, knocking the targets back, and stunning them for 1s.",
+            "increasing": [
+              [
+                "160%",
+                "176%",
+                "192%",
+                "208%",
+                "224%"
+              ]
+            ]
+          },
+          {
+            "id": "spear-charge",
+            "name": "Spear Charge",
+            "effect": "Helga deals Attack * <value1>{v1}</value1> damage to the target.",
+            "increasing": [
+              [
+                "150%",
+                "165%",
+                "180%",
+                "195%",
+                "210%"
+              ]
+            ]
+          },
+          {
+            "id": "fury",
+            "name": "Fury",
+            "effect": "When taking damage, Helga has a 10% chance of increasing Attack by <value1>{v1}</value1> for 3s. Stacks up to 5 times.",
+            "increasing": [
+              [
+                "4%",
+                "6%",
+                "8%",
+                "10%",
+                "12%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "oath-of-guardian",
+            "name": "Oath of Guardian",
+            "effect": "Helga has a <value1>{v1}</value1> chance of reducing damage taken by 50% for all squads.",
+            "increasing": [
+              [
+                "8%",
+                "16%",
+                "24%",
+                "32%",
+                "40%"
+              ]
+            ]
+          },
+          {
+            "id": "echoes-of-valhalla",
+            "name": "Echoes of Valhalla",
+            "effect": "Helga blows a horn to motivate the squad, increasing the Attack of all squads by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          },
+          {
+            "id": "natures-balance",
+            "name": "Nature’s Balance",
+            "effect": "Helga invites everyone to embrace nature, increasing the Lethality of all squads by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          }
+        ],
+        "talentSkill": {
+          "id": "power-of-the-deer",
+          "name": "Power of the Deer",
+          "effect": "The unique talent of Helga bolsters the Attack and Defense of all deployed soldiers by <value1>{v1}</value1>.",
+          "increasing": [
+            [
+              "2%",
+              "4%",
+              "6%",
+              "8%",
+              "10%"
+            ]
+          ]
+        },
+        "special": {
+          "id": "bands-of-tyre",
+          "name": "Bands of Tyre",
+          "explorationStats": {
+            "attack": 379,
+            "defense": 495,
+            "health": 7425
+          },
+          "expeditionStats": {
+            "lethality": "55.50%",
+            "health": "55.50%"
+          },
+          "explorationSkill": {
+            "id": "valiant-fury",
+            "name": "Valiant Fury",
+            "effect": "Fueled by fury, Helga increases damage dealt by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "10%",
+                "15%",
+                "20%",
+                "25%",
+                "30%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "zeal",
+            "name": "Zeal",
+            "effect": "Helga joins the rally, increasing the Lethality of rallied Troop by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.1"
+      }
+    },
+    "hilde": {
+      "generation": 2,
+      "ko": {
+        "id": "hilde",
+        "name": "힐데",
+        "generation": "2",
+        "description": "힐데는 킹샷(Kingshot)의 신화급 2세대 기병 영웅입니다. 일일 특가 및 영주의 전당 이벤트를 통해 힐데를 잠금 해제할 수 있습니다.",
+        "troop": "cavalry",
+        "source": "king",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 2664,
+          "defense": 2220,
+          "health": 26640
+        },
+        "expeditionStats": {
+          "attack": "240.19%",
+          "defense": "240.19%"
+        },
+        "explorationSkills": [
+          {
+            "id": "rejuvenating-plea",
+            "name": "회춘의 기도",
+            "effect": "즉시 모든 아군 영웅의 HP을(를) 공격력 * <value1>{v1}</value1>만큼 회복시킵니다.",
+            "increasing": [
+              [
+                "200%",
+                "220%",
+                "240%",
+                "260%",
+                "280%"
+              ]
+            ]
+          },
+          {
+            "id": "redeemer",
+            "name": "구원자",
+            "effect": "부상도 힐데의 구원의 기도 앞에서는 무력합니다. 즉시 가장 약한 아군 영웅의 HP을(를) 공격력 * <value1>{v1}</value1>만큼 회복시킵니다.",
+            "increasing": [
+              [
+                "100%",
+                "110%",
+                "120%",
+                "130%",
+                "140%"
+              ]
+            ]
+          },
+          {
+            "id": "intimidation",
+            "name": "위협",
+            "effect": "심리전은 오래된 전술입니다. 1초 동안 적 대상을 무력화시키고 공격력 * <value1>{v1}</value1>의 피해를 줍니다.",
+            "increasing": [
+              [
+                "140%",
+                "154%",
+                "168%",
+                "182%",
+                "196%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "noble-path",
+            "name": "고귀한 길",
+            "effect": "힐데의 철저한 규율은 병사들을 진정한 무기로 성장시켜 모든 부대의 공격력을(를) <value1>{v1}</value1>, 방어력을(를) <value2>{v2}</value2> 증가시킵니다.",
+            "increasing": [
+              [
+                "3%",
+                "6%",
+                "9%",
+                "12%",
+                "15%"
+              ],
+              [
+                "2%",
+                "4%",
+                "6%",
+                "8%",
+                "10%"
+              ]
+            ]
+          },
+          {
+            "id": "elixir-of-strength",
+            "name": "힘의 비약",
+            "effect": "힐데는 비밀의 강장제를 사용하여 전사들의 힘을 강화하며, 모든 부대의 공격력에 25%의 확률로 <value1>{v1}</value1>의 피해를 주는 효과를 부여합니다.",
+            "increasing": [
+              [
+                "120%",
+                "140%",
+                "160%",
+                "180%",
+                "200%"
+              ]
+            ]
+          },
+          {
+            "id": "trial-by-fire",
+            "name": "불의 시련",
+            "effect": "힐데의 경건한 기도로 <value1>{v1}</value1>의 확률로 모든 부대가 받는 피해량을 50% 감소시킵니다.",
+            "increasing": [
+              [
+                "8%",
+                "16%",
+                "24%",
+                "32%",
+                "40%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "revelation",
+          "name": "계시",
+          "explorationStats": {
+            "attack": 540,
+            "defense": 540,
+            "health": 5400
+          },
+          "expeditionStats": {
+            "lethality": "60.00%",
+            "health": "60.00%"
+          },
+          "explorationSkill": {
+            "id": "holy-invocation",
+            "name": "신성한 기도",
+            "effect": "병사들은 힐데의 일상적인 기적을 굳게 믿으며, 치유 효과가 <value1>{v1}</value1> 증가합니다.",
+            "increasing": [
+              [
+                "30%",
+                "40%",
+                "50%",
+                "60%",
+                "70%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "fortitude",
+            "name": "인내",
+            "effect": "대의에 대한 힐데의 경건한 믿음은 전염성이 강하여 방어 중인 부대의 HP을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.1"
+      },
+      "en": {
+        "id": "hilde",
+        "name": "Hilde",
+        "generation": "2",
+        "description": "Hilde is a Mythic Generation 2 Cavalry Hero in Kingshot. You can unlock Hilde through Daily Deals, and the Hall Of Governors event.",
+        "troop": "cavalry",
+        "source": "king",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 2664,
+          "defense": 2220,
+          "health": 26640
+        },
+        "expeditionStats": {
+          "attack": "240.19%",
+          "defense": "240.19%"
+        },
+        "explorationSkills": [
+          {
+            "id": "rejuvenating-plea",
+            "name": "Rejuvenating Plea",
+            "effect": "Immediately restores Health equal to Attack * <value1>{v1}</value1> to all friendly heroes.",
+            "increasing": [
+              [
+                "200%",
+                "220%",
+                "240%",
+                "260%",
+                "280%"
+              ]
+            ]
+          },
+          {
+            "id": "redeemer",
+            "name": "Redeemer",
+            "effect": "Injury is no match for the redeeming invocations of Hilde. Immediately restores Health equal to Attack * <value1>{v1}</value1> to the weakest friendly hero.",
+            "increasing": [
+              [
+                "100%",
+                "110%",
+                "120%",
+                "130%",
+                "140%"
+              ]
+            ]
+          },
+          {
+            "id": "intimidation",
+            "name": "Intimidation",
+            "effect": "Psychological warfare is an age-old tactic. Disables the enemy target for 1s while dealing Attack * <value1>{v1}</value1> damage.",
+            "increasing": [
+              [
+                "140%",
+                "154%",
+                "168%",
+                "182%",
+                "196%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "noble-path",
+            "name": "Noble Path",
+            "effect": "The exhaustive discipline of Hilde develops soldiers into true weapons, increasing the Attack by <value1>{v1}</value1> and the Defense by <value2>{v2}</value2> of all squads.",
+            "increasing": [
+              [
+                "3%",
+                "6%",
+                "9%",
+                "12%",
+                "15%"
+              ],
+              [
+                "2%",
+                "4%",
+                "6%",
+                "8%",
+                "10%"
+              ]
+            ]
+          },
+          {
+            "id": "elixir-of-strength",
+            "name": "Elixir of Strength",
+            "effect": "Hilde uses a secret tonic to enhance the strength of warriors, granting the Attack of all squads a 25% chance of dealing <value1>{v1}</value1> damage.",
+            "increasing": [
+              [
+                "120%",
+                "140%",
+                "160%",
+                "180%",
+                "200%"
+              ]
+            ]
+          },
+          {
+            "id": "trial-by-fire",
+            "name": "Trial by Fire",
+            "effect": "The devout prayer of Hilde has a <value1>{v1}</value1> chance of reducing damage taken by 50% for all squads.",
+            "increasing": [
+              [
+                "8%",
+                "16%",
+                "24%",
+                "32%",
+                "40%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "revelation",
+          "name": "Revelation",
+          "explorationStats": {
+            "attack": 540,
+            "defense": 540,
+            "health": 5400
+          },
+          "expeditionStats": {
+            "lethality": "60.00%",
+            "health": "60.00%"
+          },
+          "explorationSkill": {
+            "id": "holy-invocation",
+            "name": "Holy Invocation",
+            "effect": "Soldiers swear by the everyday miracles of Hilde, increasing healing effects by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "30%",
+                "40%",
+                "50%",
+                "60%",
+                "70%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "fortitude",
+            "name": "Fortitude",
+            "effect": "The pious confidence of Hilde in the cause is infectious, increasing the Health of defending Troop by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.1"
+      }
+    },
+    "jabel": {
+      "generation": 1,
+      "ko": {
+        "id": "jabel",
+        "name": "자벨",
+        "generation": "1",
+        "description": "자벨는 킹샷(Kingshot)의 신화급 1세대 기병 영웅입니다. 영웅의 전당를 통해 자벨를 잠금 해제할 수 있습니다.",
+        "troop": "cavalry",
+        "source": "hall_of_heroes",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 2220,
+          "defense": 2220,
+          "health": 22200
+        },
+        "expeditionStats": {
+          "attack": "200.16%",
+          "defense": "200.16%"
+        },
+        "explorationSkills": [
+          {
+            "id": "gallant-throw",
+            "name": "용감한 투척",
+            "effect": "자벨가 방어구를 관통하는 창을 던져 공격력 * <value1>{v1}</value1>의 광역 피해를 주고 1.5초 동안 대상을 속박합니다.",
+            "increasing": [
+              [
+                "180%",
+                "198%",
+                "216%",
+                "234%",
+                "252%"
+              ]
+            ]
+          },
+          {
+            "id": "brave-the-storm",
+            "name": "폭풍에 맞서다",
+            "effect": "진정한 기사로서 자벨는 용감하게 적과 맞서 대상에게 공격력 * <value1>{v1}</value1>의 피해를 줍니다.",
+            "increasing": [
+              [
+                "150%",
+                "165%",
+                "180%",
+                "195%",
+                "210%"
+              ]
+            ]
+          },
+          {
+            "id": "persistence",
+            "name": "끈기",
+            "effect": "역경은 무한한 잠재력을 일깨워주며, HP가 50% 미만일 때 공격 속도가 <value1>{v1}</value1> 증가합니다.",
+            "increasing": [
+              [
+                "20%",
+                "30%",
+                "40%",
+                "50%",
+                "60%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "rally-flag",
+            "name": "집결 깃발",
+            "effect": "깃발과 같은 붉은 갑옷을 입은 자벨는 <value1>{v1}</value1>의 확률로 모든 부대가 받는 피해량을 50% 감소시킵니다.",
+            "increasing": [
+              [
+                "8%",
+                "16%",
+                "24%",
+                "32%",
+                "40%"
+              ]
+            ]
+          },
+          {
+            "id": "heros-domain",
+            "name": "영웅의 영역",
+            "effect": "두려움 없는 기사 자벨는 공격 시 모든 부대에게 <value1>{v1}</value1>의 확률로 50%의 추가 피해를 줄 수 있도록 합니다.",
+            "increasing": [
+              [
+                "10%",
+                "20%",
+                "30%",
+                "40%",
+                "50%"
+              ]
+            ]
+          },
+          {
+            "id": "youthful-rage",
+            "name": "젊은 분노",
+            "effect": "자벨의 용맹한 정신이 모두에게 영감을 주어 모든 부대가 주는 피해량을 <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "greaves-of-faith",
+          "name": "신앙의 경갑",
+          "explorationStats": {
+            "attack": 450,
+            "defense": 450,
+            "health": 4500
+          },
+          "expeditionStats": {
+            "lethality": "50.00%",
+            "health": "50.00%"
+          },
+          "explorationSkill": {
+            "id": "crimson-spirit",
+            "name": "진홍의 영혼",
+            "effect": "승리를 향한 의지로 자벨가 한계를 돌파하여 주는 피해량이 <value1>{v1}</value1> 증가합니다.",
+            "increasing": [
+              [
+                "10%",
+                "15%",
+                "20%",
+                "25%",
+                "30%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "divine-strength",
+            "name": "신성한 힘",
+            "effect": "확고한 신앙을 바탕으로 방어 중인 부대의 파괴력이(가) <value1>{v1}</value1> 증가합니다.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.1"
+      },
+      "en": {
+        "id": "jabel",
+        "name": "Jabel",
+        "generation": "1",
+        "description": "Jabel is a Mythic-quality Generation 1 Cavalry Hero in Kingshot. You can unlock Jabel through the Hall of Heroes.",
+        "troop": "cavalry",
+        "source": "hall_of_heroes",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 2220,
+          "defense": 2220,
+          "health": 22200
+        },
+        "expeditionStats": {
+          "attack": "200.16%",
+          "defense": "200.16%"
+        },
+        "explorationSkills": [
+          {
+            "id": "gallant-throw",
+            "name": "Gallant Throw",
+            "effect": "Jabel throws a spear that pierces defenses, dealing Attack * <value1>{v1}</value1> area of effect damage and pinning the targets for 1.5s.",
+            "increasing": [
+              [
+                "180%",
+                "198%",
+                "216%",
+                "234%",
+                "252%"
+              ]
+            ]
+          },
+          {
+            "id": "brave-the-storm",
+            "name": "Brave the Storm",
+            "effect": "As a true knight, Jabel bravely confronts enemies, dealing Attack * <value1>{v1}</value1> damage to the target.",
+            "increasing": [
+              [
+                "150%",
+                "165%",
+                "180%",
+                "195%",
+                "210%"
+              ]
+            ]
+          },
+          {
+            "id": "persistence",
+            "name": "Persistence",
+            "effect": "Adversity ignites endless potential, increasing Attack Speed by <value1>{v1}</value1> when Health is below 50%.",
+            "increasing": [
+              [
+                "20%",
+                "30%",
+                "40%",
+                "50%",
+                "60%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "rally-flag",
+            "name": "Rally Flag",
+            "effect": "With banner-like red armor, Jabel has a <value1>{v1}</value1> chance of reducing damage taken by 50% for all squads.",
+            "increasing": [
+              [
+                "8%",
+                "16%",
+                "24%",
+                "32%",
+                "40%"
+              ]
+            ]
+          },
+          {
+            "id": "heros-domain",
+            "name": "Hero’s Domain",
+            "effect": "Jabel, a fearless knight, grants all squads a <value1>{v1}</value1> chance of dealing 50% more damage when attacking.",
+            "increasing": [
+              [
+                "10%",
+                "20%",
+                "30%",
+                "40%",
+                "50%"
+              ]
+            ]
+          },
+          {
+            "id": "youthful-rage",
+            "name": "Youthful Rage",
+            "effect": "The valiant spirit of Jabel inspires everyone, increasing damage dealt by <value1>{v1}</value1> for all squads.",
+            "increasing": [
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "greaves-of-faith",
+          "name": "Greaves of Faith",
+          "explorationStats": {
+            "attack": 450,
+            "defense": 450,
+            "health": 4500
+          },
+          "expeditionStats": {
+            "lethality": "50.00%",
+            "health": "50.00%"
+          },
+          "explorationSkill": {
+            "id": "crimson-spirit",
+            "name": "Crimson Spirit",
+            "effect": "The will to win helps Jabel breakthrough limitations, increasing damage dealt by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "10%",
+                "15%",
+                "20%",
+                "25%",
+                "30%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "divine-strength",
+            "name": "Divine Strength",
+            "effect": "Based on steadfast faith, the Lethality of defending Troop is increased by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.1"
+      }
+    },
+    "jaeger": {
+      "generation": 3,
+      "ko": {
+        "id": "jaeger",
+        "name": "예거",
+        "generation": "3",
+        "description": "예거는 킹샷(Kingshot)의 신화급 3세대 궁병 영웅입니다. 일일 특가, 영웅 집결, 지고의 영주 및 최강 왕국 이벤트를 통해 예거를 잠금 해제할 수 있습니다.",
+        "troop": "archer",
+        "source": "king",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 4045,
+          "defense": 3330,
+          "health": 24974
+        },
+        "expeditionStats": {
+          "attack": "290.23%",
+          "defense": "290.23%"
+        },
+        "explorationSkills": [
+          {
+            "id": "fatal-attraction",
+            "name": "치명적인 매력",
+            "effect": "치명적인 세이렌의 노래처럼, 예거는 목표 지역의 적에게 공격력 * <value1>{v1}</value1>의 피해를 주고 2초 동안 기절시킵니다.",
+            "increasing": [
+              [
+                "160%",
+                "176%",
+                "192%",
+                "208%",
+                "224%"
+              ]
+            ]
+          },
+          {
+            "id": "game-of-chance",
+            "name": "운의 게임",
+            "effect": "예거의 가장 치명적인 공연은 매우 예측 불가능합니다. 성공 시 예거는 공격력 * <value1>{v1}</value1>의 피해를 주거나, 실패 시 대상의 HP을(를) 공격력 * 50%만큼 회복시킵니다.",
+            "increasing": [
+              [
+                "220%",
+                "240%",
+                "260%",
+                "280%",
+                "300%"
+              ]
+            ]
+          },
+          {
+            "id": "rumormonger",
+            "name": "소문 유포자",
+            "effect": "방랑하는 음유시인은 입이 가벼운 자들을 이용하는 방법을 알고 있으며, 3초 동안 적이 받는 피해량을 <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "10%",
+                "15%",
+                "20%",
+                "25%",
+                "30%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "the-tempest",
+            "name": "폭풍",
+            "effect": "예거의 승리의 음악은 훌륭한 위협 도구로, 3턴 동안 20%의 확률로 모든 부대가 주는 피해량을 <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "8%",
+                "16%",
+                "24%",
+                "32%",
+                "40%"
+              ]
+            ]
+          },
+          {
+            "id": "the-resistance",
+            "name": "저항",
+            "effect": "음악은 병사들의 마음을 집중시킵니다. 예거는 공격 시 모든 부대에게 20%의 확률로 2턴 동안 적 부대의 파괴력을(를) <value1>{v1}</value1> 감소시키는 효과를 부여합니다.",
+            "increasing": [
+              [
+                "10%",
+                "20%",
+                "30%",
+                "40%",
+                "50%"
+              ]
+            ]
+          },
+          {
+            "id": "the-celebration",
+            "name": "축제",
+            "effect": "모든 부대의 HP을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "wanderwail",
+          "name": "방랑자의 통곡",
+          "explorationStats": {
+            "attack": 764,
+            "defense": 630,
+            "health": 4725
+          },
+          "expeditionStats": {
+            "lethality": "70.00%",
+            "health": "70.00%"
+          },
+          "explorationSkill": {
+            "id": "sound-of-silence",
+            "name": "침묵의 소리",
+            "effect": "“이제 조용히 하고 거장의 작업을 지켜보라”. 예거는 대상을 침묵시키고 <value1>{v1}</value1>초 동안 스킬을 사용하지 못하게 하며(이미 시전된 스킬은 영향을 받지 않음), 공격력 * <value2>{v2}</value2>의 피해를 줍니다.",
+            "increasing": [
+              [
+                "3s",
+                "3.5s",
+                "4s",
+                "4.5s",
+                "5s"
+              ],
+              [
+                "220%",
+                "240%",
+                "260%",
+                "280%",
+                "300%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "hymn-to-survival",
+            "name": "생존의 찬가",
+            "effect": "병사들의 목숨이 잘 보호되지 않는 한 어떤 안락함이나 사치도 누릴 수 없습니다. 예거는 방어 중인 부대의 HP을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.1"
+      },
+      "en": {
+        "id": "jaeger",
+        "name": "Jaeger",
+        "generation": "3",
+        "description": "Jaeger is a Mythic Generation 3 Archer Hero in Kingshot. You can unlock Jaeger through Daily Deals, Hero Rally, Strongest Governor, and the Kingdom of Power event.",
+        "troop": "archer",
+        "source": "king",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 4045,
+          "defense": 3330,
+          "health": 24974
+        },
+        "expeditionStats": {
+          "attack": "290.23%",
+          "defense": "290.23%"
+        },
+        "explorationSkills": [
+          {
+            "id": "fatal-attraction",
+            "name": "Fatal Attraction",
+            "effect": "Like a deadly siren song, Jaeger deals Attack * <value1>{v1}</value1> damage to enemies in the target area and stuns them for 2s.",
+            "increasing": [
+              [
+                "160%",
+                "176%",
+                "192%",
+                "208%",
+                "224%"
+              ]
+            ]
+          },
+          {
+            "id": "game-of-chance",
+            "name": "Game of Chance",
+            "effect": "The deadliest performances of Jaeger are also highly unpredictable. If successful, Jaeger deals Attack * <value1>{v1}</value1> damage or else restores the Health of the target equal to Attack * 50%.",
+            "increasing": [
+              [
+                "220%",
+                "240%",
+                "260%",
+                "280%",
+                "300%"
+              ]
+            ]
+          },
+          {
+            "id": "rumormonger",
+            "name": "Rumormonger",
+            "effect": "A wandering bard knows how to take advantage of loose lips, increasing damage taken by enemies by <value1>{v1}</value1> for 3s.",
+            "increasing": [
+              [
+                "10%",
+                "15%",
+                "20%",
+                "25%",
+                "30%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "the-tempest",
+            "name": "The Tempest",
+            "effect": "The triumphant music of Jaeger is a fine tool of intimidation, granting a 20% chance of increasing damage dealt by <value1>{v1}</value1> for all squads for 3 turns.",
+            "increasing": [
+              [
+                "8%",
+                "16%",
+                "24%",
+                "32%",
+                "40%"
+              ]
+            ]
+          },
+          {
+            "id": "the-resistance",
+            "name": "The Resistance",
+            "effect": "Music focuses the mind of soldiers. Jaeger grants all squads a 20% chance of reducing the Lethality of enemy squads by <value1>{v1}</value1> for 2 turns when attacking.",
+            "increasing": [
+              [
+                "10%",
+                "20%",
+                "30%",
+                "40%",
+                "50%"
+              ]
+            ]
+          },
+          {
+            "id": "the-celebration",
+            "name": "The Celebration",
+            "effect": "Increases the Health of all squads by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "wanderwail",
+          "name": "Wanderwail",
+          "explorationStats": {
+            "attack": 764,
+            "defense": 630,
+            "health": 4725
+          },
+          "expeditionStats": {
+            "lethality": "70.00%",
+            "health": "70.00%"
+          },
+          "explorationSkill": {
+            "id": "sound-of-silence",
+            "name": "Sound of Silence",
+            "effect": "“Hush now and watch the master work”. Jaeger silences and prevents the target from using skills for <value1>{v1}</value1>s (skills already cast are not affected), dealing Attack * <value2>{v2}</value2> damage.",
+            "increasing": [
+              [
+                "3s",
+                "3.5s",
+                "4s",
+                "4.5s",
+                "5s"
+              ],
+              [
+                "220%",
+                "240%",
+                "260%",
+                "280%",
+                "300%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "hymn-to-survival",
+            "name": "Hymn to Survival",
+            "effect": "No ease or luxury can be enjoyed unless the lives of soldiers are well-guarded. Jaeger increases the Health of defending Troop by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.1"
+      }
+    },
+    "long-fei": {
+      "generation": 5,
+      "ko": {
+        "id": "long-fei",
+        "name": "롱페이",
+        "generation": "5",
+        "description": "롱페이는 킹샷(Kingshot)의 신화급 5세대 보병 영웅입니다. 영웅 룰렛를 통해 롱페이를 잠금 해제할 수 있습니다.",
+        "troop": "infantry",
+        "source": "roulette",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 3780,
+          "defense": 4928,
+          "health": 73926
+        },
+        "expeditionStats": {
+          "attack": "444.35%",
+          "defense": "444.35%"
+        },
+        "explorationSkills": [
+          {
+            "id": "ambrosia",
+            "name": "암브로시아",
+            "effect": "롱페이는 특제 암브로시아를 마신 후 전장과 하나가 되어 4초 동안 <value1>{v1}</value1>의 공격 속도와 제어 효과 면역을 얻습니다.",
+            "increasing": [
+              [
+                "80%",
+                "90%",
+                "100%",
+                "110%",
+                "120%"
+              ]
+            ]
+          },
+          {
+            "id": "above-and-beyond",
+            "name": "초월",
+            "effect": "롱페이의 적들의 자만심은 그들의 약점입니다. HP가 50% 미만일 때 롱페이가 받는 피해량이 <value1>{v1}</value1> 감소합니다.",
+            "increasing": [
+              [
+                "20%",
+                "30%",
+                "40%",
+                "50%",
+                "60%"
+              ]
+            ]
+          },
+          {
+            "id": "mountain-mover",
+            "name": "산을 움직이는 자",
+            "effect": "고대의 전사들은 롱페이에게 생존을 위한 많은 비밀을 가르쳐주었습니다. HP가 50% 미만일 때 롱페이는 <value1>{v1}</value1>의 공격력을(를) 얻습니다.",
+            "increasing": [
+              [
+                "16%",
+                "24%",
+                "32%",
+                "40%",
+                "48%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "mighty-paragon",
+            "name": "강력한 모범",
+            "effect": "적 앞에서의 롱페이의 용기는 내면의 전사를 향한 길을 제시하며, <value1>{v1}</value1>의 확률로 모든 부대가 받는 피해량을 50% 감소시킵니다.",
+            "increasing": [
+              [
+                "10%",
+                "20%",
+                "30%",
+                "40%",
+                "50%"
+              ]
+            ]
+          },
+          {
+            "id": "celestial-sustenance",
+            "name": "천상의 양식",
+            "effect": "롱페이의 물약의 달콤한 꿀은 병사들의 활력으로 결실을 맺어 모든 부대의 방어력을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          },
+          {
+            "id": "art-of-war",
+            "name": "손자병법",
+            "effect": "\"모든 전쟁은 기만을 기반으로 한다\". 롱페이의 전쟁 지혜는 병사들에게 뿌리 깊게 박혀 있어, 공격 시 모든 부대에게 25%의 확률로 <value1>{v1}</value1>의 피해를 주는 효과를 부여합니다.",
+            "increasing": [
+              [
+                "120%",
+                "140%",
+                "160%",
+                "180%",
+                "200%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "immortals-flask",
+          "name": "불멸자의 플라스크",
+          "explorationStats": {
+            "attack": 765,
+            "defense": 999,
+            "health": 14985
+          },
+          "expeditionStats": {
+            "lethality": "111.00%",
+            "health": "111.00%"
+          },
+          "explorationSkill": {
+            "id": "strong-brew",
+            "name": "강력한 양조",
+            "effect": "암브로시아의 지속 시간을 1.5초 연장하고, 주는 피해량의 <value1>{v1}</value1>만큼 롱페이의 HP을(를) 회복시킵니다.",
+            "increasing": [
+              [
+                "7%",
+                "9%",
+                "11%",
+                "13%",
+                "15%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "strategic-strike",
+            "name": "전략적 타격",
+            "effect": "\"능력이 있을 때는 능력이 없는 것처럼, 움직일 때는 움직이지 않는 것처럼 보여라.\" 롱페이의 전쟁 지혜는 방어 중인 부대의 공격력을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.0"
+      },
+      "en": {
+        "id": "long-fei",
+        "name": "Long Fei",
+        "generation": "5",
+        "description": "Long Fei is a Mythic Generation 5 Infantry Hero in Kingshot. You can unlock Long Fei through the Hero Roulette.",
+        "troop": "infantry",
+        "source": "roulette",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 3780,
+          "defense": 4928,
+          "health": 73926
+        },
+        "expeditionStats": {
+          "attack": "444.35%",
+          "defense": "444.35%"
+        },
+        "explorationSkills": [
+          {
+            "id": "ambrosia",
+            "name": "Ambrosia",
+            "effect": "Long Fei becomes one with the battlefield upon drinking the signature ambrosia, gaining <value1>{v1}</value1> Attack Speed and Immunity to control effects for 4s.",
+            "increasing": [
+              [
+                "80%",
+                "90%",
+                "100%",
+                "110%",
+                "120%"
+              ]
+            ]
+          },
+          {
+            "id": "above-and-beyond",
+            "name": "Above and Beyond",
+            "effect": "The overconfidence of the enemies of Long Fei is their weakness. Damage taken by Long Fei is reduced by <value1>{v1}</value1> when Health is below 50%.",
+            "increasing": [
+              [
+                "20%",
+                "30%",
+                "40%",
+                "50%",
+                "60%"
+              ]
+            ]
+          },
+          {
+            "id": "mountain-mover",
+            "name": "Mountain Mover",
+            "effect": "The warriors of the ancient way have taught Long Fei many secrets to survival. Long Fei gains <value1>{v1}</value1> Attack when Health is below 50%.",
+            "increasing": [
+              [
+                "16%",
+                "24%",
+                "32%",
+                "40%",
+                "48%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "mighty-paragon",
+            "name": "Mighty Paragon",
+            "effect": "The courage of Long Fei in the teeth of the enemy points the way toward the warrior within, granting a <value1>{v1}</value1> chance of reducing damage taken by 50% for all squads.",
+            "increasing": [
+              [
+                "10%",
+                "20%",
+                "30%",
+                "40%",
+                "50%"
+              ]
+            ]
+          },
+          {
+            "id": "celestial-sustenance",
+            "name": "Celestial Sustenance",
+            "effect": "The sweet nectar of the potions of Long Fei has born fruit in soldiers’ vitality, increasing the Defense of all squads by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          },
+          {
+            "id": "art-of-war",
+            "name": "Art of War",
+            "effect": "“All warfare is based on deception”. The war wisdom of Long Fei is ingrained in soldiers, granting all squads a 25% chance of dealing <value1>{v1}</value1> damage when attacking.",
+            "increasing": [
+              [
+                "120%",
+                "140%",
+                "160%",
+                "180%",
+                "200%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "immortals-flask",
+          "name": "Immortal’s Flask",
+          "explorationStats": {
+            "attack": 765,
+            "defense": 999,
+            "health": 14985
+          },
+          "expeditionStats": {
+            "lethality": "111.00%",
+            "health": "111.00%"
+          },
+          "explorationSkill": {
+            "id": "strong-brew",
+            "name": "Strong Brew",
+            "effect": "Extends Ambrosia by 1.5s and restores the Health of Long Fei by <value1>{v1}</value1> of damage dealt.",
+            "increasing": [
+              [
+                "7%",
+                "9%",
+                "11%",
+                "13%",
+                "15%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "strategic-strike",
+            "name": "Strategic Strike",
+            "effect": "“Appear unable when able; appear inactive when active.” The war wisdom of Long Fei increases the Attack of defending Troop by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.0"
+      }
+    },
+    "margot": {
+      "generation": 4,
+      "ko": {
+        "id": "margot",
+        "name": "마고",
+        "generation": "4",
+        "description": "마고는 킹샷(Kingshot)의 신화급 4세대 기병 영웅입니다. 영웅의 전당를 통해 마고를 잠금 해제할 수 있습니다.",
+        "troop": "cavalry",
+        "source": "hall_of_heroes",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 4106,
+          "defense": 4106,
+          "health": 41070
+        },
+        "expeditionStats": {
+          "attack": "370.29%",
+          "defense": "370.29%"
+        },
+        "explorationSkills": [
+          {
+            "id": "ambush",
+            "name": "매복",
+            "effect": "마고가 폭탄으로 적을 기습하여 공격력 * <value1>{v1}</value1>의 광역 피해를 줍니다.",
+            "increasing": [
+              [
+                "300%",
+                "330%",
+                "360%",
+                "390%",
+                "420%"
+              ]
+            ]
+          },
+          {
+            "id": "parry",
+            "name": "쳐내기",
+            "effect": "검은 공격과 방어 모두에 사용할 수 있습니다. 마고는 <value1>{v1}</value1>의 확률로 쳐내기를 시전하여 적의 공격으로부터 받는 모든 피해를 회피합니다.",
+            "increasing": [
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          },
+          {
+            "id": "stiletto",
+            "name": "스틸레토",
+            "effect": "마고가 적의 머리를 가격하여(영웅 우선) 공격력 * <value1>{v1}</value1>의 피해를 주고 1.5초 동안 대상을 속박합니다.",
+            "increasing": [
+              [
+                "100%",
+                "110%",
+                "120%",
+                "130%",
+                "140%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "warbringer",
+            "name": "전쟁 인도자",
+            "effect": "방어구 관통에 대한 마고의 집중력으로 모든 부대의 공격력이(가) <value1>{v1}</value1> 증가합니다.",
+            "increasing": [
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          },
+          {
+            "id": "subterfuge",
+            "name": "속임수",
+            "effect": "마고의 무작위 배치 속에는 신중한 전략이 숨어 있습니다. 모든 부대에게 <value1>{v1}</value1>%의 확률로 일반 공격을 회피하는 효과를 부여합니다.",
+            "increasing": [
+              [
+                "4%",
+                "8%",
+                "12%",
+                "16%",
+                "20%"
+              ]
+            ]
+          },
+          {
+            "id": "sleight-hand",
+            "name": "날랜 손재주",
+            "effect": "마고의 기병은(는) 25%의 확률로 추가 공격을 가하여 <value1>{v1}</value1>의 피해를 줍니다.",
+            "increasing": [
+              [
+                "120%",
+                "140%",
+                "160%",
+                "180%",
+                "200%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "revel-fang",
+          "name": "광란의 송곳니",
+          "explorationStats": {
+            "attack": 832,
+            "defense": 832,
+            "health": 8325
+          },
+          "expeditionStats": {
+            "lethality": "92.50%",
+            "health": "92.50%"
+          },
+          "explorationSkill": {
+            "id": "indefensible",
+            "name": "방어 불가",
+            "effect": "\"두 개의 칼날을 모두 피할 수는 없다\". 마고는 일반 공격 시 40%의 확률로 두 번째 공격을 가하여 공격력 * <value1>{v1}</value1>의 피해를 줍니다.",
+            "increasing": [
+              [
+                "25%",
+                "30%",
+                "35%",
+                "40%",
+                "45%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "pugilist",
+            "name": "투사",
+            "effect": "마고는 성벽 위에서도 한순간도 경계를 늦추지 않으며, 방어 중인 부대의 파괴력을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.1"
+      },
+      "en": {
+        "id": "margot",
+        "name": "Margot",
+        "generation": "4",
+        "description": "Margot is a Mythic Generation 4 Cavalry Hero in Kingshot. You can unlock Margot through the Hall of Heroes.",
+        "troop": "cavalry",
+        "source": "hall_of_heroes",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 4106,
+          "defense": 4106,
+          "health": 41070
+        },
+        "expeditionStats": {
+          "attack": "370.29%",
+          "defense": "370.29%"
+        },
+        "explorationSkills": [
+          {
+            "id": "ambush",
+            "name": "Ambush",
+            "effect": "Margot ambushes an enemy with bombs, dealing Attack * <value1>{v1}</value1> area of effect damage.",
+            "increasing": [
+              [
+                "300%",
+                "330%",
+                "360%",
+                "390%",
+                "420%"
+              ]
+            ]
+          },
+          {
+            "id": "parry",
+            "name": "Parry",
+            "effect": "Swords can be used offensively and defensively. Margot has a <value1>{v1}</value1> chance of parrying, avoiding all damage from enemy attacks.",
+            "increasing": [
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          },
+          {
+            "id": "stiletto",
+            "name": "Stiletto",
+            "effect": "Margot head-gouges the enemy (heroes first), dealing Attack * <value1>{v1}</value1> damage and immobilizing them for 1.5s.",
+            "increasing": [
+              [
+                "100%",
+                "110%",
+                "120%",
+                "130%",
+                "140%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "warbringer",
+            "name": "Warbringer",
+            "effect": "The focus of Margot on armor-penetration increases the Attack of all squads by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          },
+          {
+            "id": "subterfuge",
+            "name": "Subterfuge",
+            "effect": "Within the haphazard positioning of Margot lies careful strategy. Grants all squads a <value1>{v1}</value1>% chance of dodging Normal Attacks.",
+            "increasing": [
+              [
+                "4%",
+                "8%",
+                "12%",
+                "16%",
+                "20%"
+              ]
+            ]
+          },
+          {
+            "id": "sleight-hand",
+            "name": "Sleight Hand",
+            "effect": "The Cavalry of Margot have a 25% chance of performing an extra attack, dealing <value1>{v1}</value1> damage.",
+            "increasing": [
+              [
+                "120%",
+                "140%",
+                "160%",
+                "180%",
+                "200%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "revel-fang",
+          "name": "Revel Fang",
+          "explorationStats": {
+            "attack": 832,
+            "defense": 832,
+            "health": 8325
+          },
+          "expeditionStats": {
+            "lethality": "92.50%",
+            "health": "92.50%"
+          },
+          "explorationSkill": {
+            "id": "indefensible",
+            "name": "Indefensible",
+            "effect": "“You can’t duck both blades”. Margot has a 40% chance of launching a second attack with each Normal Attack, dealing Attack * <value1>{v1}</value1> damage.",
+            "increasing": [
+              [
+                "25%",
+                "30%",
+                "35%",
+                "40%",
+                "45%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "pugilist",
+            "name": "Pugilist",
+            "effect": "Margot never lets guard down on the battlements even for a moment, increasing the Lethality of defending Troop by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.1"
+      }
+    },
+    "marlin": {
+      "generation": 2,
+      "ko": {
+        "id": "marlin",
+        "name": "마린",
+        "generation": "2",
+        "description": "마린는 킹샷(Kingshot)의 신화급 2세대 궁병 영웅입니다. 영웅의 전당를 통해 마린를 잠금 해제할 수 있습니다.",
+        "troop": "archer",
+        "source": "hall_of_heroes",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 3235,
+          "defense": 2220,
+          "health": 19980
+        },
+        "expeditionStats": {
+          "attack": "240.19%",
+          "defense": "240.19%"
+        },
+        "explorationSkills": [
+          {
+            "id": "tidal-rush",
+            "name": "해일 돌진",
+            "effect": "마린가 해일 돌진을 방출하여 공격력 * <value1>{v1}</value1>의 광역 피해를 주고 1.5초 동안 적을 속박합니다.",
+            "increasing": [
+              [
+                "200%",
+                "220%",
+                "240%",
+                "260%",
+                "280%"
+              ]
+            ]
+          },
+          {
+            "id": "fermented-blow",
+            "name": "발효된 일격",
+            "effect": "마린가 발효된 일격을 가하여 공격력 * <value1>{v1}</value1>의 광역 피해를 줍니다.",
+            "increasing": [
+              [
+                "50%",
+                "55%",
+                "60%",
+                "65%",
+                "70%"
+              ]
+            ]
+          },
+          {
+            "id": "lucky-hit",
+            "name": "행운의 일격",
+            "effect": "마린가 행운의 일격을 가하여 매 <value2>{v2}</value2>회 공격마다 대상을 <value1>{v1}</value1> 동안 기절시킵니다.",
+            "increasing": [
+              [
+                "0.2s",
+                "0.2s",
+                "0.4s",
+                "0.4s",
+                "0.5s"
+              ],
+              [
+                "8",
+                "7",
+                "7",
+                "6",
+                "5"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "wild-card",
+            "name": "와일드 카드",
+            "effect": "마린가 와일드 카드를 사용하여 <value1>{v1}</value1>의 확률로 모든 부대가 주는 피해량을 50% 증가시킵니다.",
+            "increasing": [
+              [
+                "8%",
+                "16%",
+                "24%",
+                "32%",
+                "40%"
+              ]
+            ]
+          },
+          {
+            "id": "rumhead",
+            "name": "럼주꾼",
+            "effect": "럼주에 취한 마린의 기행은 공격 시 모든 부대에게 20%의 확률로 2턴 동안 적 부대의 파괴력을(를) <value1>{v1}</value1> 감소시키는 효과를 부여합니다.",
+            "increasing": [
+              [
+                "10%",
+                "20%",
+                "30%",
+                "40%",
+                "50%"
+              ]
+            ]
+          },
+          {
+            "id": "dynamo",
+            "name": "동력기",
+            "effect": "마린는 동력기 역할을 하여 모든 부대의 공격력에 50%의 확률로 주는 피해량을 <value1>{v1}</value1> 증가시키는 효과를 부여합니다.",
+            "increasing": [
+              [
+                "10%",
+                "20%",
+                "30%",
+                "40%",
+                "50%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "mistweaver",
+          "name": "안개술사",
+          "explorationStats": {
+            "attack": 655,
+            "defense": 540,
+            "health": 4050
+          },
+          "expeditionStats": {
+            "lethality": "60.00%",
+            "health": "60.00%"
+          },
+          "explorationSkill": {
+            "id": "servant-of-wine",
+            "name": "와인의 종복",
+            "effect": "와인의 종복인 마린는 기본 공격마다 가장 약한 영웅을 공격력 * <value1>{v1}</value1>만큼 회복시킵니다.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "admiral-of-the-line",
+            "name": "함대 제독",
+            "effect": "마린가 집결한 부대의 파괴력을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.1"
+      },
+      "en": {
+        "id": "marlin",
+        "name": "Marlin",
+        "generation": "2",
+        "description": "Marlin is a Mythic Generation 2 Archer Hero in Kingshot. You can unlock Marlin through the Hall of Heroes.",
+        "troop": "archer",
+        "source": "hall_of_heroes",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 3235,
+          "defense": 2220,
+          "health": 19980
+        },
+        "expeditionStats": {
+          "attack": "240.19%",
+          "defense": "240.19%"
+        },
+        "explorationSkills": [
+          {
+            "id": "tidal-rush",
+            "name": "Tidal Rush",
+            "effect": "Marlin unleashes a tidal rush, dealing Attack * <value1>{v1}</value1> area of effect damage and immobilizing the enemy for 1.5s.",
+            "increasing": [
+              [
+                "200%",
+                "220%",
+                "240%",
+                "260%",
+                "280%"
+              ]
+            ]
+          },
+          {
+            "id": "fermented-blow",
+            "name": "Fermented Blow",
+            "effect": "Marlin delivers a fermented blow, dealing Attack * <value1>{v1}</value1> area of effect damage.",
+            "increasing": [
+              [
+                "50%",
+                "55%",
+                "60%",
+                "65%",
+                "70%"
+              ]
+            ]
+          },
+          {
+            "id": "lucky-hit",
+            "name": "Lucky Hit",
+            "effect": "Marlin lands lucky hits, stunning targets for <value1>{v1}</value1> after every <value2>{v2}</value2> strikes.",
+            "increasing": [
+              [
+                "0.2s",
+                "0.2s",
+                "0.4s",
+                "0.4s",
+                "0.5s"
+              ],
+              [
+                "8",
+                "7",
+                "7",
+                "6",
+                "5"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "wild-card",
+            "name": "Wild Card",
+            "effect": "Marlin plays a wild card, with a <value1>{v1}</value1> chance of increasing damage dealt by 50% for all squads.",
+            "increasing": [
+              [
+                "8%",
+                "16%",
+                "24%",
+                "32%",
+                "40%"
+              ]
+            ]
+          },
+          {
+            "id": "rumhead",
+            "name": "Rumhead",
+            "effect": "The rum-fueled antics of Marlin grant all squads a 20% chance of reducing the Lethality of enemy squads by <value1>{v1}</value1> for 2 turns when attacking.",
+            "increasing": [
+              [
+                "10%",
+                "20%",
+                "30%",
+                "40%",
+                "50%"
+              ]
+            ]
+          },
+          {
+            "id": "dynamo",
+            "name": "Dynamo",
+            "effect": "Marlin acts as a dynamo, granting the Attack of all squads a 50% chance of increasing damage dealt by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "10%",
+                "20%",
+                "30%",
+                "40%",
+                "50%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "mistweaver",
+          "name": "Mistweaver",
+          "explorationStats": {
+            "attack": 655,
+            "defense": 540,
+            "health": 4050
+          },
+          "expeditionStats": {
+            "lethality": "60.00%",
+            "health": "60.00%"
+          },
+          "explorationSkill": {
+            "id": "servant-of-wine",
+            "name": "Servant of Wine",
+            "effect": "Marlin, servant of wine, heals the weakest hero by Attack * <value1>{v1}</value1> with each basic attack.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "admiral-of-the-line",
+            "name": "Admiral of the Line",
+            "effect": "Marlin increases the Lethality of rallied Troop by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.1"
+      }
+    },
+    "petra": {
+      "generation": 3,
+      "ko": {
+        "id": "petra",
+        "name": "페트라",
+        "generation": "3",
+        "description": "페트라는 킹샷(Kingshot)의 신화급 3세대 기병 영웅입니다. 영웅 룰렛를 통해 페트라를 잠금 해제할 수 있습니다.",
+        "troop": "cavalry",
+        "source": "roulette",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 3330,
+          "defense": 3330,
+          "health": 33300
+        },
+        "expeditionStats": {
+          "attack": "290.23%",
+          "defense": "290.23%"
+        },
+        "explorationSkills": [
+          {
+            "id": "dichotomoy",
+            "name": "이분법",
+            "effect": "페트라가 적에게 타로 카드를 던져 공격력 * <value1>{v1}</value1>의 피해를 주고 다음 효과 중 하나를 부여합니다: 2초 동안 대상의 공격력을(를) 20% 감소시키거나 1.5초 동안 대상을 기절시킵니다.",
+            "increasing": [
+              [
+                "270%",
+                "297%",
+                "324%",
+                "351%",
+                "378%"
+              ]
+            ]
+          },
+          {
+            "id": "change-of-fate",
+            "name": "운명의 변화",
+            "effect": "페트라가 적을 저주하여 공격력 * <value1>{v1}</value1>의 기본값을 바탕으로 유동적인 피해를 줍니다. 최종 피해량은 해당 기본값의 5%에서 600% 사이의 무작위 수치입니다.",
+            "increasing": [
+              [
+                "50%",
+                "55%",
+                "60%",
+                "65%",
+                "70%"
+              ]
+            ]
+          },
+          {
+            "id": "turn-card",
+            "name": "카드 뒤집기",
+            "effect": "페트라가 공격력 * <value1>{v1}</value1>의 기본값을 바탕으로 남은 HP 비율이 가장 낮은 아군 영웅을 치유하여 불운을 뒤집습니다. 최종적으로 회복된 HP은(는) 해당 기본값의 5%에서 400% 사이의 무작위 수치입니다.",
+            "increasing": [
+              [
+                "100%",
+                "110%",
+                "120%",
+                "130%",
+                "140%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "evil-eye",
+            "name": "사악한 눈",
+            "effect": "모든 부대의 공격력에 50%의 확률로 대상을 저주하는 효과를 부여하여, 대상이 받는 피해량을 <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "10%",
+                "20%",
+                "30%",
+                "40%",
+                "50%"
+              ]
+            ]
+          },
+          {
+            "id": "the-favor",
+            "name": "은총",
+            "effect": "페트라는 병사들에게 행운을 가져다주는 점쟁이로 알려져 있으며, 50%의 확률로 모든 부대의 공격력을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "10%",
+                "20%",
+                "30%",
+                "40%",
+                "50%"
+              ]
+            ]
+          },
+          {
+            "id": "the-shield",
+            "name": "방패",
+            "effect": "페트라의 점술은 나쁜 결과를 피해가며, 40%의 확률로 모든 부대가 받는 피해량을 <value1>{v1}</value1> 감소시킵니다.",
+            "increasing": [
+              [
+                "10%",
+                "20%",
+                "30%",
+                "40%",
+                "50%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "fates-writ",
+          "name": "운명의 서",
+          "explorationStats": {
+            "attack": 630,
+            "defense": 630,
+            "health": 6300
+          },
+          "expeditionStats": {
+            "lethality": "70.00%",
+            "health": "70.00%"
+          },
+          "explorationSkill": {
+            "id": "weighted-deck",
+            "name": "조작된 덱",
+            "effect": "페트라는 운명의 카드를 조작하는 데 더 능숙해져서, 유동적인 스킬의 상한선과 하한선을 <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "30%",
+                "60%",
+                "90%",
+                "120%",
+                "150%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "cosmic-eye",
+            "name": "우주의 눈",
+            "effect": "“공격!” 카드는 페트라에게 행동할 적절한 시기를 결코 놓치지 않고 알려줍니다. 페트라는 집결한 부대의 공격력을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.1"
+      },
+      "en": {
+        "id": "petra",
+        "name": "Petra",
+        "generation": "3",
+        "description": "Petra is a Mythic Generation 3 Cavalry Hero in Kingshot. You can unlock Petra through the Hero Roulette.",
+        "troop": "cavalry",
+        "source": "roulette",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 3330,
+          "defense": 3330,
+          "health": 33300
+        },
+        "expeditionStats": {
+          "attack": "290.23%",
+          "defense": "290.23%"
+        },
+        "explorationSkills": [
+          {
+            "id": "dichotomoy",
+            "name": "Dichotomoy",
+            "effect": "Petra throws a tarot card at an enemy, dealing Attack * <value1>{v1}</value1> damage and inflicting one of the following effects: reducing the Attack of the target by 20% for 2s or stunning the target for 1.5s.",
+            "increasing": [
+              [
+                "270%",
+                "297%",
+                "324%",
+                "351%",
+                "378%"
+              ]
+            ]
+          },
+          {
+            "id": "change-of-fate",
+            "name": "Change of Fate",
+            "effect": "Petra curses an enemy, dealing floating damage based on the base value of Attack * <value1>{v1}</value1>. The final damage is a random amount between 5% and 600% of that base value.",
+            "increasing": [
+              [
+                "50%",
+                "55%",
+                "60%",
+                "65%",
+                "70%"
+              ]
+            ]
+          },
+          {
+            "id": "turn-card",
+            "name": "Turn Card",
+            "effect": "Petra reverses misfortune by healing a friendly hero with the lowest percentage of Health remaining based on the base value of Attack * <value1>{v1}</value1>. The final Health restored is a random amount ranging between 5% and 400% of that base value.",
+            "increasing": [
+              [
+                "100%",
+                "110%",
+                "120%",
+                "130%",
+                "140%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "evil-eye",
+            "name": "Evil Eye",
+            "effect": "Grants the Attack of all squads a 50% chance of cursing the target, increasing damage taken by the target by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "10%",
+                "20%",
+                "30%",
+                "40%",
+                "50%"
+              ]
+            ]
+          },
+          {
+            "id": "the-favor",
+            "name": "The Favor",
+            "effect": "Petra is known as a lucky fortune-teller to soldiers, granting a 50% chance of increasing the Attack of all squads by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "10%",
+                "20%",
+                "30%",
+                "40%",
+                "50%"
+              ]
+            ]
+          },
+          {
+            "id": "the-shield",
+            "name": "The Shield",
+            "effect": "The divination of Petra navigates bad outcomes with a 40% chance of reducing damage taken by <value1>{v1}</value1> for all squads.",
+            "increasing": [
+              [
+                "10%",
+                "20%",
+                "30%",
+                "40%",
+                "50%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "fates-writ",
+          "name": "Fate’s Writ",
+          "explorationStats": {
+            "attack": 630,
+            "defense": 630,
+            "health": 6300
+          },
+          "expeditionStats": {
+            "lethality": "70.00%",
+            "health": "70.00%"
+          },
+          "explorationSkill": {
+            "id": "weighted-deck",
+            "name": "Weighted Deck",
+            "effect": "Petra has become more skilled at weighting the cards of fate, increasing the upper and lower limit of fluctuating skills by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "30%",
+                "60%",
+                "90%",
+                "120%",
+                "150%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "cosmic-eye",
+            "name": "Cosmic Eye",
+            "effect": "“Strike!” The cards never fail to inform Petra of the right time to act. Petra increases the Attack of rallied Troop by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.1"
+      }
+    },
+    "rosa": {
+      "generation": 4,
+      "ko": {
+        "id": "rosa",
+        "name": "로자",
+        "generation": "4",
+        "description": "로자는 킹샷(Kingshot)의 신화급 4세대 궁병 영웅입니다. 영웅 룰렛를 통해 로자를 잠금 해제할 수 있습니다.",
+        "troop": "archer",
+        "source": "roulette",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 4989,
+          "defense": 4106,
+          "health": 30802
+        },
+        "expeditionStats": {
+          "attack": "370.29%",
+          "defense": "370.29%"
+        },
+        "explorationSkills": [
+          {
+            "id": "battle-focus",
+            "name": "전투 집중",
+            "effect": "모든 부대의 모든 디버프(제어 효과 등)를 해제하고 <value2>{v2}</value2>초 동안 모든 부대의 공격력을(를) <value1>{v1}</value1> 증가시키며, 해당 시간 동안 디버프에 면역이 됩니다.",
+            "increasing": [
+              [
+                "3%",
+                "4%",
+                "5%",
+                "6%",
+                "7%"
+              ],
+              [
+                "3s",
+                "3.5s",
+                "4s",
+                "4.5s",
+                "5s"
+              ]
+            ]
+          },
+          {
+            "id": "flutterfang",
+            "name": "나비 송곳니",
+            "effect": "경로 상의 적들에게 공격력 * <value1>{v1}</value1>의 피해를 줍니다.",
+            "increasing": [
+              [
+                "220%",
+                "240%",
+                "260%",
+                "280%",
+                "300%"
+              ]
+            ]
+          },
+          {
+            "id": "swoon-chakra",
+            "name": "기절 차크라",
+            "effect": "모든 적 부대의 공격 속도를 <value1>{v1}</value1> 감소시키고 치유 효과를 <value2>{v2}</value2> 감소시킵니다.",
+            "increasing": [
+              [
+                "1%",
+                "1.5%",
+                "2%",
+                "2.5%",
+                "3%"
+              ],
+              [
+                "40%",
+                "45%",
+                "50%",
+                "55%",
+                "60%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "chaos-gambit",
+            "name": "혼돈의 도박",
+            "effect": "40%의 확률로 모든 부대가 주는 피해량을 <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "10%",
+                "20%",
+                "30%",
+                "40%",
+                "50%"
+              ]
+            ]
+          },
+          {
+            "id": "rose-of-war",
+            "name": "전쟁의 장미",
+            "effect": "모든 적 부대가 주는 피해량을 <value1>{v1}</value1> 감소시킵니다.",
+            "increasing": [
+              [
+                "4%",
+                "8%",
+                "12%",
+                "16%",
+                "20%"
+              ]
+            ]
+          },
+          {
+            "id": "golden-rhythm",
+            "name": "황금빛 리듬",
+            "effect": "궁병의 공격력을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "6%",
+                "12%",
+                "18%",
+                "24%",
+                "30%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "aeolian",
+          "name": "아이올로스",
+          "explorationStats": {
+            "attack": 1010,
+            "defense": 832,
+            "health": 6243
+          },
+          "expeditionStats": {
+            "lethality": "92.50%",
+            "health": "92.50%"
+          },
+          "explorationSkill": {
+            "id": "night-reverie",
+            "name": "밤의 몽상",
+            "effect": "'전투 집중'을 시전하면 전투가 끝날 때까지 공격력이(가) <value1>{v1}</value1> 증가합니다.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "perihelion",
+            "name": "근일점",
+            "effect": "집결한 부대의 파괴력을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.1"
+      },
+      "en": {
+        "id": "rosa",
+        "name": "Rosa",
+        "generation": "4",
+        "description": "Rosa is a Mythic Generation 4 Archer Hero in Kingshot. You can unlock Rosa through the Hero Roulette.",
+        "troop": "archer",
+        "source": "roulette",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 4989,
+          "defense": 4106,
+          "health": 30802
+        },
+        "expeditionStats": {
+          "attack": "370.29%",
+          "defense": "370.29%"
+        },
+        "explorationSkills": [
+          {
+            "id": "battle-focus",
+            "name": "Battle Focus",
+            "effect": "Clears all debuffs (control effects, etc.) for all squads and increases the Attack of all squads by <value1>{v1}</value1> for <value2>{v2}</value2>s, during which they remain immune to debuffs.",
+            "increasing": [
+              [
+                "3%",
+                "4%",
+                "5%",
+                "6%",
+                "7%"
+              ],
+              [
+                "3s",
+                "3.5s",
+                "4s",
+                "4.5s",
+                "5s"
+              ]
+            ]
+          },
+          {
+            "id": "flutterfang",
+            "name": "Flutterfang",
+            "effect": "Deals Attack * <value1>{v1}</value1> damage to enemies in its path.",
+            "increasing": [
+              [
+                "220%",
+                "240%",
+                "260%",
+                "280%",
+                "300%"
+              ]
+            ]
+          },
+          {
+            "id": "swoon-chakra",
+            "name": "Swoon Chakra",
+            "effect": "Reduces Attack Speed by <value1>{v1}</value1> and healing effects by <value2>{v2}</value2> for all enemy squads.",
+            "increasing": [
+              [
+                "1%",
+                "1.5%",
+                "2%",
+                "2.5%",
+                "3%"
+              ],
+              [
+                "40%",
+                "45%",
+                "50%",
+                "55%",
+                "60%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "chaos-gambit",
+            "name": "Chaos Gambit",
+            "effect": "Grants a 40% chance of increasing damage dealt by <value1>{v1}</value1> for all squads.",
+            "increasing": [
+              [
+                "10%",
+                "20%",
+                "30%",
+                "40%",
+                "50%"
+              ]
+            ]
+          },
+          {
+            "id": "rose-of-war",
+            "name": "Rose of War",
+            "effect": "Reduces damage dealt by <value1>{v1}</value1> for all enemy squads.",
+            "increasing": [
+              [
+                "4%",
+                "8%",
+                "12%",
+                "16%",
+                "20%"
+              ]
+            ]
+          },
+          {
+            "id": "golden-rhythm",
+            "name": "Golden Rhythm",
+            "effect": "Increases the Attack of Archer by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "6%",
+                "12%",
+                "18%",
+                "24%",
+                "30%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "aeolian",
+          "name": "Aeolian",
+          "explorationStats": {
+            "attack": 1010,
+            "defense": 832,
+            "health": 6243
+          },
+          "expeditionStats": {
+            "lethality": "92.50%",
+            "health": "92.50%"
+          },
+          "explorationSkill": {
+            "id": "night-reverie",
+            "name": "Night Reverie",
+            "effect": "Upon casting Battle Focus, increases Attack by <value1>{v1}</value1> until the end of the battle.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "perihelion",
+            "name": "Perihelion",
+            "effect": "Increases the Lethality of rallied Troop by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.1"
+      }
+    },
+    "saul": {
+      "generation": 1,
+      "ko": {
+        "id": "saul",
+        "name": "사울",
+        "generation": "1",
+        "description": "사울는 킹샷(Kingshot)의 신화급 1세대 궁병 영웅입니다. 영웅 룰렛를 통해 사울를 잠금 해제할 수 있습니다.",
+        "troop": "archer",
+        "source": "roulette",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 2697,
+          "defense": 2220,
+          "health": 16650
+        },
+        "expeditionStats": {
+          "attack": "200.16%",
+          "defense": "200.16%"
+        },
+        "explorationSkills": [
+          {
+            "id": "rapidfire",
+            "name": "속사",
+            "effect": "사울가 여러 번의 타격을 가하여 각각 공격력 * <value1>{v1}</value1>의 피해를 주고 2초 동안 대상을 기절시킵니다.",
+            "increasing": [
+              [
+                "55%",
+                "60%",
+                "65%",
+                "70%",
+                "75%"
+              ]
+            ]
+          },
+          {
+            "id": "final-prayer",
+            "name": "마지막 기도",
+            "effect": "HP가 50% 미만일 때 사울의 방어력이(가) <value1>{v1}</value1> 증가합니다.",
+            "increasing": [
+              [
+                "50%",
+                "75%",
+                "100%",
+                "125%",
+                "150%"
+              ]
+            ]
+          },
+          {
+            "id": "superior-techniques",
+            "name": "우수한 기술",
+            "effect": "사울의 공격 속도가 <value1>{v1}</value1> 증가합니다.",
+            "increasing": [
+              [
+                "10%",
+                "15%",
+                "20%",
+                "25%",
+                "30%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "taskforce-training",
+            "name": "특수부대 훈련",
+            "effect": "특수부대원으로서 사울의 독특한 훈련 프로그램은 매우 효과적이어서 모든 부대의 방어력을(를) <value1>{v1}</value1>, HP을(를) <value2>{v2}</value2> 증가시킵니다.",
+            "increasing": [
+              [
+                "2%",
+                "4%",
+                "6%",
+                "8%",
+                "10%"
+              ],
+              [
+                "3%",
+                "6%",
+                "9%",
+                "12%",
+                "15%"
+              ]
+            ]
+          },
+          {
+            "id": "resourceful",
+            "name": "지략가",
+            "effect": "사울의 효율적인 건설 관리로 인해 건설 속도이(가) <value1>{v1}</value1> 증가하고 건설 비용이 <value2>{v2}</value2> 감소합니다.",
+            "increasing": [
+              [
+                "3%",
+                "6%",
+                "9%",
+                "12%",
+                "15%"
+              ],
+              [
+                "3%",
+                "6%",
+                "9%",
+                "12%",
+                "15%"
+              ]
+            ]
+          },
+          {
+            "id": "positional-batter",
+            "name": "진형 타격수",
+            "effect": "사울가 전장을 능숙하게 조율하여 모든 부대의 파괴력을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "rabbitgear-cannon",
+          "name": "래빗기어 캐논",
+          "explorationStats": {
+            "attack": 546,
+            "defense": 450,
+            "health": 3375
+          },
+          "expeditionStats": {
+            "lethality": "50.00%",
+            "health": "50.00%"
+          },
+          "explorationSkill": {
+            "id": "fearless-advance",
+            "name": "두려움 없는 전진",
+            "effect": "극한 상황에서 발현되는 사울의 강한 결의가 공격력을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "10%",
+                "15%",
+                "20%",
+                "25%",
+                "30%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "defend-to-attack",
+            "name": "방어 후 공격",
+            "effect": "방어 중인 부대의 공격력을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.1"
+      },
+      "en": {
+        "id": "saul",
+        "name": "Saul",
+        "generation": "1",
+        "description": "Saul is a Mythic Generation 1 Archer Hero in Kingshot. You can unlock Saul through the Hero Roulette.",
+        "troop": "archer",
+        "source": "roulette",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 2697,
+          "defense": 2220,
+          "health": 16650
+        },
+        "expeditionStats": {
+          "attack": "200.16%",
+          "defense": "200.16%"
+        },
+        "explorationSkills": [
+          {
+            "id": "rapidfire",
+            "name": "Rapidfire",
+            "effect": "Saul delivers multiple hits, each dealing Attack * <value1>{v1}</value1> damage and stunning the target for 2s.",
+            "increasing": [
+              [
+                "55%",
+                "60%",
+                "65%",
+                "70%",
+                "75%"
+              ]
+            ]
+          },
+          {
+            "id": "final-prayer",
+            "name": "Final Prayer",
+            "effect": "When Health is below 50%, the Defense of Saul is increased by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "50%",
+                "75%",
+                "100%",
+                "125%",
+                "150%"
+              ]
+            ]
+          },
+          {
+            "id": "superior-techniques",
+            "name": "Superior Techniques",
+            "effect": "Saul increases Attack Speed by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "10%",
+                "15%",
+                "20%",
+                "25%",
+                "30%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "taskforce-training",
+            "name": "Taskforce Training",
+            "effect": "As a member of the task force, the unique training program of Saul is highly empowering, increasing the Defense by <value1>{v1}</value1> and the Health by <value2>{v2}</value2> for all squads.",
+            "increasing": [
+              [
+                "2%",
+                "4%",
+                "6%",
+                "8%",
+                "10%"
+              ],
+              [
+                "3%",
+                "6%",
+                "9%",
+                "12%",
+                "15%"
+              ]
+            ]
+          },
+          {
+            "id": "resourceful",
+            "name": "Resourceful",
+            "effect": "The efficient construction management of Saul increases Construction Speed by <value1>{v1}</value1> and reduces Construction Costs by <value2>{v2}</value2>.",
+            "increasing": [
+              [
+                "3%",
+                "6%",
+                "9%",
+                "12%",
+                "15%"
+              ],
+              [
+                "3%",
+                "6%",
+                "9%",
+                "12%",
+                "15%"
+              ]
+            ]
+          },
+          {
+            "id": "positional-batter",
+            "name": "Positional Batter",
+            "effect": "Saul masterfully manipulates the battlefield, increasing the Lethality of all squads by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "rabbitgear-cannon",
+          "name": "Rabbitgear Cannon",
+          "explorationStats": {
+            "attack": 546,
+            "defense": 450,
+            "health": 3375
+          },
+          "expeditionStats": {
+            "lethality": "50.00%",
+            "health": "50.00%"
+          },
+          "explorationSkill": {
+            "id": "fearless-advance",
+            "name": "Fearless Advance",
+            "effect": "The burst of strong determination of Saul under extreme situation increases Attack by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "10%",
+                "15%",
+                "20%",
+                "25%",
+                "30%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "defend-to-attack",
+            "name": "Defend to Attack",
+            "effect": "Increases the Attack of defending Troop by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.1"
+      }
+    },
+    "sophia": {
+      "generation": 6,
+      "ko": {
+        "id": "sophia",
+        "name": "소피아",
+        "generation": "6",
+        "description": "소피아는 킹샷(Kingshot)의 신화급 6세대 기병 영웅입니다. 영웅 룰렛 및 성검 상점을 통해 소피아를 잠금 해제할 수 있습니다.",
+        "troop": "cavalry",
+        "source": "roulette",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 5926,
+          "defense": 5926,
+          "health": 59274
+        },
+        "expeditionStats": {
+          "attack": "540.43%",
+          "defense": "540.43%"
+        },
+        "explorationSkills": [
+          {
+            "id": "puppet-master",
+            "name": "인형 조종자",
+            "effect": "소피아의 미묘한 장미 마법은 적 병사들의 결의를 꺾어 적들에게 공격력 * <value1>{v1}</value1>의 광역 피해를 주고 1초 동안 대상을 혼란에 빠뜨립니다. 혼란에 빠진 적은 피아를 가리지 않고 주변의 모든 대상을 공격합니다.",
+            "increasing": [
+              [
+                "100%",
+                "110%",
+                "120%",
+                "130%",
+                "140%"
+              ]
+            ]
+          },
+          {
+            "id": "scalding-mark",
+            "name": "화상 징표",
+            "effect": "소피아가 마법의 장미로 공격하여 대상에게 공격력 * <value1>{v1}</value1>의 피해를 주고 화상 징표를 부여하여, 4초 동안 대상이 받는 피해량을 <value2>{v2}</value2> 증가시킵니다.",
+            "increasing": [
+              [
+                "50%",
+                "55%",
+                "60%",
+                "65%",
+                "70%"
+              ],
+              [
+                "2%",
+                "3%",
+                "4%",
+                "5%",
+                "6%"
+              ]
+            ]
+          },
+          {
+            "id": "scalding-mark-lash",
+            "name": "화상 징표 – 채찍질",
+            "effect": "화상 징표는 소피아의 공격력을(를) <value1>{v1}</value1> 증가시키고 영향을 받는 대상에게 채찍질을 가하여 <value2>{v2}</value2> 증가된 피해를 줍니다.",
+            "increasing": [
+              [
+                "8%",
+                "12%",
+                "16%",
+                "20%",
+                "24%"
+              ],
+              [
+                "4%",
+                "6%",
+                "8%",
+                "10%",
+                "12%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "arcane-pact",
+            "name": "비전의 계약",
+            "effect": "비전의 계약은 소피아에게 밤의 가호를 부여하여, 매 턴 <value1>{v1}</value1>의 확률로 받는 피해량을 50% 감소시킵니다.",
+            "increasing": [
+              [
+                "8%",
+                "16%",
+                "24%",
+                "32%",
+                "40%"
+              ]
+            ]
+          },
+          {
+            "id": "terror-deathblow",
+            "name": "공포 – 결정타",
+            "effect": "소피아는 적의 대상에게 공포를 유발할 확률이 있는 무시무시한 기운을 내뿜습니다. 적 대상은 매 2턴마다 공포 효과를 겪으며, 다음 턴에 기병로부터 받는 피해량이 <value1>{v1}</value1> 증가합니다. 공포는 1턴 동안 지속됩니다.",
+            "increasing": [
+              [
+                "40%",
+                "80%",
+                "120%",
+                "160%",
+                "200%"
+              ]
+            ]
+          },
+          {
+            "id": "terror-annihilation",
+            "name": "공포 – 섬멸",
+            "effect": "공포는 취약성을 증가시킵니다. 모든 부대가 공포에 빠진 대상에게 주는 피해량이 <value1>{v1}</value1> 증가합니다.",
+            "increasing": [
+              [
+                "15%",
+                "30%",
+                "45%",
+                "60%",
+                "75%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "scarlet-rose",
+          "name": "진홍의 장미",
+          "explorationStats": {
+            "attack": 1201,
+            "defense": 1201,
+            "health": 12015
+          },
+          "expeditionStats": {
+            "lethality": "133.50%",
+            "health": "133.50%"
+          },
+          "explorationSkill": {
+            "id": "eyes-of-obedience",
+            "name": "복종의 눈동자",
+            "effect": "“여왕에 대한 충성이 유일한 목적이다.” 소피아의 공격은 <value1>{v1}</value1>의 확률로 1초 동안 대상을 혼란에 빠뜨립니다. 혼란에 빠진 적은 피아를 가리지 않고 주변의 모든 대상을 공격합니다.",
+            "increasing": [
+              [
+                "2%",
+                "3.5%",
+                "5%",
+                "6.5%",
+                "8%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "queen-of-night",
+            "name": "밤의 여왕",
+            "effect": "소피아는 밤의 여왕의 화신으로서의 힘을 끌어내어 병사들의 공격력을(를) 강화하고 방어 중인 부대의 파괴력을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2026-03-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.0"
+      },
+      "en": {
+        "id": "sophia",
+        "name": "Sophia",
+        "generation": "6",
+        "description": "Sophia is a Mythic Generation 6 Cavalry Hero in Kingshot. You can unlock Sophia through the Hero Roulette and the Swordland Shop.",
+        "troop": "cavalry",
+        "source": "roulette",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 5926,
+          "defense": 5926,
+          "health": 59274
+        },
+        "expeditionStats": {
+          "attack": "540.43%",
+          "defense": "540.43%"
+        },
+        "explorationSkills": [
+          {
+            "id": "puppet-master",
+            "name": "Puppet Master",
+            "effect": "The subtle rose-magic of Sophia saps the resolve of enemy soldiers, dealing Attack * <value1>{v1}</value1> area of effect damage to enemies and confuses the target for 1s. Confused enemies attack all surrounding targets, friend and foe.",
+            "increasing": [
+              [
+                "100%",
+                "110%",
+                "120%",
+                "130%",
+                "140%"
+              ]
+            ]
+          },
+          {
+            "id": "scalding-mark",
+            "name": "Scalding Mark",
+            "effect": "Sophia attacks with an enchanted rose, dealing Attack * <value1>{v1}</value1> damage to targets and applies Scalding Mark, increasing damage taken by the target by <value2>{v2}</value2> for 4s.",
+            "increasing": [
+              [
+                "50%",
+                "55%",
+                "60%",
+                "65%",
+                "70%"
+              ],
+              [
+                "2%",
+                "3%",
+                "4%",
+                "5%",
+                "6%"
+              ]
+            ]
+          },
+          {
+            "id": "scalding-mark-lash",
+            "name": "Scalding Mark – Lash",
+            "effect": "Scalding Marks boost the Attack of Sophia by <value1>{v1}</value1> and allows a Lash against afflicted targets, dealing <value2>{v2}</value2> increased damage.",
+            "increasing": [
+              [
+                "8%",
+                "12%",
+                "16%",
+                "20%",
+                "24%"
+              ],
+              [
+                "4%",
+                "6%",
+                "8%",
+                "10%",
+                "12%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "arcane-pact",
+            "name": "Arcane Pact",
+            "effect": "The arcane pact grants Sophia the protection of night, and a <value1>{v1}</value1> chance of reducing damage taken by 50% every turn.",
+            "increasing": [
+              [
+                "8%",
+                "16%",
+                "24%",
+                "32%",
+                "40%"
+              ]
+            ]
+          },
+          {
+            "id": "terror-deathblow",
+            "name": "Terror – Deathblow",
+            "effect": "Sophia radiates a fearsome aura that has a chance to inflict Terror on enemy targets. Enemy targets suffer the effects of Terror every 2 turns and will receive <value1>{v1}</value1> increased damage from Cavalry on the following turn. Terror lasts 1 turn.",
+            "increasing": [
+              [
+                "40%",
+                "80%",
+                "120%",
+                "160%",
+                "200%"
+              ]
+            ]
+          },
+          {
+            "id": "terror-annihilation",
+            "name": "Terror – Annihilation",
+            "effect": "Terror increases fragility. All squads deal <value1>{v1}</value1> increased damage to Terrified targets.",
+            "increasing": [
+              [
+                "15%",
+                "30%",
+                "45%",
+                "60%",
+                "75%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "scarlet-rose",
+          "name": "Scarlet Rose",
+          "explorationStats": {
+            "attack": 1201,
+            "defense": 1201,
+            "health": 12015
+          },
+          "expeditionStats": {
+            "lethality": "133.50%",
+            "health": "133.50%"
+          },
+          "explorationSkill": {
+            "id": "eyes-of-obedience",
+            "name": "Eyes of Obedience",
+            "effect": "“Loyalty to the Queen is the one and only purpose.” The attacks of Sophia have a <value1>{v1}</value1> chance of confusing the target for 1s. Confused enemies attack all surrounding targets, friend and foe.",
+            "increasing": [
+              [
+                "2%",
+                "3.5%",
+                "5%",
+                "6.5%",
+                "8%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "queen-of-night",
+            "name": "Queen of Night",
+            "effect": "Sophia draws upon the avatar as Queen of the Night to enhance the Attack of soldiers, increasing the Lethality of defending Troop by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2026-03-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.0"
+      }
+    },
+    "thrud": {
+      "generation": 5,
+      "ko": {
+        "id": "thrud",
+        "name": "스루드",
+        "generation": "5",
+        "description": "스루드는 킹샷(Kingshot)의 신화급 5세대 기병 영웅입니다. 일일 특가, 영웅 집결, 지고의 영주 및 최강 왕국 이벤트를 통해 스루드를 잠금 해제할 수 있습니다.",
+        "troop": "cavalry",
+        "source": "king",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 4928,
+          "defense": 4928,
+          "health": 49284
+        },
+        "expeditionStats": {
+          "attack": "444.35%",
+          "defense": "444.35%"
+        },
+        "explorationSkills": [
+          {
+            "id": "axe-flurry",
+            "name": "도끼 난무",
+            "effect": "스루드가 무작위 대상(영웅 우선)에게 5개의 도끼를 던져 공격력 * <value1>{v1}</value1>의 광역 피해를 줍니다.",
+            "increasing": [
+              [
+                "60%",
+                "66%",
+                "72%",
+                "78%",
+                "84%"
+              ]
+            ]
+          },
+          {
+            "id": "brutal-throw",
+            "name": "잔혹한 투척",
+            "effect": "스루드가 회전하는 도끼를 던져 범위 내의 적들에게 공격력 * <value1>{v1}</value1>의 피해를 주고 1.5초 동안 기절시킵니다.",
+            "increasing": [
+              [
+                "50%",
+                "55%",
+                "60%",
+                "65%",
+                "70%"
+              ]
+            ]
+          },
+          {
+            "id": "feast-of-the-pack",
+            "name": "무리의 연회",
+            "effect": "스루드가 원시적인 포효를 내질러 모든 부대의 공격력을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "3%",
+                "3.5%",
+                "4%",
+                "4.5%",
+                "5%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "battle-hunger",
+            "name": "전투의 갈망",
+            "effect": "스루드의 전투 열기는 보병 및 궁병에게 영감을 주어 받는 피해량을 <value1>{v1}</value1> 감소시키고 주는 피해량을 <value2>{v2}</value2> 증가시킵니다.",
+            "increasing": [
+              [
+                "3%",
+                "6%",
+                "9%",
+                "12%",
+                "15%"
+              ],
+              [
+                "3%",
+                "6%",
+                "9%",
+                "12%",
+                "15%"
+              ]
+            ]
+          },
+          {
+            "id": "reckless-charge",
+            "name": "무모한 돌진",
+            "effect": "계획도 없고 기교도 없습니다. 오직 잔혹하게 전투로 돌진할 뿐입니다. 스루드의 기병은(는) 공격 시 20%의 확률로 모든 적에게 <value1>{v1}</value1>의 추가 피해를 줍니다.",
+            "increasing": [
+              [
+                "20%",
+                "40%",
+                "60%",
+                "80%",
+                "100%"
+              ]
+            ]
+          },
+          {
+            "id": "ancestral-guidance",
+            "name": "조상의 인도",
+            "effect": "조상의 영혼이 용맹한 자들을 발할라로 인도합니다. 기병이(가) 4번 공격할 때마다 2턴 동안 모든 부대가 주는 피해량이 <value1>{v1}</value1> 증가하고 받는 피해량이 <value2>{v2}</value2> 감소합니다.",
+            "increasing": [
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ],
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "bloodfang",
+          "name": "피송곳니",
+          "explorationStats": {
+            "attack": 999,
+            "defense": 999,
+            "health": 9990
+          },
+          "expeditionStats": {
+            "lethality": "111.00%",
+            "health": "111.00%"
+          },
+          "explorationSkill": {
+            "id": "berserkers-edge",
+            "name": "광전사의 칼날",
+            "effect": "'도끼 난무'를 시전하는 동안 스루드는 <value1>{v1}</value1>의 확률로 대상을 <value2>{v2}</value2> 동안 기절시킵니다.",
+            "increasing": [
+              [
+                "25%",
+                "27.5%",
+                "30%",
+                "32.5%",
+                "35%"
+              ],
+              [
+                "0.6s",
+                "0.7s",
+                "0.8s",
+                "0.9s",
+                "1s"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "wolf-kissed",
+            "name": "늑대의 입맞춤을 받은 자",
+            "effect": "스루드는 \"늑대의 입맞춤을 받은 자\"라는 칭호에 걸맞은 활약을 합니다. 집결한 부대의 파괴력을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.1"
+      },
+      "en": {
+        "id": "thrud",
+        "name": "Thrud",
+        "generation": "5",
+        "description": "Thrud is a Mythic Generation 5 Cavalry Hero in Kingshot. You can unlock Thrud through Daily Deals, Hero Rally, Strongest Governor, and the Kingdom of Power event.",
+        "troop": "cavalry",
+        "source": "king",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 4928,
+          "defense": 4928,
+          "health": 49284
+        },
+        "expeditionStats": {
+          "attack": "444.35%",
+          "defense": "444.35%"
+        },
+        "explorationSkills": [
+          {
+            "id": "axe-flurry",
+            "name": "Axe Flurry",
+            "effect": "Thrud hurls five axes at random targets (heroes first), dealing Attack * <value1>{v1}</value1> area of effect damage.",
+            "increasing": [
+              [
+                "60%",
+                "66%",
+                "72%",
+                "78%",
+                "84%"
+              ]
+            ]
+          },
+          {
+            "id": "brutal-throw",
+            "name": "Brutal Throw",
+            "effect": "Thrud throws a spinning axe, dealing Attack * <value1>{v1}</value1> damage to enemies within range and stunning them for 1.5s.",
+            "increasing": [
+              [
+                "50%",
+                "55%",
+                "60%",
+                "65%",
+                "70%"
+              ]
+            ]
+          },
+          {
+            "id": "feast-of-the-pack",
+            "name": "Feast of the Pack",
+            "effect": "Thrud lets out a primal howl, increasing the Attack of all squads by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "3%",
+                "3.5%",
+                "4%",
+                "4.5%",
+                "5%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "battle-hunger",
+            "name": "Battle Hunger",
+            "effect": "The battle fever of Thrud inspires Infantry and Archer, reducing damage taken by <value1>{v1}</value1> and increasing damage dealt by <value2>{v2}</value2>.",
+            "increasing": [
+              [
+                "3%",
+                "6%",
+                "9%",
+                "12%",
+                "15%"
+              ],
+              [
+                "3%",
+                "6%",
+                "9%",
+                "12%",
+                "15%"
+              ]
+            ]
+          },
+          {
+            "id": "reckless-charge",
+            "name": "Reckless Charge",
+            "effect": "No plans. No finesse. Just brutally charging into battle. The Cavalry of Thrud has a 20% chance of dealing <value1>{v1}</value1> extra damage to all enemies on attack.",
+            "increasing": [
+              [
+                "20%",
+                "40%",
+                "60%",
+                "80%",
+                "100%"
+              ]
+            ]
+          },
+          {
+            "id": "ancestral-guidance",
+            "name": "Ancestral Guidance",
+            "effect": "Ancestral spirits guide the brave to Valhalla. For every 4 attacks made by Cavalry, damage dealt is increased by <value1>{v1}</value1> and damage taken is reduced by <value2>{v2}</value2> for all squads for 2 turns.",
+            "increasing": [
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ],
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "bloodfang",
+          "name": "Bloodfang",
+          "explorationStats": {
+            "attack": 999,
+            "defense": 999,
+            "health": 9990
+          },
+          "expeditionStats": {
+            "lethality": "111.00%",
+            "health": "111.00%"
+          },
+          "explorationSkill": {
+            "id": "berserkers-edge",
+            "name": "Berserker’s Edge",
+            "effect": "While releasing Axe Flurry, Thrud has a <value1>{v1}</value1> chance of stunning the targets for <value2>{v2}</value2>s.",
+            "increasing": [
+              [
+                "25%",
+                "27.5%",
+                "30%",
+                "32.5%",
+                "35%"
+              ],
+              [
+                "0.6s",
+                "0.7s",
+                "0.8s%",
+                "0.9s",
+                "1s"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "wolf-kissed",
+            "name": "Wolf-Kissed",
+            "effect": "Thrud lives up to the title, “Wolf-Kissed.” Increases the Lethality of rallied Troop by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.1"
+      }
+    },
+    "triton": {
+      "generation": 6,
+      "ko": {
+        "id": "triton",
+        "name": "트리톤",
+        "generation": "6",
+        "description": "트리톤는 킹샷(Kingshot)의 신화급 6세대 보병 영웅입니다. 영웅의 전당 및 성검 상점을 통해 트리톤를 잠금 해제할 수 있습니다.",
+        "troop": "infantry",
+        "source": "hall_of_heroes",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 4546,
+          "defense": 5926,
+          "health": 99910
+        },
+        "expeditionStats": {
+          "attack": "540.43%",
+          "defense": "540.43%"
+        },
+        "explorationSkills": [
+          {
+            "id": "tidewill",
+            "name": "파도의 의지",
+            "effect": "트리톤는 앞으로 밀려드는 파도 장벽에 둘러싸여 2초 동안 무적 상태를 얻은 후 공격력 * <value1>{v1}</value1>의 광역 피해를 줍니다.",
+            "increasing": [
+              [
+                "100%",
+                "110%",
+                "120%",
+                "130%",
+                "140%"
+              ]
+            ]
+          },
+          {
+            "id": "regal-wrath",
+            "name": "제왕의 분노",
+            "effect": "트리톤는 내면의 지배자의 분노를 표출하여 4초 동안 공격력을(를) <value1>{v1}</value1>, 방어력을(를) <value2>{v2}</value2> 증가시킵니다.",
+            "increasing": [
+              [
+                "8%",
+                "12%",
+                "16%",
+                "20%",
+                "24%"
+              ],
+              [
+                "16%",
+                "24%",
+                "32%",
+                "40%",
+                "48%"
+              ]
+            ]
+          },
+          {
+            "id": "striking-hit",
+            "name": "강력한 타격",
+            "effect": "트리톤는 산산조각 내는 폭력성으로 불복종하는 자들을 채찍질하며, 일반 공격마다 무작위 적에게 공격력 * <value1>{v1}</value1>의 피해를 줍니다.",
+            "increasing": [
+              [
+                "20%",
+                "22%",
+                "24%",
+                "26%",
+                "28%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "command-of-power",
+            "name": "권력의 지휘",
+            "effect": "트리톤의 권위를 받아들이면 그 결실을 나눌 수 있게 되어 모든 부대의 방어력이(가) <value1>{v1}</value1> 증가합니다.",
+            "increasing": [
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          },
+          {
+            "id": "warfare-of-power",
+            "name": "권력의 전쟁",
+            "effect": "전쟁의 힘은 전투에 직면하여 두려움을 공유하는 데 있으며, 모든 부대가 주는 스킬 피해량이 <value1>{v1}</value1> 증가합니다.",
+            "increasing": [
+              [
+                "6%",
+                "12%",
+                "18%",
+                "24%",
+                "30%"
+              ]
+            ]
+          },
+          {
+            "id": "oath-of-power",
+            "name": "권력의 맹세",
+            "effect": "강대한 힘은 맹세를 지키려는 의지에서 비롯되며, 보병의 HP을(를) <value1>{v1}</value1> 증가시키고, 기병 및 궁병의 HP을(를) <value2>{v2}</value2> 증가시킵니다.",
+            "increasing": [
+              [
+                "4%",
+                "8%",
+                "12%",
+                "16%",
+                "20%"
+              ],
+              [
+                "6%",
+                "12%",
+                "18%",
+                "24%",
+                "30%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "tidal-scepter",
+          "name": "파도의 홀",
+          "explorationStats": {
+            "attack": 921,
+            "defense": 1201,
+            "health": 18022
+          },
+          "expeditionStats": {
+            "lethality": "133.50%",
+            "health": "133.50%"
+          },
+          "explorationSkill": {
+            "id": "magnetic-reformation",
+            "name": "자기 재형성",
+            "effect": "고대 개조 기술의 산물인 이 홀은 트리톤가 주는 피해량을 <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "10%",
+                "15%",
+                "20%",
+                "25%",
+                "30%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "whale-call",
+            "name": "고래의 부름",
+            "effect": "트리톤의 고대 고래 울음소리가 바리케이드를 통해 메아리치며 병사들을 흔들림 없는 결의로 채우고, 방어 중인 부대의 방어력을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2026-03-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.0"
+      },
+      "en": {
+        "id": "triton",
+        "name": "Triton",
+        "generation": "6",
+        "description": "Triton is a Mythic Generation 6 Infantry Hero in Kingshot. You can unlock Triton through the Hall of Heroes and the Swordland Shop.",
+        "troop": "infantry",
+        "source": "hall_of_heroes",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 4546,
+          "defense": 5926,
+          "health": 99910
+        },
+        "expeditionStats": {
+          "attack": "540.43%",
+          "defense": "540.43%"
+        },
+        "explorationSkills": [
+          {
+            "id": "tidewill",
+            "name": "Tidewill",
+            "effect": "Triton is surrounded by a barrier of waves that surges forward, gaining invulnerability for 2s before dealing Attack * <value1>{v1}</value1> area of effect damage.",
+            "increasing": [
+              [
+                "100%",
+                "110%",
+                "120%",
+                "130%",
+                "140%"
+              ]
+            ]
+          },
+          {
+            "id": "regal-wrath",
+            "name": "Regal Wrath",
+            "effect": "Triton channels the rage of the ruler within, increasing Attack by <value1>{v1}</value1> and Defense by <value2>{v2}</value2> for 4s.",
+            "increasing": [
+              [
+                "8%",
+                "12%",
+                "16%",
+                "20%",
+                "24%"
+              ],
+              [
+                "16%",
+                "24%",
+                "32%",
+                "40%",
+                "48%"
+              ]
+            ]
+          },
+          {
+            "id": "striking-hit",
+            "name": "Striking Hit",
+            "effect": "Triton lashes the disobedient with shattering violence, dealing Attack * <value1>{v1}</value1> damage to a random enemy with every normal attack.",
+            "increasing": [
+              [
+                "20%",
+                "22%",
+                "24%",
+                "26%",
+                "28%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "command-of-power",
+            "name": "Command of Power",
+            "effect": "Acceptance of the authority of Triton enables the fruits to be shared thereof, increasing the Defense of all squads by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          },
+          {
+            "id": "warfare-of-power",
+            "name": "Warfare of Power",
+            "effect": "The power of warfare lies in shared fearlessness in the face of battle, increasing skill damage dealt by all squads by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "6%",
+                "12%",
+                "18%",
+                "24%",
+                "30%"
+              ]
+            ]
+          },
+          {
+            "id": "oath-of-power",
+            "name": "Oath of Power",
+            "effect": "Great power stems from a willingness to keep oaths, increasing the Health of Infantry by <value1>{v1}</value1> and the Health of Cavalry and Archer by <value2>{v2}</value2>.",
+            "increasing": [
+              [
+                "4%",
+                "8%",
+                "12%",
+                "16%",
+                "20%"
+              ],
+              [
+                "6%",
+                "12%",
+                "18%",
+                "24%",
+                "30%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "tidal-scepter",
+          "name": "Tidal Scepter",
+          "explorationStats": {
+            "attack": 921,
+            "defense": 1201,
+            "health": 18022
+          },
+          "expeditionStats": {
+            "lethality": "133.50%",
+            "health": "133.50%"
+          },
+          "explorationSkill": {
+            "id": "magnetic-reformation",
+            "name": "Magnetic Reformation",
+            "effect": "An artifice of ancient modification, the scepter grants Triton <value1>{v1}</value1> increased damage.",
+            "increasing": [
+              [
+                "10%",
+                "15%",
+                "20%",
+                "25%",
+                "30%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "whale-call",
+            "name": "Whale Call",
+            "effect": "The ancient whale-calls of Triton echo through the barricades, filling soldiers with unshakable resolve and increasing the Defense of defending Troop by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2026-03-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.0"
+      }
+    },
+    "vivian": {
+      "generation": 5,
+      "ko": {
+        "id": "vivian",
+        "name": "비비안",
+        "generation": "5",
+        "description": "비비안는 킹샷(Kingshot)의 신화급 5세대 궁병 영웅입니다. 영웅의 전당를 통해 비비안를 잠금 해제할 수 있습니다.",
+        "troop": "archer",
+        "source": "hall_of_heroes",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 5987,
+          "defense": 4928,
+          "health": 36962
+        },
+        "expeditionStats": {
+          "attack": "444.35%",
+          "defense": "444.35%"
+        },
+        "explorationSkills": [
+          {
+            "id": "gilded-barrage",
+            "name": "금빛 탄막",
+            "effect": "비비안가 적의 후열에 동전 총알을 발사하여(영웅 우선) 공격력 * <value1>{v1}</value1>의 광역 피해를 주고 2초 동안 대상의 공격 속도를 50% 감소시킵니다.",
+            "increasing": [
+              [
+                "180%",
+                "198%",
+                "216%",
+                "234%",
+                "252%"
+              ]
+            ]
+          },
+          {
+            "id": "lucky-strike",
+            "name": "행운의 일격",
+            "effect": "운은 전세를 바꿀 수 있습니다. 비비안가 적에게 발포하여(영웅 우선) 공격력 * <value1>{v1}</value1>의 피해를 주며, 50%의 확률로 두 배의 피해를 줍니다.",
+            "increasing": [
+              [
+                "100%",
+                "110%",
+                "120%",
+                "130%",
+                "140%"
+              ]
+            ]
+          },
+          {
+            "id": "priceless-shot",
+            "name": "값비싼 사격",
+            "effect": "비비안가 거대한 동전 총알의 파괴적인 우박을 퍼부어 3초 동안 범위 내의 적들에게 매초 공격력 * <value1>{v1}</value1>의 피해를 줍니다.",
+            "increasing": [
+              [
+                "35%",
+                "38.5%",
+                "42%",
+                "45.5%",
+                "49%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "crouching-tiger",
+            "name": "웅크린 호랑이",
+            "effect": "비비안는 공격할 적절한 순간을 기다릴 줄 아는 인내심 있는 지휘관입니다. 모든 부대의 공격력은(는) 적이 받는 피해량을 <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          },
+          {
+            "id": "focus-fire",
+            "name": "일점사",
+            "effect": "비비안의 날카로운 집중력은 적의 약점을 노출시켜 4번의 공격마다 모든 부대의 공격력에 <value1>{v1}</value1>의 추가 피해를 부여하고, 대상이 다음 번 받는 공격에서 <value2>{v2}</value2>의 추가 피해를 받게 합니다.",
+            "increasing": [
+              [
+                "20%",
+                "40%",
+                "60%",
+                "80%",
+                "100%"
+              ],
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          },
+          {
+            "id": "trap-of-greed",
+            "name": "탐욕의 덫",
+            "effect": "비비안는 궁병에게 맞춤형 동전 함정을 장착하여 매 4번의 공격마다 다음 공격 시 모든 적에게 <value1>{v1}</value1>의 추가 피해를 줍니다.",
+            "increasing": [
+              [
+                "12%",
+                "24%",
+                "36%",
+                "48%",
+                "60%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "lucky-spinner",
+          "name": "행운의 룰렛",
+          "explorationStats": {
+            "attack": 1212,
+            "defense": 999,
+            "health": 7494
+          },
+          "expeditionStats": {
+            "lethality": "111.00%",
+            "health": "111.00%"
+          },
+          "explorationSkill": {
+            "id": "refined-gunplay",
+            "name": "정교한 사격술",
+            "effect": "비비안의 세련된 사격술은 스킬이 시전될 때마다 무작위 적에게 공격력 * <value1>{v1}</value1>의 피해를 줄 수 있게 해줍니다(영웅 우선).",
+            "increasing": [
+              [
+                "50%",
+                "55%",
+                "60%",
+                "65%",
+                "70%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "money-driven",
+            "name": "금전욕",
+            "effect": "큰 보상은 엄청난 용기를 북돋워 방어 중인 부대의 방어력을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.1"
+      },
+      "en": {
+        "id": "vivian",
+        "name": "Vivian",
+        "generation": "5",
+        "description": "Vivian is a Mythic Generation 5 Archer Hero in Kingshot. You can unlock Vivian through the Hall of Heroes.",
+        "troop": "archer",
+        "source": "hall_of_heroes",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 5987,
+          "defense": 4928,
+          "health": 36962
+        },
+        "expeditionStats": {
+          "attack": "444.35%",
+          "defense": "444.35%"
+        },
+        "explorationSkills": [
+          {
+            "id": "gilded-barrage",
+            "name": "Gilded Barrage",
+            "effect": "Vivian fires a coin bullet at the enemy back row (heroes first), dealing Attack * <value1>{v1}</value1> area of effect damage and reducing Attack Speed of the targets by 50% for 2 seconds.",
+            "increasing": [
+              [
+                "180%",
+                "198%",
+                "216%",
+                "234%",
+                "252%"
+              ]
+            ]
+          },
+          {
+            "id": "lucky-strike",
+            "name": "Lucky Strike",
+            "effect": "Luck can turn the tide. Vivian fires at an enemy (heroes first), dealing Attack * <value1>{v1}</value1> damage with a 50% chance of dealing double damage.",
+            "increasing": [
+              [
+                "100%",
+                "110%",
+                "120%",
+                "130%",
+                "140%"
+              ]
+            ]
+          },
+          {
+            "id": "priceless-shot",
+            "name": "Priceless Shot",
+            "effect": "Vivian unleashes a devastating hail of massive coin bullets, dealing Attack * <value1>{v1}</value1> damage per second to enemies within range for 3s.",
+            "increasing": [
+              [
+                "35%",
+                "38.5%",
+                "42%",
+                "45.5%",
+                "49%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "crouching-tiger",
+            "name": "Crouching Tiger",
+            "effect": "Vivian is a patient commander willing to wait for just the right moment to strike. The Attack of all squads increases damage taken by enemies by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          },
+          {
+            "id": "focus-fire",
+            "name": "Focus Fire",
+            "effect": "The sharp focus of Vivian exposes enemy weaknesses, granting the Attack of all squads <value1>{v1}</value1> extra damage after every four attacks, and causes the target to receive <value2>{v2}</value2> extra damage for the next attack received.",
+            "increasing": [
+              [
+                "20%",
+                "40%",
+                "60%",
+                "80%",
+                "100%"
+              ],
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          },
+          {
+            "id": "trap-of-greed",
+            "name": "Trap of Greed",
+            "effect": "Vivian equips Archer with custom coin traps, dealing <value1>{v1}</value1> extra damage to all enemies on the next attack of every 4 attacks.",
+            "increasing": [
+              [
+                "12%",
+                "24%",
+                "36%",
+                "48%",
+                "60%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "lucky-spinner",
+          "name": "Lucky Spinner",
+          "explorationStats": {
+            "attack": 1212,
+            "defense": 999,
+            "health": 7494
+          },
+          "expeditionStats": {
+            "lethality": "111.00%",
+            "health": "111.00%"
+          },
+          "explorationSkill": {
+            "id": "refined-gunplay",
+            "name": "Refined Gunplay",
+            "effect": "The refined shooting style of Vivian allows dealing Attack * <value1>{v1}</value1> damage to a random enemy each time a skill is cast (heroes first).",
+            "increasing": [
+              [
+                "50%",
+                "55%",
+                "60%",
+                "65%",
+                "70%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "money-driven",
+            "name": "Money Driven",
+            "effect": "Big rewards fuel great bravery, increasing the Defense of defending Troop by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.1"
+      }
+    },
+    "yang": {
+      "generation": 6,
+      "ko": {
+        "id": "yang",
+        "name": "양",
+        "generation": "6",
+        "description": "양는 킹샷(Kingshot)의 신화급 6세대 궁병 영웅입니다. 일일 특가, 영웅 집결, 지고의 영주 및 최강 왕국를 통해 양를 잠금 해제할 수 있습니다.",
+        "troop": "archer",
+        "source": "king",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 7200,
+          "defense": 5926,
+          "health": 44454
+        },
+        "expeditionStats": {
+          "attack": "540.43%",
+          "defense": "540.43%"
+        },
+        "explorationSkills": [
+          {
+            "id": "kin-throw",
+            "name": "혈족 투척",
+            "effect": "양가 적을 향해 직선으로 맹렬한 프로스트킨을 날려 공격력 * <value1>{v1}</value1>의 광역 피해를 주고 돌아오는 경로에서도 동일한 피해를 줍니다.",
+            "increasing": [
+              [
+                "100%",
+                "110%",
+                "120%",
+                "130%",
+                "140%"
+              ]
+            ]
+          },
+          {
+            "id": "combo",
+            "name": "콤보",
+            "effect": "양의 특수 총기는 <value1>{v1}</value1>의 확률로 콤보 사격을 가하여 적에게 한 번 더 피해를 줍니다.",
+            "increasing": [
+              [
+                "15%",
+                "20%",
+                "25%",
+                "30%",
+                "35%"
+              ]
+            ]
+          },
+          {
+            "id": "deadshot",
+            "name": "데드샷",
+            "effect": "제대로 조준한다면 어떤 총알이든 사냥꾼의 사냥감에게 치명적인 일격을 가할 수 있습니다. 양는 피해를 줄 때 <value1>{v1}</value1>의 치명타 확률을 얻습니다.",
+            "increasing": [
+              [
+                "3%",
+                "6%",
+                "9%",
+                "12%",
+                "15%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "avalanche",
+            "name": "눈사태",
+            "effect": "눈사태는 양에게 무기고에 있는 또 다른 무기에 불과하며, 매 4턴마다 모든 부대가 대상에게 추가 타격을 가하여 <value1>{v1}</value1>의 피해를 줍니다.",
+            "increasing": [
+              [
+                "20%",
+                "40%",
+                "60%",
+                "80%",
+                "100%"
+              ]
+            ]
+          },
+          {
+            "id": "ice-zone",
+            "name": "아이스 존",
+            "effect": "수년간의 극한의 역경은 양에게 이점을 포착하는 방법을 가르쳐 주었습니다. 양의 궁병은(는) 매 공격 시 40%의 확률로 <value1>{v1}</value1>의 추가 피해를 줍니다.",
+            "increasing": [
+              [
+                "20%",
+                "40%",
+                "60%",
+                "80%",
+                "100%"
+              ]
+            ]
+          },
+          {
+            "id": "ambush",
+            "name": "매복",
+            "effect": "양는 거의 모든 현상의 원리를 쉽게 파악할 수 있는 진보적인 사고가로, 매 턴 모든 부대에게 주는 피해량을 증가시킬 수 있는 <value1>{v1}</value1>의 확률을 부여합니다.",
+            "increasing": [
+              [
+                "8%",
+                "16%",
+                "24%",
+                "32%",
+                "40%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "frostkin",
+          "name": "프로스트킨",
+          "explorationStats": {
+            "attack": 1457,
+            "defense": 1201,
+            "health": 9011
+          },
+          "expeditionStats": {
+            "lethality": "133.50%",
+            "health": "133.50%"
+          },
+          "explorationSkill": {
+            "id": "quick-draw",
+            "name": "빠른 뽑기",
+            "effect": "양의 놀라운 근육 기억력은 5연발 탄막을 쏠 수 있게 하여 무작위 적에게 공격력 * <value1>{v1}</value1>의 피해를 줍니다. 대상이 호위대일 경우 <value2>{v2}</value2>의 확률로 즉시 쓰러뜨립니다.",
+            "increasing": [
+              [
+                "40%",
+                "44%",
+                "48%",
+                "52%",
+                "56%"
+              ],
+              [
+                "40%",
+                "55%",
+                "70%",
+                "85%",
+                "100%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "offensive-defense",
+            "name": "공격적 방어",
+            "effect": "양는 최선의 방어는 좋은 공격이라는 격언을 잘 활용하여, 집결한 부대의 파괴력을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2026-03-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.0"
+      },
+      "en": {
+        "id": "yang",
+        "name": "Yang",
+        "generation": "6",
+        "description": "Yang is a Mythic Generation 6 Archer Hero in Kingshot. You can unlock Yang through Daily Deals, Hero Rally, Strongest Governor, and the Kingdom of Power.",
+        "troop": "archer",
+        "source": "king",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 7200,
+          "defense": 5926,
+          "health": 44454
+        },
+        "expeditionStats": {
+          "attack": "540.43%",
+          "defense": "540.43%"
+        },
+        "explorationSkills": [
+          {
+            "id": "kin-throw",
+            "name": "Kin Throw",
+            "effect": "Yang delivers a rip-roaring Frostkin in a straight line against enemies, dealing Attack * <value1>{v1}</value1> area of effect damage plus the same amount on the return path.",
+            "increasing": [
+              [
+                "100%",
+                "110%",
+                "120%",
+                "130%",
+                "140%"
+              ]
+            ]
+          },
+          {
+            "id": "combo",
+            "name": "Combo",
+            "effect": "The special firearm of Yang has a <value1>{v1}</value1> chance of inflicting a combo shot, dealing another round of damage to enemies.",
+            "increasing": [
+              [
+                "15%",
+                "20%",
+                "25%",
+                "30%",
+                "35%"
+              ]
+            ]
+          },
+          {
+            "id": "deadshot",
+            "name": "Deadshot",
+            "effect": "Any bullet can inflict the critical blow to the prey of the hunter when aimed just right. Yang enjoys a <value1>{v1}</value1> Crit Rate when dealing damage.",
+            "increasing": [
+              [
+                "3%",
+                "6%",
+                "9%",
+                "12%",
+                "15%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "avalanche",
+            "name": "Avalanche",
+            "effect": "An avalanche for Yang is just another weapon in the arsenal, resulting in an additional strike against a target by all squads every 4 turns for <value1>{v1}</value1> damage.",
+            "increasing": [
+              [
+                "20%",
+                "40%",
+                "60%",
+                "80%",
+                "100%"
+              ]
+            ]
+          },
+          {
+            "id": "ice-zone",
+            "name": "Ice Zone",
+            "effect": "Years of arctic adversity have taught Yang to seize advantages. The Archer of Yang have a 40% chance of dealing <value1>{v1}</value1> extra damage with every attack.",
+            "increasing": [
+              [
+                "20%",
+                "40%",
+                "60%",
+                "80%",
+                "100%"
+              ]
+            ]
+          },
+          {
+            "id": "ambush",
+            "name": "Ambush",
+            "effect": "Yang is an advanced thinker who can easily grasp the principles of almost any phenomena, giving all squads a <value1>{v1}</value1> chance of dealing increased damage every turn.",
+            "increasing": [
+              [
+                "8%",
+                "16%",
+                "24%",
+                "32%",
+                "40%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "frostkin",
+          "name": "Frostkin",
+          "explorationStats": {
+            "attack": 1457,
+            "defense": 1201,
+            "health": 9011
+          },
+          "expeditionStats": {
+            "lethality": "133.50%",
+            "health": "133.50%"
+          },
+          "explorationSkill": {
+            "id": "quick-draw",
+            "name": "Quick Draw",
+            "effect": "The impressive muscle memory of Yang enables a five-shot barrage, dealing Attack * <value1>{v1}</value1> damage to a random enemy. If the target is an Escort, there is a <value2>{v2}</value2> chance of instantly knocking them down.",
+            "increasing": [
+              [
+                "40%",
+                "44%",
+                "48%",
+                "52%",
+                "56%"
+              ],
+              [
+                "40%",
+                "55%",
+                "70%",
+                "85%",
+                "100%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "offensive-defense",
+            "name": "Offensive Defense",
+            "effect": "Yang puts the maxim that the best defense is a good offense to good use, increasing the Lethality of rallied Troop by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2026-03-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.0"
+      }
+    },
+    "zoe": {
+      "generation": 2,
+      "ko": {
+        "id": "zoe",
+        "name": "조이",
+        "generation": "2",
+        "description": "조이는 킹샷(Kingshot)의 신화급 2세대 보병 영웅입니다. 영웅 룰렛를 통해 조이를 잠금 해제할 수 있습니다.",
+        "troop": "infantry",
+        "source": "roulette",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 2043,
+          "defense": 2664,
+          "health": 39960
+        },
+        "expeditionStats": {
+          "attack": "240.19%",
+          "defense": "240.19%"
+        },
+        "explorationSkills": [
+          {
+            "id": "shield-strike",
+            "name": "방패 타격",
+            "effect": "조이의 예측 불가능한 공격은 적을 쉽게 속박하여 매 0.5초마다 공격력 * <value1>{v1}</value1>의 피해를 주고 2초 동안 대상이 받는 피해량을 <value2>{v2}</value2> 증폭시킵니다.",
+            "increasing": [
+              [
+                "60%",
+                "66%",
+                "72%",
+                "78%",
+                "84%"
+              ],
+              [
+                "10%",
+                "15%",
+                "20%",
+                "25%",
+                "25%"
+              ]
+            ]
+          },
+          {
+            "id": "agony-rush",
+            "name": "고통의 돌진",
+            "effect": "조이는 최고의 신체 능력을 발휘하기 위해 고통을 필요로 하며, HP가 50% 미만일 때 즉시 최대 HP의 <value1>{v1}</value1>을(를) 회복합니다. 전투당 한 번만 발동할 수 있습니다.",
+            "increasing": [
+              [
+                "20%",
+                "25%",
+                "30%",
+                "35%",
+                "40%"
+              ]
+            ]
+          },
+          {
+            "id": "holy-might",
+            "name": "신성한 힘",
+            "effect": "조이는 동료 전사들의 전투 의지를 고취하여 공격 속도를 <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "3%",
+                "4%",
+                "5%",
+                "6%",
+                "7%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "sundering-wound",
+            "name": "찢어지는 상처",
+            "effect": "모든 부대의 공격력은(는) 20%의 확률로 '분쇄'를 부여하여 3턴 동안 매 턴 <value1>{v1}</value1>의 피해를 줍니다.",
+            "increasing": [
+              [
+                "8%",
+                "16%",
+                "24%",
+                "32%",
+                "40%"
+              ]
+            ]
+          },
+          {
+            "id": "stoic",
+            "name": "강인함",
+            "effect": "조이는 타고난 연설가이며, 사기를 북돋는 전투 연설로 모든 부대의 공격력을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          },
+          {
+            "id": "infinite-arsenal",
+            "name": "무한한 무기고",
+            "effect": "조이는 적을 완전히 압도하여 모든 부대의 공격력에 50%의 확률로 적 부대가 받는 피해량을 <value1>{v1}</value1> 증폭시키는 효과를 부여합니다.",
+            "increasing": [
+              [
+                "10%",
+                "20%",
+                "30%",
+                "40%",
+                "50%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "the-unrighteous",
+          "name": "불의한 자",
+          "explorationStats": {
+            "attack": 414,
+            "defense": 540,
+            "health": 8100
+          },
+          "expeditionStats": {
+            "lethality": "60.00%",
+            "health": "60.00%"
+          },
+          "explorationSkill": {
+            "id": "death-or-glory",
+            "name": "죽음 아니면 영광",
+            "effect": "조이의 내면의 악마는 오직 고통에 의해서만 깨어나며, '고통의 돌진'이 발동되면 전투가 끝날 때까지 공격력이(가) <value1>{v1}</value1> 증가합니다.",
+            "increasing": [
+              [
+                "8%",
+                "12%",
+                "16%",
+                "20%",
+                "24%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "dark-lady",
+            "name": "어둠의 여인",
+            "effect": "조이는 무자비하게 엄격한 수비대장으로, 방어 중인 부대의 공격력을(를) <value1>{v1}</value1> 증가시킵니다.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.1"
+      },
+      "en": {
+        "id": "zoe",
+        "name": "Zoe",
+        "generation": "2",
+        "description": "Zoe is a Mythic Generation 2 Infantry Hero in Kingshot. You can unlock Zoe through the Hero Roulette.",
+        "troop": "infantry",
+        "source": "roulette",
+        "class": "combat",
+        "explorationStats": {
+          "attack": 2043,
+          "defense": 2664,
+          "health": 39960
+        },
+        "expeditionStats": {
+          "attack": "240.19%",
+          "defense": "240.19%"
+        },
+        "explorationSkills": [
+          {
+            "id": "shield-strike",
+            "name": "Shield Strike",
+            "effect": "The unpredictable attacks of Zoe easily enweb foes, dealing Attack * <value1>{v1}</value1> damage every 0.5s and amplifying damage taken by the target by <value2>{v2}</value2> for 2s.",
+            "increasing": [
+              [
+                "60%",
+                "66%",
+                "72%",
+                "78%",
+                "84%"
+              ],
+              [
+                "10%",
+                "15%",
+                "20%",
+                "25%",
+                "25%"
+              ]
+            ]
+          },
+          {
+            "id": "agony-rush",
+            "name": "Agony Rush",
+            "effect": "Zoe requires pain to reach peak physical performance, immediately regaining <value1>{v1}</value1> of max Health when Health is under 50%. Can only activate once per battle.",
+            "increasing": [
+              [
+                "20%",
+                "25%",
+                "30%",
+                "35%",
+                "40%"
+              ]
+            ]
+          },
+          {
+            "id": "holy-might",
+            "name": "Holy Might",
+            "effect": "Zoe inspires fellow warriors to battle, boosting Attack Speed by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "3%",
+                "4%",
+                "5%",
+                "6%",
+                "7%"
+              ]
+            ]
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "id": "sundering-wound",
+            "name": "Sundering Wound",
+            "effect": "The Attack of all squads gains a 20% chance of inflicting Sunder, dealing <value1>{v1}</value1> damage per turn for 3 turns.",
+            "increasing": [
+              [
+                "8%",
+                "16%",
+                "24%",
+                "32%",
+                "40%"
+              ]
+            ]
+          },
+          {
+            "id": "stoic",
+            "name": "Stoic",
+            "effect": "Zoe is a gifted orator, and the rousing battle speeches increase the Attack of all squads by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%"
+              ]
+            ]
+          },
+          {
+            "id": "infinite-arsenal",
+            "name": "Infinite Arsenal",
+            "effect": "Zoe strikes the enemy so completely and utterly that the Attack of all squads gains a 50% chance of amplifying damage taken by enemy squads by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "10%",
+                "20%",
+                "30%",
+                "40%",
+                "50%"
+              ]
+            ]
+          }
+        ],
+        "special": {
+          "id": "the-unrighteous",
+          "name": "The Unrighteous",
+          "explorationStats": {
+            "attack": 414,
+            "defense": 540,
+            "health": 8100
+          },
+          "expeditionStats": {
+            "lethality": "60.00%",
+            "health": "60.00%"
+          },
+          "explorationSkill": {
+            "id": "death-or-glory",
+            "name": "Death or Glory",
+            "effect": "The inner demon of Zoe is awakened only by pain, gaining a <value1>{v1}</value1> increased Attack until the end of the Battle once ‘Agony Rush’ is triggered.",
+            "increasing": [
+              [
+                "8%",
+                "12%",
+                "16%",
+                "20%",
+                "24%"
+              ]
+            ]
+          },
+          "expeditionSkill": {
+            "id": "dark-lady",
+            "name": "Dark Lady",
+            "effect": "Zoe is a relentlessly demanding garrison commander, increasing the Attack of defending Troop by <value1>{v1}</value1>.",
+            "increasing": [
+              [
+                "5%",
+                "7.5%",
+                "10%",
+                "12.5%",
+                "15%"
+              ]
+            ]
+          }
+        },
+        "upgradeScheme": 1,
+        "publishDate": "2025-12-25",
+        "updateDate": "2026-03-25",
+        "version": "v1.1"
+      }
+    }
+  }
+}

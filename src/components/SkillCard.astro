@@ -1,0 +1,37 @@
+---
+import { renderSkillDescription } from '@/lib/hero-skill';
+
+export interface HeroSkill {
+  name: string;
+  nameEn: string;
+  mode: '토벌' | '원정' | '특성';
+  description: string;
+  levels: string[];
+  /** 설명에 {v2} 가 있을 때 쓰는 두 번째 수치 줄 */
+  levels2?: string[];
+}
+
+interface Props {
+  skill: HeroSkill;
+  /** 토벌/원정 소제목 아래에 묶어 둘 때는 배지가 군더더기라 끈다 */
+  showMode?: boolean;
+  class?: string;
+}
+
+const { skill, showMode = false, class: className = '' } = Astro.props;
+
+const descriptionHtml = renderSkillDescription(skill.description, skill.levels, skill.levels2);
+---
+
+<li class:list={['rounded-xl border border-border bg-surface p-4', className]}>
+  <div class="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+    <h4 class="font-bold">{skill.name}</h4>
+    <span class="text-xs text-muted">{skill.nameEn}</span>
+    {showMode && (
+      <span class="ml-auto inline-flex items-center rounded-md border border-accent/40 bg-accent/12 px-1.5 py-0.5 text-[11px] font-bold text-accent">
+        {skill.mode}
+      </span>
+    )}
+  </div>
+  <p class="mt-2 text-sm leading-relaxed text-muted" set:html={descriptionHtml} />
+</li>

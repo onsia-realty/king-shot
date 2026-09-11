@@ -7,7 +7,9 @@ import RarityBadge from '@/components/RarityBadge.astro';
 import ClassIcon from '@/components/ClassIcon.astro';
 import TierBadge from '@/components/TierBadge.astro';
 import Disclaimer from '@/components/Disclaimer.astro';
+import SkillCard from '@/components/SkillCard.astro';
 import { rarityLabel } from '@/lib/labels';
+import { HERO_SHARD_ROWS, HERO_SHARD_STARS, HERO_SHARD_TOTALS } from '@/data/hero-shard';
 
 export async function getStaticPaths() {
   const heroes = await getCollection('heroes');
@@ -40,8 +42,26 @@ const ratingRows = (['bearRally', 'garrison', 'arena', 'f2p'] as const)
     Boolean(row.tier),
   );
 
-const hasStats = Boolean(d.stats);
+/** 전투력은 토벌(절대수치)과 원정(퍼센트) 둘로 나뉘고, 한 쪽만 있어도 그 쪽만 렌더한다 */
+const exploration = d.stats?.exploration;
+const expedition = d.stats?.expedition;
+const hasStats = Boolean(exploration || expedition);
+
+/** 스킬은 mode 로 토벌/원정/특성을 갈라 나란히 보여준다 (탭을 쓰면 JS 아일랜드가 필요해진다) */
+const explorationSkills = d.skills.filter((s) => s.mode === '토벌');
+const expeditionSkills = d.skills.filter((s) => s.mode === '원정');
+const talentSkills = d.skills.filter((s) => s.mode === '특성');
 const hasSkills = d.skills.length > 0;
+
+const gear = d.exclusiveGear;
+const hasGear = Boolean(gear);
+
+/** 아직 못 채운 항목만 골라 안내 문구를 만든다 */
+const missingParts = [
+  !hasStats && '전투력',
+  !hasSkills && '스킬',
+  !hasGear && '전용 장비',
+].filter((part): part is string => typeof part === 'string');
 
 const rarityVar = `var(--ks-rarity-${d.rarity.toLowerCase()})`;
 const placeholderStyle = `background-image: linear-gradient(150deg, color-mix(in oklab, ${rarityVar} 45%, transparent), color-mix(in oklab, ${rarityVar} 8%, transparent) 65%, transparent); color: ${rarityVar};`;
@@ -54,7 +74,11 @@ const RARITY_RING = {
 } as const;
 
 const title = `${d.name} (${d.nameEn})`;
-const description = `킹샷 ${d.name}(${d.nameEn}) — ${d.generation}세대 ${rarityLabel(d.rarity)} ${d.troopClass}. ${d.summary}`;
+const description = [
+  `킹샷 ${d.name}(${d.nameEn}) — ${d.generation}세대 ${rarityLabel(d.rarity)} ${d.troopClass}.`,
+  d.summary,
+  gear ? `전용 장비 ${gear.name}.` : '',
+].filter(Boolean).join(' ');
 ---
 
 <BaseLayout title={title} description={description}>
@@ -100,6 +124,11 @@ const description = `킹샷 ${d.name}(${d.nameEn}) — ${d.generation}세대 ${r
           <span class="inline-flex items-center rounded-md border border-border bg-raised px-2 py-0.5 text-xs font-bold text-muted">
             {d.generation}세대
           </span>
+          {d.heroClass && (
+            <span class="inline-flex items-center rounded-md border border-border bg-raised px-2 py-0.5 text-xs font-bold text-muted">
+              {d.heroClass}형
+            </span>
+          )}
           <span class="inline-flex items-center rounded-md border border-border px-2 py-0.5 text-xs text-muted">
             획득: {d.acquisition}
           </span>
@@ -133,26 +162,44 @@ const description = `킹샷 ${d.name}(${d.nameEn}) — ${d.generation}세대 ${r
       </section>
     )}
 
-    {hasStats && d.stats && (
+    {hasStats && (
       <section class="mt-10">
-        <h2 class="text-xl font-bold">기본 능력치</h2>
-        <div class="table-wrap mt-3">
-          <table class="w-full border-collapse text-sm">
-            <thead>
-              <tr class="bg-raised text-left">
-                <th class="px-4 py-3 font-bold">공격</th>
-                <th class="px-4 py-3 font-bold">방어</th>
-                <th class="px-4 py-3 font-bold">체력</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="border-t border-border tabular-nums">
-                <td class="px-4 py-3">{d.stats.attack.toLocaleString('ko-KR')}</td>
-                <td class="px-4 py-3">{d.stats.defense.toLocaleString('ko-KR')}</td>
-                <td class="px-4 py-3">{d.stats.hp.toLocaleString('ko-KR')}</td>
-              </tr>
-            </tbody>
-          </table>
+        <h2 class="text-xl font-bold">전투력</h2>
+        <div class="mt-3 grid gap-3 sm:grid-cols-2">
+          {exploration && (
+            <div class="rounded-xl border border-border bg-surface p-4">
+              <h3 class="text-sm font-bold text-accent">토벌</h3>
+              <dl class="mt-2 grid grid-cols-3 gap-2 text-sm tabular-nums">
+                <div>
+                  <dt class="text-xs text-muted">공격력</dt>
+                  <dd class="font-bold">{exploration.attack.toLocaleString('ko-KR')}</dd>
+                </div>
+                <div>
+                  <dt class="text-xs text-muted">방어력</dt>
+                  <dd class="font-bold">{exploration.defense.toLocaleString('ko-KR')}</dd>
+                </div>
+                <div>
+                  <dt class="text-xs text-muted">HP</dt>
+                  <dd class="font-bold">{exploration.hp.toLocaleString('ko-KR')}</dd>
+                </div>
+              </dl>
+            </div>
+          )}
+          {expedition && (
+            <div class="rounded-xl border border-border bg-surface p-4">
+              <h3 class="text-sm font-bold text-accent">원정</h3>
+              <dl class="mt-2 grid grid-cols-3 gap-2 text-sm tabular-nums">
+                <div>
+                  <dt class="text-xs text-muted">공격력</dt>
+                  <dd class="font-bold">{expedition.attack}</dd>
+                </div>
+                <div>
+                  <dt class="text-xs text-muted">방어력</dt>
+                  <dd class="font-bold">{expedition.defense}</dd>
+                </div>
+              </dl>
+            </div>
+          )}
         </div>
       </section>
     )}
@@ -160,37 +207,160 @@ const description = `킹샷 ${d.name}(${d.nameEn}) — ${d.generation}세대 ${r
     {hasSkills && (
       <section class="mt-10">
         <h2 class="text-xl font-bold">스킬</h2>
-        <ul class="mt-3 grid gap-3 sm:grid-cols-2">
-          {d.skills.map((skill) => (
-            <li class="rounded-xl border border-border bg-surface p-4">
-              <div class="flex items-center gap-2">
-                <h3 class="font-bold">{skill.name}</h3>
-                <span class="inline-flex items-center rounded-md border border-accent/40 bg-accent/12 px-1.5 py-0.5 text-[11px] font-bold text-accent">
-                  {skill.type}
-                </span>
-              </div>
-              <p class="mt-2 text-sm leading-relaxed text-muted">{skill.description}</p>
-            </li>
-          ))}
-        </ul>
+        {explorationSkills.length > 0 && (
+          <>
+            <h3 class="mt-4 text-sm font-bold text-accent">토벌 스킬</h3>
+            <ul class="mt-2 grid gap-3 sm:grid-cols-2">
+              {explorationSkills.map((skill) => <SkillCard skill={skill} />)}
+            </ul>
+          </>
+        )}
+        {expeditionSkills.length > 0 && (
+          <>
+            <h3 class="mt-5 text-sm font-bold text-accent">원정 스킬</h3>
+            <ul class="mt-2 grid gap-3 sm:grid-cols-2">
+              {expeditionSkills.map((skill) => <SkillCard skill={skill} />)}
+            </ul>
+          </>
+        )}
+        {talentSkills.length > 0 && (
+          <>
+            <h3 class="mt-5 text-sm font-bold text-accent">특성 스킬</h3>
+            <ul class="mt-2 grid gap-3 sm:grid-cols-2">
+              {talentSkills.map((skill) => <SkillCard skill={skill} />)}
+            </ul>
+          </>
+        )}
       </section>
     )}
 
-    {(!hasStats || !hasSkills) && (
+    {gear && (
+      <section class="mt-10">
+        <h2 class="text-xl font-bold">전용 장비</h2>
+        <div class="mt-3 rounded-xl border border-border bg-surface p-4">
+          <div class="flex flex-wrap items-baseline gap-x-2">
+            <h3 class="font-bold">{gear.name}</h3>
+            <span class="text-xs text-muted">{gear.nameEn}</span>
+          </div>
+
+          {(gear.exploration || gear.expedition) && (
+            <div class="mt-3 grid gap-3 sm:grid-cols-2">
+              {gear.exploration && (
+                <div class="rounded-lg border border-border bg-raised p-3">
+                  <h4 class="text-xs font-bold text-accent">토벌</h4>
+                  <dl class="mt-1.5 grid grid-cols-3 gap-2 text-sm tabular-nums">
+                    <div>
+                      <dt class="text-xs text-muted">공격력</dt>
+                      <dd class="font-bold">{gear.exploration.attack.toLocaleString('ko-KR')}</dd>
+                    </div>
+                    <div>
+                      <dt class="text-xs text-muted">방어력</dt>
+                      <dd class="font-bold">{gear.exploration.defense.toLocaleString('ko-KR')}</dd>
+                    </div>
+                    <div>
+                      <dt class="text-xs text-muted">HP</dt>
+                      <dd class="font-bold">{gear.exploration.hp.toLocaleString('ko-KR')}</dd>
+                    </div>
+                  </dl>
+                </div>
+              )}
+              {gear.expedition && (
+                <div class="rounded-lg border border-border bg-raised p-3">
+                  <h4 class="text-xs font-bold text-accent">원정</h4>
+                  <dl class="mt-1.5 grid grid-cols-3 gap-2 text-sm tabular-nums">
+                    <div>
+                      <dt class="text-xs text-muted">파괴력</dt>
+                      <dd class="font-bold">{gear.expedition.lethality}</dd>
+                    </div>
+                    <div>
+                      <dt class="text-xs text-muted">HP</dt>
+                      <dd class="font-bold">{gear.expedition.hp}</dd>
+                    </div>
+                  </dl>
+                </div>
+              )}
+            </div>
+          )}
+
+          {gear.parts.length > 0 && (
+            <>
+              <h4 class="mt-5 text-sm font-bold">부속품 업그레이드</h4>
+              <div class="table-wrap mt-2">
+                <table class="w-full border-collapse text-sm">
+                  <thead>
+                    <tr class="bg-raised text-left">
+                      <th class="px-3 py-2 font-bold whitespace-nowrap">레벨</th>
+                      {gear.parts.map((_, i) => (
+                        <th class="px-3 py-2 text-right font-bold tabular-nums">{i + 1}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border-t border-border tabular-nums">
+                      <td class="px-3 py-2 whitespace-nowrap">부속품</td>
+                      {gear.parts.map((count) => (
+                        <td class="px-3 py-2 text-right">{count.toLocaleString('ko-KR')}</td>
+                      ))}
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
+
+          {gear.skills.length > 0 && (
+            <ul class="mt-4 grid gap-3 sm:grid-cols-2">
+              {gear.skills.map((skill) => <SkillCard skill={skill} showMode />)}
+            </ul>
+          )}
+        </div>
+      </section>
+    )}
+
+    {missingParts.length > 0 && (
       <p class="mt-8 rounded-xl border border-border bg-surface px-4 py-3 text-sm text-muted">
-        {d.name}의 {!hasStats && !hasSkills ? '능력치와 스킬' : !hasStats ? '능력치' : '스킬'} 수치는
-        아직 비워 뒀습니다. 추측으로 채우지 않고, 정확한 수치는 게임 내 확인 후 채웁니다.
+        {d.name}의 {missingParts.join('·')} 정보는 아직 비워 뒀습니다. 추측으로 채우지 않고,
+        정확한 수치는 게임 내 확인 후 채웁니다.
       </p>
     )}
 
-    {d.exclusiveGear && (
-      <section class="mt-10">
-        <h2 class="text-xl font-bold">전용 장비</h2>
-        <p class="mt-3 rounded-xl border border-border bg-surface px-4 py-3 text-muted">
-          {d.exclusiveGear}
-        </p>
-      </section>
-    )}
+    <section class="mt-10">
+      <h2 class="text-xl font-bold">영웅 파편 업그레이드</h2>
+      <p class="mt-2 text-sm text-muted">
+        영웅별로 다르지 않고 모든 영웅에 똑같이 적용되는 표다. 1성부터 5성까지 올리려면 파편이 모두
+        {' '}{HERO_SHARD_TOTALS.reduce((sum, n) => sum + n, 0).toLocaleString('ko-KR')}개 든다.
+      </p>
+      <div class="table-wrap mt-3">
+        <table class="w-full border-collapse text-sm">
+          <thead>
+            <tr class="bg-raised text-left">
+              <th class="px-3 py-2 font-bold whitespace-nowrap">등급</th>
+              {HERO_SHARD_STARS.map((star) => (
+                <th class="px-3 py-2 text-right font-bold whitespace-nowrap">{star}성</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {HERO_SHARD_ROWS.map((row) => (
+              <tr class="border-t border-border tabular-nums">
+                <td class="px-3 py-2 font-bold whitespace-nowrap">{row.tier}</td>
+                {row.counts.map((count) => (
+                  <td class="px-3 py-2 text-right">{count.toLocaleString('ko-KR')}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr class="border-t border-border bg-raised tabular-nums">
+              <td class="px-3 py-2 font-bold whitespace-nowrap">합계</td>
+              {HERO_SHARD_TOTALS.map((total) => (
+                <td class="px-3 py-2 text-right font-bold">{total.toLocaleString('ko-KR')}</td>
+              ))}
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </section>
 
     <div class="prose mt-10">
       <Content />

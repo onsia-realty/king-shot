@@ -7,6 +7,68 @@ troopClass: 기병
 portrait: ../../assets/heroes/margot.webp
 acquisition: 명예의전당
 summary: 60/40 병종 조합 편성에서 자주 거론되는 4세대 기병
+heroClass: 전투
+stats:
+  exploration:
+    attack: 4106
+    defense: 4106
+    hp: 41070
+  expedition:
+    attack: "370.29%"
+    defense: "370.29%"
+skills:
+  - name: 매복
+    nameEn: Ambush
+    mode: 토벌
+    description: "마르고가 폭탄으로 적을 기습해 공격력 × {v1}의 광역 피해를 준다."
+    levels: ["300%", "330%", "360%", "390%", "420%"]
+  - name: 쳐내기
+    nameEn: Parry
+    mode: 토벌
+    description: "검은 공격에도 방어에도 쓰인다. 마르고가 {v1} 확률로 적의 공격을 쳐내 피해를 모두 흘려보낸다."
+    levels: ["5%", "10%", "15%", "20%", "25%"]
+  - name: 스틸레토
+    nameEn: Stiletto
+    mode: 토벌
+    description: "마르고가 적의 머리를 노려(영웅 우선) 공격력 × {v1}의 피해를 주고 1.5초 동안 대상을 속박한다."
+    levels: ["100%", "110%", "120%", "130%", "140%"]
+  - name: 전쟁의 인도자
+    nameEn: Warbringer
+    mode: 원정
+    description: "방어구를 꿰뚫는 데 집중하는 마르고 덕분에 모든 부대의 공격력이 {v1} 오른다."
+    levels: ["5%", "10%", "15%", "20%", "25%"]
+  - name: 기만술
+    nameEn: Subterfuge
+    mode: 원정
+    description: "제멋대로인 듯한 마르고의 배치에는 치밀한 계산이 숨어 있다. 모든 부대가 {v1} 확률로 일반 공격을 회피한다."
+    levels: ["4%", "8%", "12%", "16%", "20%"]
+  - name: 날랜 손놀림
+    nameEn: Sleight Hand
+    mode: 원정
+    description: "마르고의 기병이 25% 확률로 추가 공격을 가해 {v1}의 피해를 준다."
+    levels: ["120%", "140%", "160%", "180%", "200%"]
+exclusiveGear:
+  name: 광란의 송곳니
+  nameEn: Revel Fang
+  exploration:
+    attack: 832
+    defense: 832
+    hp: 8325
+  expedition:
+    lethality: "92.50%"
+    hp: "92.50%"
+  parts: [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
+  skills:
+    - name: 막을 수 없는 칼날
+      nameEn: Indefensible
+      mode: 토벌
+      description: "“두 칼날을 모두 피할 수는 없다.” 마르고가 일반 공격마다 40% 확률로 두 번째 공격을 가해 공격력 × {v1}의 피해를 준다."
+      levels: ["25%", "30%", "35%", "40%", "45%"]
+    - name: 투사
+      nameEn: Pugilist
+      mode: 원정
+      description: "마르고는 성벽 위에서도 한순간도 경계를 늦추지 않는다. 방어 중인 부대의 파괴력이 {v1} 오른다."
+      levels: ["5%", "7.5%", "10%", "12.5%", "15%"]
 ratings:
   bearRally: A
   garrison: B
