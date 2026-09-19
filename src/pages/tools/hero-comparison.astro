@@ -1,0 +1,101 @@
+---
+import { getCollection } from 'astro:content';
+import { getImage } from 'astro:assets';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+import Disclaimer from '@/components/Disclaimer.astro';
+import HeroComparison, { type ComparisonHero } from '@/components/islands/HeroComparison';
+import { TOOLS } from '@/data/tools';
+
+const otherTools = TOOLS.filter((t) => t.href !== '/tools/hero-comparison/');
+
+const entries = (await getCollection('heroes')).sort((a, b) => a.data.order - b.data.order);
+
+/**
+ * 콘텐츠 컬렉션의 image() 필드는 서버에서만 다룰 수 있으므로,
+ * 여기서 초상화를 최적화한 뒤 src 문자열만 남긴 평범한 객체로 바꿔 아일랜드에 넘긴다.
+ * 스킬은 비교용이라 만렙 수치 한 줄만 추린다.
+ */
+const heroes: ComparisonHero[] = await Promise.all(
+  entries.map(async (entry) => {
+    const d = entry.data;
+    const portrait = d.portrait
+      ? (await getImage({ src: d.portrait, width: 128, height: 128, format: 'webp' })).src
+      : undefined;
+
+    return {
+      id: entry.id,
+      name: d.name,
+      nameEn: d.nameEn,
+      generation: d.generation,
+      rarity: d.rarity,
+      troopClass: d.troopClass,
+      acquisition: d.acquisition,
+      summary: d.summary,
+      heroClass: d.heroClass,
+      portrait,
+      exploration: d.stats?.exploration,
+      expedition: d.stats?.expedition,
+      skills: d.skills.map((skill) => ({
+        name: skill.name,
+        nameEn: skill.nameEn,
+        mode: skill.mode,
+        max: skill.levels.at(-1),
+        max2: skill.levels2.at(-1),
+      })),
+      gearName: d.exclusiveGear?.name,
+    };
+  }),
+);
+
+const title = '영웅 비교';
+const description = `킹샷 영웅 ${heroes.length}명 중 둘을 골라 토벌·원정 스탯, 스킬 만렙 수치, 전용 장비를 나란히 비교합니다.`;
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+    <Breadcrumb
+      items={[
+        { label: '홈', href: '/' },
+        { label: '계산기', href: '/tools/' },
+        { label: '영웅 비교' },
+      ]}
+      class="mb-6"
+    />
+
+    <header class="mb-8">
+      <h1 class="text-3xl font-extrabold sm:text-4xl">영웅 비교</h1>
+      <p class="mt-3 max-w-2xl text-muted">
+        영웅 둘을 골라 나란히 놓고 봅니다. 토벌 스탯은 높은 쪽에 색과 차이값이 붙고, 원정 스탯은
+        퍼센트끼리 비교합니다. 스킬은 만렙 수치만 추려 뒀으니, 자세한 설명은 각 영웅 상세에서
+        확인하세요.
+      </p>
+    </header>
+
+    <HeroComparison client:load heroes={heroes} />
+
+    <section class="mt-12">
+      <h2 class="text-xl font-bold">다른 계산기</h2>
+      <ul class="mt-3 space-y-2">
+        {
+          otherTools.map((tool) => (
+            <li class="rounded-xl border border-border bg-surface px-4 py-3">
+              <a href={tool.href} class="font-bold hover:text-accent">
+                {tool.label}
+              </a>
+              <p class="mt-1 text-sm text-muted">{tool.summary}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <div class="mt-12 border-t border-border pt-6">
+      <p class="mb-3 text-sm text-muted">
+        스탯은 만렙·최대 성급 기준 수치이며, 아직 채우지 못한 영웅은 빈칸(—)으로 둡니다. 원정 수치는
+        퍼센트 표기라 절대 전투력과는 비교하지 마세요.
+      </p>
+      <Disclaimer />
+    </div>
+  </div>
+</BaseLayout>

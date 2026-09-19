@@ -1,0 +1,97 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+import Disclaimer from '@/components/Disclaimer.astro';
+import BuildingCalculator from '@/components/islands/BuildingCalculator';
+import { TOOLS } from '@/data/tools';
+
+const otherTools = TOOLS.filter((t) => t.href !== '/tools/building-calculator/');
+
+const title = '건물 업그레이드 계산기';
+const description =
+  '킹샷 건물을 목표 레벨까지 올리는 데 드는 빵·나무·석재·철과 건설 시간을 계산합니다. 건물과 현재·목표 레벨을 고르면 단계별 소요량을 바로 확인할 수 있습니다.';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: title,
+  description,
+  applicationCategory: 'GameApplication',
+  operatingSystem: 'Web',
+  inLanguage: 'ko-KR',
+  offers: {
+    '@type': 'Offer',
+    price: 0,
+    priceCurrency: 'KRW',
+  },
+};
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <div class="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
+    <Breadcrumb
+      items={[
+        { label: '홈', href: '/' },
+        { label: '계산기', href: '/tools/' },
+        { label: '건물 업그레이드' },
+      ]}
+      class="mb-6"
+    />
+
+    <header class="mb-8">
+      <h1 class="text-3xl font-extrabold sm:text-4xl">건물 업그레이드 계산기</h1>
+      <p class="mt-3 max-w-2xl text-muted">
+        건물과 현재 레벨, 목표 레벨을 고르면 그 구간에 드는 자원과 건설 시간을 합산합니다. 건설
+        속도 보너스를 입력하면 실제로 걸리는 시간까지 같이 보여줍니다.
+      </p>
+    </header>
+
+    <BuildingCalculator client:load />
+
+    <section class="mt-12">
+      <h2 class="text-xl font-bold">데이터 범위와 한계</h2>
+      <ul class="mt-3 space-y-2 text-sm text-muted">
+        <li>
+          지원 범위는 8개 건물, 1~30레벨입니다. 트루골드(TG) 구간은 아직 지원하지 않습니다.
+        </li>
+        <li>
+          수치는 커뮤니티 자료를 정리한 근사값입니다. 원본 표가 1.8K, 36M 같은 반올림 표기라
+          구간을 길게 잡을수록 합계에 오차가 쌓일 수 있습니다.
+        </li>
+        <li>
+          전투력 상승량과 선행 건물 조건은 신뢰할 수 있는 전체 자료를 구하지 못해 제공하지
+          않습니다. 게임 내 표기와 다르면 게임 쪽을 따라 주세요.
+        </li>
+        <li>
+          출처:
+          <a
+            href="https://simplegameguide.com/kingshot-building-requirements/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-link hover:text-link-hover">simplegameguide.com</a
+          >
+        </li>
+      </ul>
+    </section>
+
+    <section class="mt-12">
+      <h2 class="text-xl font-bold">다른 계산기</h2>
+      <ul class="mt-3 space-y-2">
+        {
+          otherTools.map((tool) => (
+            <li class="rounded-xl border border-border bg-surface px-4 py-3">
+              <a href={tool.href} class="font-bold hover:text-accent">
+                {tool.label}
+              </a>
+              <p class="mt-1 text-sm text-muted">{tool.summary}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <div class="mt-12 border-t border-border pt-6">
+      <Disclaimer />
+    </div>
+  </div>
+</BaseLayout>

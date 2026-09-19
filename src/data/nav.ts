@@ -18,6 +18,7 @@ export const mainNav: NavItem[] = [
   { label: '영웅', href: '/heroes/' },
   { label: '건물', href: '/buildings/' },
   { label: '펫', href: '/pets/' },
+  { label: '계산기', href: '/tools/' },
   { label: '기프트코드', href: '/gift-codes/' },
 ];
 
