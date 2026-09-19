@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import type { GiftCode } from '@/components/islands/GiftCodeTable';
+import RedeemLink from '@/components/islands/RedeemLink';
 import { statusOf, type GiftCodeStatus } from '@/lib/gift-codes';
 import { useCopy } from '@/lib/copy';
 
@@ -126,14 +127,18 @@ export default function GiftCodeCalendar({ codes, today }: Props) {
 
   const selectedCodes = selected ? (byDate.get(selected) ?? []) : [];
 
-  const copyButton = (code: string) => (
-    <button
-      type="button"
-      onClick={() => copy(code)}
-      className="shrink-0 rounded-md border border-border px-2 py-1 text-xs font-bold text-text transition-colors hover:border-accent/60 hover:text-accent"
-    >
-      {copied === code ? '복사됨' : failed === code ? '복사 실패' : '복사'}
-    </button>
+  /** 복사 + 리딤 한 쌍. 클릭 한 번으로 복사하고 교환 페이지를 연다. */
+  const codeActions = (code: string) => (
+    <>
+      <button
+        type="button"
+        onClick={() => copy(code)}
+        className="shrink-0 rounded-md border border-border px-2 py-1 text-xs font-bold text-text transition-colors hover:border-accent/60 hover:text-accent"
+      >
+        {copied === code ? '복사됨' : failed === code ? '복사 실패' : '복사'}
+      </button>
+      <RedeemLink code={code} onCopy={copy} />
+    </>
   );
 
   return (
@@ -297,7 +302,7 @@ export default function GiftCodeCalendar({ codes, today }: Props) {
                       >
                         {status}
                       </span>
-                      {copyButton(c.code)}
+                      {status === '만료' ? null : codeActions(c.code)}
                     </div>
                     <p className="mt-1.5 text-xs text-muted tabular-nums">
                       {c.startsAt} ~ {c.expiresAt ?? '기한 미확인'}
@@ -321,11 +326,11 @@ export default function GiftCodeCalendar({ codes, today }: Props) {
           </p>
           <ul className="mt-2 flex flex-wrap gap-2">
             {undated.map((c) => (
-              <li key={c.code} className="flex items-center gap-2">
+              <li key={c.code} className="flex flex-wrap items-center gap-2">
                 <code className="rounded-md border border-border bg-raised px-2 py-1 font-mono text-sm font-bold text-accent-strong">
                   {c.code}
                 </code>
-                {copyButton(c.code)}
+                {codeActions(c.code)}
               </li>
             ))}
           </ul>

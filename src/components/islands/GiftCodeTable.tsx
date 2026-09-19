@@ -1,3 +1,4 @@
+import RedeemLink from '@/components/islands/RedeemLink';
 import { useCopy } from '@/lib/copy';
 
 export interface GiftCode {
@@ -44,7 +45,7 @@ export default function GiftCodeTable({ codes, expired = false, emptyMessage }: 
           {codes.map((c) => (
             <tr key={c.code} className="border-t border-border align-top">
               <td className="px-4 py-3">
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <code
                     className={[
                       'rounded-md border border-border px-2 py-1 font-mono text-sm font-bold',
@@ -54,13 +55,16 @@ export default function GiftCodeTable({ codes, expired = false, emptyMessage }: 
                     {c.code}
                   </code>
                   {!expired && (
-                    <button
-                      type="button"
-                      onClick={() => copy(c.code)}
-                      className="shrink-0 rounded-md border border-border px-2 py-1 text-xs font-bold text-text transition-colors hover:border-accent/60 hover:text-accent"
-                    >
-                      {copied === c.code ? '복사됨' : failed === c.code ? '복사 실패' : '복사'}
-                    </button>
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => copy(c.code)}
+                        className="shrink-0 rounded-md border border-border px-2 py-1 text-xs font-bold text-text transition-colors hover:border-accent/60 hover:text-accent"
+                      >
+                        {copied === c.code ? '복사됨' : failed === c.code ? '복사 실패' : '복사'}
+                      </button>
+                      <RedeemLink code={c.code} onCopy={copy} />
+                    </>
                   )}
                 </div>
                 {c.note && <p className="mt-1 text-xs text-muted">{c.note}</p>}

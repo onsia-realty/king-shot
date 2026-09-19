@@ -28,3 +28,6 @@ export function statusOf(code: GiftCode, today: string): GiftCodeStatus {
   if (code.expiresAt && code.expiresAt < today) return '만료';
   return '활성';
 }
+
+/** 공식 기프트 코드 교환 페이지. 페이지와 아일랜드 양쪽에서 쓴다. */
+export const REDEEM_URL = 'https://ks-giftcode.centurygame.com';
