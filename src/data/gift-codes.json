@@ -1,5 +1,5 @@
 {
-  "lastChecked": "2026-09-20",
+  "lastChecked": "2026-09-21",
   "codes": [
     {
       "code": "KS0909",
@@ -651,6 +651,12 @@
       "expiresAt": "2025-12-08",
       "addedAt": "2026-09-11",
       "note": "출처: ks.h5joy-games.com"
+    },
+    {
+      "code": "KS0919",
+      "rewards": "",
+      "addedAt": "2026-09-21",
+      "note": "출처: 공식 위키 kingshotwiki.com/ko/giftcode"
     }
   ]
 }
