@@ -1,5 +1,5 @@
 {
-  "lastChecked": "2026-09-21",
+  "lastChecked": "2026-09-22",
   "codes": [
     {
       "code": "KS0909",
@@ -656,6 +656,12 @@
       "code": "KS0919",
       "rewards": "",
       "addedAt": "2026-09-21",
+      "note": "출처: 공식 위키 kingshotwiki.com/ko/giftcode"
+    },
+    {
+      "code": "JPHolidaySEP",
+      "rewards": "",
+      "addedAt": "2026-09-22",
       "note": "출처: 공식 위키 kingshotwiki.com/ko/giftcode"
     }
   ]
