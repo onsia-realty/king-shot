@@ -1,5 +1,5 @@
 {
-  "lastChecked": "2026-09-27",
+  "lastChecked": "2026-09-28",
   "codes": [
     {
       "code": "KS0909",
@@ -668,6 +668,12 @@
       "code": "MIDAUTUMN26",
       "rewards": "",
       "addedAt": "2026-09-26",
+      "note": "출처: 공식 위키 kingshotwiki.com/ko/giftcode"
+    },
+    {
+      "code": "EXPLORETHEWORLD",
+      "rewards": "",
+      "addedAt": "2026-09-28",
       "note": "출처: 공식 위키 kingshotwiki.com/ko/giftcode"
     }
   ]
