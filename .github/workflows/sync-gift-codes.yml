@@ -1,6 +1,6 @@
 name: 기프트 코드 동기화
 
-# 공식 위키(kingshotwiki.com/ko/giftcode)에서 새 코드를 긁어와
+# h5joy · kingshot.net · 공식 위키에서 새 코드를 긁어와
 # src/data/gift-codes.json 에 병합하고, 변경이 있을 때만 커밋·푸시한다.
 # 푸시되면 Vercel 이 알아서 재배포한다.
 
@@ -32,9 +32,20 @@ jobs:
 
       # 스크립트가 exit 1 이면 여기서 워크플로가 실패한다.
       # 파싱 실패를 조용히 넘기지 않기 위한 것이므로 continue-on-error 를 붙이지 말 것.
-      - name: 위키에서 코드 동기화
+      # exit 2 는 '저장은 했지만 최근 코드가 너무 오래됐다(출처 정체)'는 뜻이다.
+      # 여기서 죽이면 커밋이 안 되니 표시만 해 두고, 맨 끝 step 에서 실패시킨다.
+      - name: 출처에서 코드 동기화
         id: sync
-        run: node scripts/sync-gift-codes.mjs | tee sync-output.txt
+        run: |
+          set +e
+          node scripts/sync-gift-codes.mjs | tee sync-output.txt
+          code=${PIPESTATUS[0]}
+          set -e
+          if [ "$code" -eq 2 ]; then
+            echo "stale=true" >> "$GITHUB_OUTPUT"
+          elif [ "$code" -ne 0 ]; then
+            exit "$code"
+          fi
 
       - name: 변경 확인
         id: diff
@@ -57,3 +68,10 @@ jobs:
           git add src/data/gift-codes.json
           git commit -m "데이터: 기프트 코드 갱신 — ${{ steps.diff.outputs.summary }}"
           git push
+
+      # 커밋까지 끝낸 뒤에 실패로 표시한다. GitHub 가 실패 메일을 보내게 하려는 것.
+      - name: 출처 정체 판정
+        if: steps.sync.outputs.stale == 'true'
+        run: |
+          echo "::error::최근 STALE_DAYS(14)일 동안 새 기프트 코드가 없다. 출처가 멈췄는지 scripts/sync-gift-codes.mjs 상단 주석대로 확인할 것."
+          exit 1

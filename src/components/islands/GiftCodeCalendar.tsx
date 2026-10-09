@@ -39,7 +39,11 @@ export default function GiftCodeCalendar({ codes, today }: Props) {
 
   /** 날짜가 붙은 코드만 격자에 놓을 수 있다. */
   const dated = useMemo(() => codes.filter((c) => c.startsAt), [codes]);
-  const undated = useMemo(() => codes.filter((c) => !c.startsAt), [codes]);
+  /** 만료일만 있고 이미 지난 코드는 만료 표에 있다. 여기 '아직 교환될 수 있음'에 섞지 않는다. */
+  const undated = useMemo(
+    () => codes.filter((c) => !c.startsAt && statusOf(c, today) !== '만료'),
+    [codes, today]
+  );
 
   /** 시작일 기준으로 날짜 → 코드 목록. */
   const byDate = useMemo(() => {
