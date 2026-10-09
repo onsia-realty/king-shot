@@ -1,0 +1,145 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+import Disclaimer from '@/components/Disclaimer.astro';
+import EventScoreCalculator, { ScoreMatrix } from '@/components/islands/EventScoreCalculator';
+import { TOOLS } from '@/data/tools';
+
+const otherTools = TOOLS.filter((t) => t.href !== '/tools/event-score/');
+
+const title = '이벤트 점수 계산기';
+const description =
+  '킹샷 보유 아이템(순금, 가속, 영웅 파편, 망치, 미스릴 등)과 병력 훈련 조건으로 KvK와 지고의 영주 예상 총점, 일자별 최적 배분을 계산하고 어느 이벤트가 유리한지 비교합니다.';
+
+const faq = [
+  {
+    q: '아이템을 여러 일자에 나눠 쓰면 안 되나요?',
+    a: '이 계산기는 아이템을 한 번씩만 쓴다고 보고 배점이 가장 높은 일자에 전부 넣습니다. 같은 점수를 주는 일자가 여러 날이면 가장 빠른 날에 배정하고 나머지 날은 옆에 따로 적어 둡니다.',
+  },
+  {
+    q: '훈련 가속은 어떻게 계산하나요?',
+    a: '가속을 그대로 쓸 때(분당 30점)와 그 시간으로 병력을 훈련하거나 승급할 때 점수를 비교해 높은 쪽을 고릅니다. 승급은 보유 병력만큼만 올리고, 남는 가속은 같은 티어 신규 훈련과 가속 사용 중 점수가 높은 쪽에 씁니다.',
+  },
+  {
+    q: '두 이벤트 점수가 똑같이 나와요.',
+    a: '보유 아이템 배점은 KvK와 지고의 영주가 같습니다. 차이는 훈련 가속을 병력에 쓸 때 생깁니다. 10급 병력 기준 1명당 KvK는 60점, 지고의 영주는 39점이라 훈련 속도 보너스가 높을수록 KvK가 유리해집니다.',
+  },
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: title,
+    description,
+    applicationCategory: 'GameApplication',
+    operatingSystem: 'Web',
+    inLanguage: 'ko-KR',
+    offers: {
+      '@type': 'Offer',
+      price: 0,
+      priceCurrency: 'KRW',
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  },
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <div class="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
+    <Breadcrumb
+      items={[
+        { label: '홈', href: '/' },
+        { label: '계산기', href: '/tools/' },
+        { label: '이벤트 점수 계산기' },
+      ]}
+      class="mb-6"
+    />
+
+    <header class="mb-8">
+      <h1 class="text-3xl font-extrabold sm:text-4xl">이벤트 점수 계산기</h1>
+      <p class="mt-3 max-w-2xl text-muted">
+        모아 둔 순금, 가속, 영웅 파편, 망치, 미스릴을 KvK와 지고의 영주 중 어디에 쓸지 고민될 때
+        쓰세요. 수량을 넣으면 이벤트별 예상 총점과 몇 일차에 무엇을 써야 하는지 바로 나옵니다.
+        훈련 가속은 병력을 뽑는 쪽과 그냥 쓰는 쪽 중 점수가 높은 쪽을 자동으로 고릅니다.
+      </p>
+    </header>
+
+    <EventScoreCalculator client:load />
+
+    <section class="mt-12">
+      <h2 class="text-xl font-bold">아이템별 점수표</h2>
+      <p class="mt-2 text-sm text-muted">
+        단위 하나당 점수입니다. 줄표(-)는 그 날 점수가 없다는 뜻입니다.
+      </p>
+      <div class="mt-4">
+        <ScoreMatrix />
+      </div>
+    </section>
+
+    <section class="mt-12">
+      <h2 class="text-xl font-bold">자주 묻는 질문</h2>
+      <dl class="mt-3 space-y-3">
+        {
+          faq.map((f) => (
+            <div class="rounded-xl border border-border bg-surface px-4 py-3">
+              <dt class="font-bold">{f.q}</dt>
+              <dd class="mt-1 text-sm text-muted">{f.a}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+
+    <section class="mt-12">
+      <h2 class="text-xl font-bold">데이터 범위와 한계</h2>
+      <ul class="mt-3 space-y-2 text-sm text-muted">
+        <li>
+          KvK는 확인된 1~5일차 항목만 들어 있습니다. 6일차 이후는 빠져 있어 KvK 총점이 실제보다 낮게
+          나올 수 있습니다.
+        </li>
+        <li>
+          게임에서는 아이템을 직접 쓰는 게 아니라 건설·연구·제작으로 소모할 때 점수가 들어옵니다.
+          소모 순서, 버프, 특수 규칙에 따라 실제 점수는 달라질 수 있습니다.
+        </li>
+        <li>
+          출처:
+          <a
+            href="https://kshot-lab.com/tools/event-score"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-link hover:text-link-hover">kshot-lab.com</a
+          > 공개 데이터 (2026-10-09 수집)
+        </li>
+      </ul>
+    </section>
+
+    <section class="mt-12">
+      <h2 class="text-xl font-bold">다른 계산기</h2>
+      <ul class="mt-3 space-y-2">
+        {
+          otherTools.map((tool) => (
+            <li class="rounded-xl border border-border bg-surface px-4 py-3">
+              <a href={tool.href} class="font-bold hover:text-accent">
+                {tool.label}
+              </a>
+              <p class="mt-1 text-sm text-muted">{tool.summary}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <div class="mt-12 border-t border-border pt-6">
+      <Disclaimer />
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,138 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+import Disclaimer from '@/components/Disclaimer.astro';
+import ContentUnlockPredictor from '@/components/islands/ContentUnlockPredictor';
+import { TOOLS } from '@/data/tools';
+import { CONTENT_UNLOCK_RULES, KINGDOM_MAX } from '@/data/content-unlock';
+
+const otherTools = TOOLS.filter((t) => t.href !== '/tools/content-unlock/');
+const ruleCount = CONTENT_UNLOCK_RULES.length;
+
+const title = '콘텐츠 해금 예측';
+const description = `킹샷 왕국 번호만 넣으면 영웅 세대·순금·전쟁 아카데미·첫 SvS 등 콘텐츠 ${ruleCount}개가 언제 열리는지, 며칠 남았는지 예상 날짜로 보여 줍니다.`;
+
+const faq = [
+  {
+    q: '해금일은 어떻게 계산하나요?',
+    a: '왕국 시작일에 콘텐츠별 경과 일수를 더합니다. 3세대 영웅 이후처럼 SvS 주기에 묶인 콘텐츠는 그 날짜를 2025-03-03부터 2주 간격으로 이어지는 다음 월요일로 올립니다.',
+  },
+  {
+    q: '통합 그룹 기준일이 뭔가요?',
+    a: `K1~K1331은 몇 개 그룹으로 묶여 진행이 같은 날짜에 맞춰져 있습니다. 이 왕국들은 각자 시작일 대신 그룹 기준일로 계산합니다. 그 뒤 왕국은 자기 시작일을 씁니다.`,
+  },
+  {
+    q: '신뢰도 "추정"은 얼마나 믿을 만한가요?',
+    a: '순금 1/2/3, 첫 SvS, 순금 9/10은 실측이 부족한 대략 추정입니다. "보통"은 84일 주기를 늘려 잡은 값입니다. 며칠씩 어긋날 수 있으니 계획용 참고로만 보세요.',
+  },
+  {
+    q: `K${KINGDOM_MAX + 1} 이후 왕국은요?`,
+    a: `아직 시작일 데이터가 없어서 계산하지 않습니다. 지금은 K1~K${KINGDOM_MAX}까지 지원합니다.`,
+  },
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: title,
+    description,
+    applicationCategory: 'GameApplication',
+    operatingSystem: 'Web',
+    inLanguage: 'ko-KR',
+    offers: {
+      '@type': 'Offer',
+      price: 0,
+      priceCurrency: 'KRW',
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  },
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <div class="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
+    <Breadcrumb
+      items={[
+        { label: '홈', href: '/' },
+        { label: '계산기', href: '/tools/' },
+        { label: '콘텐츠 해금 예측' },
+      ]}
+      class="mb-6"
+    />
+
+    <header class="mb-8">
+      <h1 class="text-3xl font-extrabold sm:text-4xl">콘텐츠 해금 예측</h1>
+      <p class="mt-3 max-w-2xl text-muted">
+        왕국 번호를 넣으면 영웅 세대, 순금, 전쟁 아카데미 같은 콘텐츠 {ruleCount}개가 언제 열리는지
+        예상 날짜와 남은 일수를 보여 줍니다. 처음엔 예시로 K1200 결과가 나오고, 넣은 번호는 이
+        브라우저에 기억됩니다.
+      </p>
+    </header>
+
+    <ContentUnlockPredictor client:load />
+
+    <section class="mt-12">
+      <h2 class="text-xl font-bold">자주 묻는 질문</h2>
+      <dl class="mt-3 space-y-3">
+        {
+          faq.map((f) => (
+            <div class="rounded-xl border border-border bg-surface px-4 py-3">
+              <dt class="font-bold">{f.q}</dt>
+              <dd class="mt-1 text-sm text-muted">{f.a}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+
+    <section class="mt-12">
+      <h2 class="text-xl font-bold">데이터 범위와 한계</h2>
+      <ul class="mt-3 space-y-2 text-sm text-muted">
+        <li>왕국 시작일은 K1~K{KINGDOM_MAX}까지 있습니다. 그 뒤 왕국은 아직 계산하지 않습니다.</li>
+        <li>
+          모든 날짜는 예측입니다. 특히 "추정" 배지가 붙은 항목은 실측이 부족해 크게 어긋날 수 있습니다.
+          게임 안 공지나 실제 해금이 다르면 게임 쪽을 따라 주세요.
+        </li>
+        <li>남은 일수는 이 기기의 오늘 날짜로 셉니다. 해금 당일은 해금됨으로 표시합니다.</li>
+        <li>
+          출처:
+          <a
+            href="https://kshot-lab.com/tools/content-unlock"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-link hover:text-link-hover">kshot-lab.com</a
+          > 공개 데이터 (2026-10-09 수집)
+        </li>
+      </ul>
+    </section>
+
+    <section class="mt-12">
+      <h2 class="text-xl font-bold">다른 계산기</h2>
+      <ul class="mt-3 space-y-2">
+        {
+          otherTools.map((tool) => (
+            <li class="rounded-xl border border-border bg-surface px-4 py-3">
+              <a href={tool.href} class="font-bold hover:text-accent">
+                {tool.label}
+              </a>
+              <p class="mt-1 text-sm text-muted">{tool.summary}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <div class="mt-12 border-t border-border pt-6">
+      <Disclaimer />
+    </div>
+  </div>
+</BaseLayout>

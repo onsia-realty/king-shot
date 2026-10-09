@@ -1,0 +1,139 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+import Disclaimer from '@/components/Disclaimer.astro';
+import PackValueCalculator from '@/components/islands/PackValueCalculator';
+import { TOOLS } from '@/data/tools';
+
+const otherTools = TOOLS.filter((t) => t.href !== '/tools/pack-value/');
+
+const title = '패키지 계산기';
+const description =
+  '킹샷 이벤트 패키지가 값어치를 하는지 효율과 등급으로 비교하고, 목표 토큰을 가장 싸게 채우는 조합과 바람을 쫓는 여행 마일스톤별 가성비를 계산합니다.';
+
+const faq = [
+  {
+    q: '효율은 어떻게 계산하나요?',
+    a: '구성품마다 순금 4/5세대 기준 패키지(7,500원)의 개당 단가를 곱해 원화로 바꾸고, 그 합을 패키지 가격으로 나눕니다. 100%면 기준 패키지와 같은 값어치, 150%면 1.5배입니다. 가속은 7,500원 = 119시간으로 환산합니다.',
+  },
+  {
+    q: '토큰 최적화 결과는 믿을 만한가요?',
+    a: '일반 패키지 7종을 각각 0~5회 사는 모든 조합과 일일퀘스트 2배권 사용 여부를 전부 따져 목표를 넘는 가장 싼 조합을 고릅니다. 비용이 같으면 토큰이 많은 쪽을 고릅니다.',
+  },
+  {
+    q: '바람을 쫓는 여행은 어디까지 사는 게 좋나요?',
+    a: '슬롯 증설 패키지 없이 계산하면 20상자 구간이 만원당 보상이 가장 높고, 350상자까지는 가성비가 유지되다가 600상자 구간에서 크게 떨어집니다. 슬롯 증설을 켜고 끄면서 한계효용 표를 비교해 보세요.',
+  },
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: title,
+    description,
+    applicationCategory: 'GameApplication',
+    operatingSystem: 'Web',
+    inLanguage: 'ko-KR',
+    offers: {
+      '@type': 'Offer',
+      price: 0,
+      priceCurrency: 'KRW',
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  },
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <div class="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
+    <Breadcrumb
+      items={[
+        { label: '홈', href: '/' },
+        { label: '계산기', href: '/tools/' },
+        { label: '패키지 계산기' },
+      ]}
+      class="mb-6"
+    />
+
+    <header class="mb-8">
+      <h1 class="text-3xl font-extrabold sm:text-4xl">패키지 계산기</h1>
+      <p class="mt-3 max-w-2xl text-muted">
+        이벤트 패키지를 <a href="/tools/package-ref/" class="text-link hover:text-link-hover">패키지 기준표</a
+        > 단가로 환산해 효율 순으로 줄 세우고, 이벤트 토큰 목표를 가장 싸게 채우는 조합과 바람을 쫓는
+        여행에서 어느 마일스톤까지 사는 게 이득인지 계산합니다.
+      </p>
+    </header>
+
+    <PackValueCalculator client:load />
+
+    <section class="mt-12">
+      <h2 class="text-xl font-bold">자주 묻는 질문</h2>
+      <dl class="mt-3 space-y-3">
+        {
+          faq.map((f) => (
+            <div class="rounded-xl border border-border bg-surface px-4 py-3">
+              <dt class="font-bold">{f.q}</dt>
+              <dd class="mt-1 text-sm text-muted">{f.a}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+
+    <section class="mt-12">
+      <h2 class="text-xl font-bold">데이터 범위와 한계</h2>
+      <ul class="mt-3 space-y-2 text-sm text-muted">
+        <li>
+          효율 랭킹의 이벤트 패키지는 스킨 이벤트 6종(순금 4/5세대 기준)입니다. 이벤트마다 구성이 바뀌는데
+          자동 갱신이 없어 새 이벤트가 열리면 수동으로 고쳐야 합니다.
+        </li>
+        <li>
+          효율은 기준 패키지 단가로 환산한 값이라 지금 필요 없는 아이템도 같은 값으로 셉니다. 실제
+          쓸모는 진행 상황에 따라 다릅니다.
+        </li>
+        <li>
+          바람을 쫓는 여행의 상자 가치는 확률 기대값입니다. 실제 개봉 결과는 운에 따라 달라집니다.
+        </li>
+        <li>게임 내 패키지 구성이나 가격이 이 표와 다르면 게임 쪽을 따라 주세요.</li>
+        <li>
+          출처:
+          <a
+            href="https://kshot-lab.com/tools/pack-value"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-link hover:text-link-hover">kshot-lab.com</a
+          > 공개 데이터 (2026-10-09 수집)
+        </li>
+      </ul>
+    </section>
+
+    <section class="mt-12">
+      <h2 class="text-xl font-bold">다른 계산기</h2>
+      <ul class="mt-3 space-y-2">
+        {
+          otherTools.map((tool) => (
+            <li class="rounded-xl border border-border bg-surface px-4 py-3">
+              <a href={tool.href} class="font-bold hover:text-accent">
+                {tool.label}
+              </a>
+              <p class="mt-1 text-sm text-muted">{tool.summary}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <div class="mt-12 border-t border-border pt-6">
+      <Disclaimer />
+    </div>
+  </div>
+</BaseLayout>
