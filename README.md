@@ -14,7 +14,7 @@ npm run check    # 타입 / Astro 진단
 
 Node 22 이상 필요.
 
-플레이어 조회는 `.env.example`을 참고해 로컬 `.env.local`에 `MIGHTPULSE_API_KEY`를 설정하고 개발 서버를 재시작한다. Vercel에서는 같은 이름의 서버 환경변수를 설정한다. 키에 `PUBLIC_` 접두사를 붙이거나 커밋하지 않는다. `GET /api/player/?id=241496933`(끝 슬래시 없는 주소도 지원)은 게임 내 영주 ID로 조회하며, `npm run dev`와 Vercel이 같은 `api/player.ts` Node 핸들러를 사용한다. Astro 정적 빌드는 유지되며 `npm run preview`와 일반 정적 호스팅에서는 API가 실행되지 않는다. [MightPulse의 최대 90초 갱신 대기](https://api.mightpulse.com/)를 수용하도록 공급자 요청은 95초에 중단하고 Vercel 함수 제한은 120초다. 이는 [현재 기본 활성화된 Fluid Compute의 Hobby 최대 300초 제한](https://vercel.com/docs/functions/configuring-functions/duration)을 전제로 하며 실제 배포 검증은 아직 하지 않았다. 성공 결과는 인스턴스별 최대 100개·5분 메모리 캐시와 남은 유효기간만큼 최대 5분 CDN 캐시를 사용하며 같은 인스턴스의 동일 ID 요청을 합친다. 오류는 캐시하지 않는다. 이는 전체 배포의 API 할당량을 보장하지 않으며 공급자 데이터 자체도 지연될 수 있다. 백엔드 테스트: `node --test tests/mightpulse-api.test.mjs`(실제 키 없이 모의 fetch 사용).
+플레이어 조회는 `.env.example`을 참고해 로컬 `.env.local`에 `MIGHTPULSE_API_KEY`를 설정하고 개발 서버를 재시작한다. Vercel에서는 같은 이름의 서버 환경변수를 설정한다. 키에 `PUBLIC_` 접두사를 붙이거나 커밋하지 않는다. `GET /api/player/?id=241496933`(끝 슬래시 없는 주소도 지원)은 게임 내 영주 ID로 조회하며, `npm run dev`와 Vercel이 같은 `api/player.ts` Node 핸들러를 사용한다. Astro 정적 빌드는 유지되며 `npm run preview`와 일반 정적 호스팅에서는 API가 실행되지 않는다. [MightPulse의 최대 90초 갱신 대기](https://api.mightpulse.com/)를 수용하도록 공급자 요청은 95초에 중단하고 Vercel 함수 제한은 120초다. 이는 [현재 기본 활성화된 Fluid Compute의 Hobby 최대 300초 제한](https://vercel.com/docs/functions/configuring-functions/duration)을 전제로 한다. 2026-10-15 [프로덕션](https://king-shot-three.vercel.app)에서 `/api/player/`, `/api/search/`, `/api/map/`의 HTTP 200 응답과 브라우저의 지도 호버 → 프로필 이동 → 영웅 5명 표시를 확인했다. 성공 결과는 인스턴스별 최대 100개·5분 메모리 캐시와 남은 유효기간만큼 최대 5분 CDN 캐시를 사용하며 같은 인스턴스의 동일 ID 요청을 합친다. 오류는 캐시하지 않는다. 이는 전체 배포의 API 할당량을 보장하지 않으며 공급자 데이터 자체도 지연될 수 있다. 백엔드 테스트: `node --test tests/mightpulse-api.test.mjs`(실제 키 없이 모의 fetch 사용).
 
 ## 프로젝트 구조
 
@@ -128,6 +128,22 @@ node scripts/sync-heroes.mjs
 `git diff` 로 확인하는 기준이다. 커밋한다.
 
 기프트 코드와 달리 매일 돌 이유가 없어서 **수동 실행 전용**이다. 워크플로가 없다.
+
+### 건설 계산 데이터 동기화
+
+[킹샷 연구소 건설 계산기](https://kshot-lab.com/tools/construction)의 공개 JS 데이터만 AST로 추출하며 원격 코드를 실행하지 않는다.
+
+```powershell
+node scripts/sync-construction-costs.mjs         # 수집 결과 확인, 파일 변경 없음
+node scripts/sync-construction-costs.mjs --write # 원본 JSON과 정규화 TS 갱신
+npx tsc --noEmit --skipLibCheck --target es2022 --module esnext src/data/construction-costs.ts
+```
+
+- `src/data/construction-source.json`: 원본 11개 건물·606행, 출처 URL·수집 시각·번들 SHA-256·교차 확인 및 불일치 기록.
+- `src/data/construction-costs.ts`: 계산용 데이터. 일반 1~30, TG1 완료35부터 TG8 완료70까지 정규화한다. 참고 UI 최소는25이며 초기 선행 조건은 일부 불완전하다.
+- 아카데미는 원본의 TG1 단일 전환을 `level:35, fromLevel:30`으로 보존한다. 없는31~34행을 생성하지 않는다. 건물마다 지원 범위가 다르므로 실제 `steps`를 사용한다. `power`는 원본 값이며 증가량으로 검증되지 않았다.
+
+갱신 후 두 데이터 파일의 diff와 선행 조건을 확인하고 `npm run check`를 실행한다. 계산 화면 회귀 기준은 도시센터30→35, 보조건물 현재25, 속도0%, Double Time 끔: 빵·나무 각각931M, 석재182.2M, 철46M, 순금660, 담금질 순금0, 총13,466,400초(155일20시간40분)다. 아카데미30→35는 자원0·2초인 원본 단일 행으로 계산되어야 한다.
 
 ### 스킬 아이콘 동기화
 

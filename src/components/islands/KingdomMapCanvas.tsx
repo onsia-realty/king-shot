@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-import { pickCity, type CityHit, type Rect } from './mapHitGeometry';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { groundRadii, pickCity, type CityHit, type Rect } from './mapHitGeometry';
 
 export interface MapCity {
   uid: number | string; nick_name?: string | null; power?: number | null; tc?: number | null;
@@ -70,11 +70,26 @@ export default function KingdomMapCanvas(props: Props) {
   const camera = useRef<Camera>({ x: 600, y: 600, scale: 14 });
   const dimensions = useRef({ width: 600, height: 560 });
   const redraw = useRef<() => void>(() => {});
-  const cancelHover = useRef<() => void>(() => {});
   const closePopup = useRef<() => void>(() => {});
   const [scale, setScale] = useState(14);
-  const [coordinates, setCoordinates] = useState<MapFocus | null>(null);
+  const coordinates = useRef<HTMLSpanElement | null>(null);
+  const pointerRing = useRef<HTMLDivElement | null>(null);
   const [expanded, setExpanded] = useState(false);
+  const clusters = useMemo(() => {
+    const groups = new Map<string, MapCity[]>();
+    for (const city of props.cities) {
+      const key = String(city.aid);
+      const members = groups.get(key) ?? [];
+      members.push(city); groups.set(key, members);
+    }
+    return props.alliances.flatMap((alliance) => {
+      const members = groups.get(String(alliance.aid));
+      const focus = members && members.length >= 4 ? clusterFocus(members) : undefined;
+      return focus ? [{ alliance, focus }] : [];
+    });
+  }, [props.cities, props.alliances]);
+  const clusterModel = useRef(clusters);
+  clusterModel.current = clusters;
 
   function placePopup() {
     const el = popup.current, city = model.current.selected;
@@ -122,7 +137,6 @@ export default function KingdomMapCanvas(props: Props) {
     return { min, max, minScale: Math.max(0.15, Math.min(dimensions.current.width, dimensions.current.height) * 0.9 / (max - min)) };
   }
   function update(next: Camera) {
-    cancelHover.current();
     const { min, max, minScale } = limits();
     camera.current = { x: Math.max(min, Math.min(max, next.x)), y: Math.max(min, Math.min(max, next.y)), scale: Math.max(minScale, Math.min(40, next.scale)) };
     setScale(camera.current.scale); redraw.current();
@@ -156,17 +170,30 @@ export default function KingdomMapCanvas(props: Props) {
     const images = new Map<string, HTMLImageElement>();
     let hits: CityHit<MapCity>[] = [];
     let labelHits: (Rect & { city: MapCity })[] = [];
-    let hovered: MapCity | undefined;
-    let hoverPoint: { x: number; y: number } | null = null;
-    let hoverTimer = 0;
-    let intent: { city: MapCity; x: number; y: number } | null = null;
-    let dismissed: string | null = null;
-    const clearIntent = () => { window.clearTimeout(hoverTimer); hoverTimer = 0; intent = null; };
-    cancelHover.current = clearIntent;
-    closePopup.current = () => {
-      clearIntent();
-      dismissed = hovered ? String(hovered.uid) : null;
-      model.current.onClose();
+    closePopup.current = () => model.current.onClose();
+    let hudFrame = 0;
+    let hudPoint: { x: number; y: number } | null = null;
+    let showPointerRing = false;
+    const updateCoordinates = (point: { x: number; y: number } | null, pointerType?: string) => {
+      hudPoint = point;
+      showPointerRing = pointerType === 'mouse' || pointerType === 'pen';
+      if (hudFrame) return;
+      hudFrame = window.requestAnimationFrame(() => {
+        hudFrame = 0;
+        const world = hudPoint && unproject(hudPoint.x, hudPoint.y, camera.current, dimensions.current.width, dimensions.current.height);
+        const text = world ? `X: ${Math.round(world.x)} · Y: ${Math.round(world.y)}` : '도시를 선택해 정보를 확인하세요';
+        if (coordinates.current && coordinates.current.textContent !== text) coordinates.current.textContent = text;
+        const ring = pointerRing.current;
+        if (ring) {
+          const p = hudPoint, panel = popup.current;
+          const overPopup = p && panel && p.x >= panel.offsetLeft && p.x <= panel.offsetLeft + panel.offsetWidth
+            && p.y >= panel.offsetTop && p.y <= panel.offsetTop + panel.offsetHeight;
+          const visible = showPointerRing && p && p.x >= 0 && p.y >= 0
+            && p.x <= dimensions.current.width && p.y <= dimensions.current.height && !overPopup;
+          ring.style.visibility = visible ? 'visible' : 'hidden';
+          if (visible) ring.style.transform = `translate3d(${p.x - 14}px, ${p.y - 14}px, 0)`;
+        }
+      });
     };
     const pointers = new Map<number, { x: number; y: number }>();
     let press: { x: number; y: number; moved: boolean } | null = null;
@@ -255,8 +282,13 @@ export default function KingdomMapCanvas(props: Props) {
         const color = allianceColor(city.aid);
         const tile = Math.max(2, cam.scale * 1.6);
         const chosen = String(city.uid) === String(current.selected?.uid);
-        const highlighted = chosen || String(city.uid) === String(hovered?.uid);
-        polygon([{ x: p.x - tile, y: p.y }, { x: p.x, y: p.y - tile / 2 }, { x: p.x + tile, y: p.y }, { x: p.x, y: p.y + tile / 2 }], color, highlighted ? '#fff8b4' : '#23362a66');
+        polygon([{ x: p.x - tile, y: p.y }, { x: p.x, y: p.y - tile / 2 }, { x: p.x + tile, y: p.y }, { x: p.x, y: p.y + tile / 2 }], color, '#23362a66');
+        if (chosen) {
+          const radius = groundRadii(tile);
+          ctx.beginPath(); ctx.ellipse(p.x, p.y, radius.x, radius.y, 0, 0, Math.PI * 2);
+          ctx.fillStyle = '#70ff7933'; ctx.fill();
+          ctx.strokeStyle = '#82ff8b'; ctx.lineWidth = 2; ctx.stroke();
+        }
         if (cam.scale >= 3) {
           const size = Math.min(100, Math.max(20, cam.scale * 2.5));
           const img = image(city.city_skin_icon);
@@ -264,7 +296,6 @@ export default function KingdomMapCanvas(props: Props) {
           if (img) { spriteHeight = Math.min(size * 1.5, size * img.naturalHeight / img.naturalWidth); ctx.drawImage(img, p.x - size / 2, p.y - spriteHeight + 4, size, spriteHeight); }
           else fallbackCastle(p.x, p.y, size * 0.8, '#d0d4cc');
           hits.push({ city, point: p, tile, body: { x: p.x - size * 0.36, y: p.y - (img ? spriteHeight * 0.9 : size * 0.82), width: size * 0.72, height: img ? spriteHeight * 0.9 : size * 0.82 } });
-          if (highlighted) { ctx.strokeStyle = '#ffe296'; ctx.lineWidth = 2; ctx.strokeRect(p.x - size / 2 - 3, p.y - spriteHeight - 3, size + 6, spriteHeight + 10); }
           if (cam.scale >= 7 || chosen) {
             const text = `${city.alliance_abbr ? `[${city.alliance_abbr}] ` : ''}${city.nick_name || '이름 정보 없음'}`;
             ctx.font = '600 11px system-ui, sans-serif';
@@ -284,36 +315,9 @@ export default function KingdomMapCanvas(props: Props) {
         label(box.text.length > 26 ? `${box.text.slice(0, 25)}…` : box.text, box.point.x, box.point.y + 11, '#ffffff', 11);
         label(cityLevel(box.city), box.point.x, box.point.y + 24, '#ffdf84', 10);
       }
-      if (cam.scale < 3) for (const alliance of current.alliances) {
-        const members = current.cities.filter((c) => String(c.aid) === String(alliance.aid));
-        if (members.length < 4) continue;
-        const focus = clusterFocus(members);
-        if (focus) { const p = screen(focus.x, focus.y); label(`[${alliance.abbr || '연맹'}]`, p.x, p.y - 8, allianceColor(alliance.aid), 11); }
+      if (cam.scale < 3) for (const { alliance, focus } of clusterModel.current) {
+        const p = screen(focus.x, focus.y); label(`[${alliance.abbr || '연맹'}]`, p.x, p.y - 8, allianceColor(alliance.aid), 11);
       }
-      if (hoverPoint && !pointers.size) updateHover(hoverPoint);
-    }
-    function updateHover(p: { x: number; y: number } | null) {
-      hoverPoint = p;
-      const next = p ? pickCity(p, hits, labelHits) : undefined;
-      if (next !== hovered) { hovered = next; schedule(); }
-      element!.style.cursor = pointers.size ? 'grabbing' : next ? 'pointer' : 'grab';
-    }
-    function requestHover(p: { x: number; y: number }) {
-      const city = pickCity(p, hits, labelHits);
-      if (dismissed !== null && String(city?.uid) !== dismissed) dismissed = null;
-      if (!city || String(city.uid) === dismissed || String(city.uid) === String(model.current.selected?.uid)) {
-        clearIntent(); return;
-      }
-      // Keep the current popup pinned while crossing cities; switch only after a dwell.
-      if (intent?.city === city && Math.hypot(p.x - intent.x, p.y - intent.y) <= 4) return;
-      clearIntent();
-      intent = { city, ...p };
-      const currentCities = model.current.cities;
-      hoverTimer = window.setTimeout(() => {
-        clearIntent();
-        if (!disposed && !pointers.size && model.current.cities === currentCities
-          && hoverPoint && pickCity(hoverPoint, hits, labelHits) === city) model.current.onSelect(city);
-      }, 100);
     }
     const resize = () => {
       const rect = element.getBoundingClientRect();
@@ -325,13 +329,12 @@ export default function KingdomMapCanvas(props: Props) {
     const observer = new ResizeObserver(resize); observer.observe(element); resize();
     const position = (e: MouseEvent | PointerEvent) => { const rect = element.getBoundingClientRect(); return { x: e.clientX - rect.left, y: e.clientY - rect.top }; };
     const down = (e: PointerEvent) => {
-      clearIntent(); updateHover(null);
       if (e.button !== 0) return;
       if (frame) { window.cancelAnimationFrame(frame); draw(); }
       const p = position(e); pointers.set(e.pointerId, p); element.setPointerCapture(e.pointerId);
+      updateCoordinates(p, e.pointerType);
       if (pointers.size === 1) press = { ...p, moved: false };
       else { if (press) press.moved = true; const [a, b] = [...pointers.values()]; pinchDistance = Math.hypot(a.x - b.x, a.y - b.y); }
-      element.style.cursor = 'grabbing';
     };
     const move = (e: PointerEvent) => {
       const p = position(e);
@@ -350,11 +353,7 @@ export default function KingdomMapCanvas(props: Props) {
           }
         }
       }
-      if (!pointers.size && e.pointerType === 'mouse' && e.buttons === 0) {
-        updateHover(p); requestHover(p);
-      } else { clearIntent(); updateHover(null); }
-      const world = unproject(p.x, p.y, camera.current, dimensions.current.width, dimensions.current.height);
-      setCoordinates({ x: Math.round(world.x), y: Math.round(world.y) });
+      updateCoordinates(p, e.pointerType);
     };
     const up = (e: PointerEvent) => {
       if (!pointers.has(e.pointerId)) return;
@@ -366,12 +365,14 @@ export default function KingdomMapCanvas(props: Props) {
       }
       pointers.delete(e.pointerId); pinchDistance = 0;
       if (element.hasPointerCapture(e.pointerId)) element.releasePointerCapture(e.pointerId);
-      if (!pointers.size) { press = null; element.style.cursor = 'grab'; }
+      if (!pointers.size) press = null;
       else if (press) press.moved = true;
-      updateHover(e.type === 'pointerup' && e.pointerType === 'mouse' ? p : null);
+      updateCoordinates(e.type === 'pointerup' ? p : null, e.pointerType);
     };
     const wheel = (e: WheelEvent) => { e.preventDefault(); e.stopPropagation(); const delta = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? dimensions.current.height : 1); zoom(Math.exp(-Math.max(-150, Math.min(150, delta)) * 0.004), position(e)); };
-    const leave = () => { clearIntent(); dismissed = null; updateHover(null); if (!pointers.size) setCoordinates(null); };
+    const enter = (e: PointerEvent) => updateCoordinates(position(e), e.pointerType);
+    const leave = () => updateCoordinates(null);
+    element.addEventListener('pointerenter', enter);
     element.addEventListener('pointerdown', down); element.addEventListener('pointermove', move);
     element.addEventListener('pointerup', up); element.addEventListener('pointercancel', up);
     element.addEventListener('lostpointercapture', up);
@@ -380,7 +381,9 @@ export default function KingdomMapCanvas(props: Props) {
     window.addEventListener('keydown', escape);
     return () => {
       disposed = true; observer.disconnect(); window.cancelAnimationFrame(frame); redraw.current = () => {};
-      clearIntent(); cancelHover.current = () => {}; closePopup.current = () => {};
+      window.cancelAnimationFrame(hudFrame); closePopup.current = () => {};
+      if (pointerRing.current) pointerRing.current.style.visibility = 'hidden';
+      element.removeEventListener('pointerenter', enter);
       for (const img of images.values()) { img.onload = null; img.onerror = null; } images.clear();
       element.removeEventListener('pointerdown', down); element.removeEventListener('pointermove', move);
       element.removeEventListener('pointerup', up); element.removeEventListener('pointercancel', up);
@@ -399,8 +402,9 @@ export default function KingdomMapCanvas(props: Props) {
       <button type="button" className={control} aria-pressed={expanded} onClick={() => setExpanded(!expanded)}>{expanded ? '확장 닫기' : '화면 확장'}</button>
     </div>
     <div className={`relative min-h-0 overflow-hidden rounded-xl border border-border ${expanded ? 'flex-1' : 'h-[420px] sm:h-[560px]'}`}>
-      <canvas ref={canvas} role="img" aria-label="등각 투영 왕국 지도. 휠 또는 확대 버튼으로 확대하고 드래그하여 이동할 수 있습니다. 아래 도시 목록으로도 영주를 선택할 수 있습니다." className="block h-full w-full touch-none" style={{ cursor: 'grab' }} />
-      <div className="pointer-events-none absolute bottom-3 left-3 rounded-lg bg-bg/85 px-3 py-2 text-xs text-text">{coordinates ? `X: ${coordinates.x} · Y: ${coordinates.y}` : '도시를 선택해 정보를 확인하세요'}<span className="mt-1 block text-muted">휠·두 손가락으로 확대 · 드래그로 이동</span></div>
+      <canvas ref={canvas} role="img" aria-label="등각 투영 왕국 지도. 휠 또는 확대 버튼으로 확대하고 드래그하여 이동할 수 있습니다. 아래 도시 목록으로도 영주를 선택할 수 있습니다." className="block h-full w-full touch-none" style={{ cursor: 'none' }} />
+      <div ref={pointerRing} aria-hidden="true" className="pointer-events-none absolute left-0 top-0 rounded-full" style={{ width: 28, height: 28, boxSizing: 'border-box', border: '2px solid #82ff8b', background: '#70ff7918', visibility: 'hidden', willChange: 'transform' }} />
+      <div className="pointer-events-none absolute bottom-3 left-3 rounded-lg bg-bg/85 px-3 py-2 text-xs text-text"><span ref={coordinates}>도시를 선택해 정보를 확인하세요</span><span className="mt-1 block text-muted">휠·두 손가락으로 확대 · 드래그로 이동</span></div>
       <div className="pointer-events-none absolute right-3 top-3 rounded-md bg-bg/85 px-2 py-1 text-xs text-muted">배율 {scale.toFixed(1)}</div>
       {props.selected && <section ref={popup} aria-label="선택한 도시 정보" className="absolute z-10 overflow-y-auto overscroll-contain rounded-xl border border-accent/50 bg-raised p-4 shadow-xl" style={{ left: 8, top: 8, width: 'min(300px, calc(100% - 16px))', maxHeight: 'calc(100% - 16px)' }}>
         <div className="flex items-start justify-between gap-3"><h3 className="min-w-0 break-words font-bold [overflow-wrap:anywhere]">{props.selected.nick_name || '이름 정보 없음'}</h3><button type="button" className="shrink-0 rounded px-2 py-1 hover:bg-bg" aria-label="도시 정보 닫기" onClick={() => closePopup.current()}>✕</button></div>
