@@ -28,28 +28,27 @@ const jsonLd = {
 ---
 
 <BaseLayout title={title} description={description} jsonLd={jsonLd}>
-  <div class="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
+  <div class="mx-auto w-full max-w-6xl px-4 py-5 sm:px-6 sm:py-10">
     <Breadcrumb
       items={[
         { label: '홈', href: '/' },
         { label: '계산기', href: '/tools/' },
         { label: '순금·건설 비용 계산기' },
       ]}
-      class="mb-6"
+      class="mb-4"
     />
 
-    <header class="mb-8">
-      <h1 class="text-3xl font-extrabold sm:text-4xl">순금·건설 비용 계산기</h1>
-      <p class="mt-3 max-w-2xl text-muted">
-        도시센터 목표를 정하면 필요한 선행 건물까지 자동으로 계획합니다. 건물별 현재 레벨을
-        반영해 자원과 시간을 합산하고, 순금 단계와 건설 속도 보너스도 함께 계산합니다.
+    <header class="mb-5">
+      <h1 class="text-2xl font-extrabold sm:text-4xl">순금·건설 비용 계산기</h1>
+      <p class="mt-2 max-w-2xl text-sm text-muted sm:text-base">
+        어디까지 올릴까요? 현재 레벨과 목표를 고르면 필요한 순금과 건설 시간을 바로 확인할 수 있어요.
       </p>
     </header>
 
     <BuildingCalculator client:load />
 
-    <section class="mt-12">
-      <h2 class="text-xl font-bold">데이터 범위와 한계</h2>
+    <details class="mt-6 rounded-xl border border-border bg-surface px-4 py-3">
+      <summary class="cursor-pointer text-sm font-semibold text-muted">계산 기준 · 데이터 출처</summary>
       <ul class="mt-3 space-y-2 text-sm text-muted">
         <li>
           건설 계획은 현재 25레벨부터 시작합니다. 도시센터는 TG8까지, 다른 건물은 원자료에 있는 단계까지 선택할 수 있습니다. TG의 중간 단계는 1/5~4/5로 표시합니다.
@@ -70,7 +69,7 @@ const jsonLd = {
           >
         </li>
       </ul>
-    </section>
+    </details>
 
     <section class="mt-12">
       <h2 class="text-xl font-bold">다른 계산기</h2>

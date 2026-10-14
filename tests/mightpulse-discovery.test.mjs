@@ -76,7 +76,7 @@ test('methods, bounded queries and kingdoms reject before fetch', async t => {
   assert.equal(fetch.mock.callCount(), 0);
 });
 
-test('search fixed host, encoded query, live=0, credential isolation, allowlist and local filter', async t => {
+test('global search fixed host, encoded query, live=0, credential isolation and allowlist', async t => {
   const search = await handler('search');
   t.mock.timers.enable({ apis: ['Date'], now: 1_000_000 });
   const previous = process.env.MIGHTPULSE_API_KEY;
@@ -91,14 +91,89 @@ test('search fixed host, encoded query, live=0, credential isolation, allowlist 
     assert.ok(options.signal instanceof AbortSignal);
     return Response.json(searchData);
   });
-  const result = await request(search, `/api/search?q=${encodeURIComponent(` ${query} `)}&kid=1622&live=1&host=evil.test`);
+  const result = await request(search, `/api/search?q=${encodeURIComponent(` ${query} `)}&live=1&host=evil.test`);
   assert.equal(result.status, 200);
   assert.equal(result.body.query, query);
-  assert.equal(result.body.total, 1);
+  assert.equal(result.body.total, 2);
   assert.deepEqual(result.body.results[0], Object.fromEntries(Object.entries(row).filter(([k]) => !['online', 'last_login'].includes(k))));
   assert.equal(result.headers['Cache-Control'], 'public, max-age=0, s-maxage=300');
   assert.equal((await request(search, `/api/search?q=${encodeURIComponent(query)}`)).body.total, 2);
   assert.equal(fetch.mock.callCount(), 1);
+});
+
+test('kingdom search scans the full snapshot, separates caches and preserves UID without inventing FID', async t => {
+  const search = await handler('search');
+  const hassan = { uid: 60598835, nick_name: 'hassan', kid: 1622, map_kid: 1622,
+    alliance_abbr: 'BOO', x: 690, y: 913, tc: 38, power: 98151218 };
+  const fetch = t.mock.method(globalThis, 'fetch', async (url, options) => {
+    assert.equal(options.headers, undefined);
+    if (url.includes('/search?')) return Response.json({ results: Array(40).fill({ ...row, kid: 1 }) });
+    const kid = Number(new URL(url).searchParams.get('kid'));
+    assert.equal(url, `https://mightpulse.com/api/map?kid=${kid}&layers=cities&limit=50000`);
+    return Response.json({ ...mapData, kid, cities: [
+      ...Array(150).fill({ ...city, kid }), { ...hassan, kid },
+    ] });
+  });
+  assert.equal((await request(search, '/api/search?q=hassan')).body.total, 40);
+  const found = await request(search, '/api/search?q=HaSsAn&kid=1622');
+  assert.equal(found.status, 200);
+  assert.equal(found.body.query, 'HaSsAn');
+  assert.equal(found.body.total, 1);
+  assert.equal(found.body.results[0].uid, 60598835);
+  assert.equal(found.body.results[0].fid, null);
+  assert.equal(found.body.results[0].town_center_level, 38);
+  const otherQuery = await request(search, '/api/search?q=ZeRa&kid=01622');
+  assert.equal(otherQuery.body.query, 'ZeRa');
+  assert.equal(otherQuery.body.total, 100);
+  assert.equal(otherQuery.body.results.length, 100);
+  assert.ok(otherQuery.body.results.every(item => item.nick_name === 'Zeras'));
+  const missing = await request(search, '/api/search?q=missing&kid=1622');
+  assert.equal(missing.body.total, 0);
+  assert.equal(missing.body.query, 'missing');
+  assert.equal(fetch.mock.callCount(), 2);
+  assert.equal((await request(search, '/api/search?q=hassan&kid=1623')).body.results[0].kid, 1623);
+  await request(search, '/api/search?q=Zeras');
+  assert.equal(fetch.mock.callCount(), 4);
+});
+
+test('concurrent queries share a kingdom fetch but receive their own filtered results', async t => {
+  const search = await handler('search');
+  let finish;
+  const fetch = t.mock.method(globalThis, 'fetch', () => new Promise(resolve => { finish = resolve; }));
+  const first = request(search, '/api/search?q=Zer&kid=1622');
+  const second = request(search, '/api/search?q=absent&kid=1622');
+  assert.equal(fetch.mock.callCount(), 1);
+  finish(Response.json(mapData));
+  assert.equal((await first).body.total, 1);
+  const missing = await second;
+  assert.equal(missing.body.query, 'absent');
+  assert.equal(missing.body.total, 0);
+});
+
+test('kingdom map failures are errors, never cached empty successes', async t => {
+  const search = await handler('search');
+  const url = '/api/search?q=hassan&kid=1622';
+  for (const data of [null, [], {}, searchData, { cities: {} }, { ok: false, cities: [] },
+    { cities: [null] }, { cities: [{}] }, { cities: [{ uid: 1, nick_name: {} }] },
+    { ...mapData, kid: 1 }]) {
+    const fetch = t.mock.method(globalThis, 'fetch', async () => Response.json(data));
+    error(await request(search, url), 502, 'upstream_error');
+    error(await request(search, url), 502, 'upstream_error');
+    assert.equal(fetch.mock.callCount(), 2);
+    fetch.mock.restore();
+  }
+  for (const status of [429, 500, 502]) {
+    const fetch = t.mock.method(globalThis, 'fetch', async () => new Response('', { status }));
+    error(await request(search, url), status === 429 ? 429 : 502, status === 429 ? 'rate_limited' : 'upstream_error');
+    fetch.mock.restore();
+  }
+  const fetch = t.mock.method(globalThis, 'fetch', async () => new Response('<html>secret</html>'));
+  error(await request(search, url), 502, 'upstream_error');
+  fetch.mock.restore();
+  t.mock.method(globalThis, 'fetch', async () => Response.json({ ...mapData, cities: [] }));
+  const empty = await request(search, url);
+  assert.equal(empty.status, 200);
+  assert.equal(empty.body.total, 0);
 });
 
 test('map fixed URL, public credential isolation, finite coordinates including zero and allowlist', async t => {

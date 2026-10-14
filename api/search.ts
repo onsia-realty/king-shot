@@ -9,21 +9,32 @@ export default discoveryHandler({
       || /[\u0000-\u001f\u007f]/.test(query)) throw new DiscoveryError('invalid_query');
     return { query, kid: kingdom(params, true) };
   },
-  key: ({ query }) => query,
-  url: ({ query }) => `https://mightpulse.com/api/search?q=${encodeURIComponent(query)}&live=0`,
-  normalize(data, { query }) {
-    if (!object(data) || !Array.isArray(data.results) || data.ok === false) throw new DiscoveryError('upstream_error');
-    const results = data.results.slice(0, 100).filter(object)
+  key: ({ query, kid }) => kid === null ? `search:${query}` : `kingdom:${kid}`,
+  url: ({ query, kid }) => kid === null
+    ? `https://mightpulse.com/api/search?q=${encodeURIComponent(query)}&live=0`
+    : `https://mightpulse.com/api/map?kid=${kid}&layers=cities&limit=50000`,
+  normalize(data, { kid }) {
+    if (!object(data) || data.ok === false) throw new DiscoveryError('upstream_error');
+    const rows = kid === null ? data.results : data.cities;
+    if (!Array.isArray(rows)) throw new DiscoveryError('upstream_error');
+    // A broken snapshot must not masquerade as a successful empty search.
+    if (kid !== null && ((data.kid !== undefined && data.kid !== kid)
+      || rows.some(row => !object(row) || id(row.uid) === null || typeof row.nick_name !== 'string'))) {
+      throw new DiscoveryError('upstream_error');
+    }
+    const results = (kid === null ? rows.slice(0, 100) : rows).filter(object)
       .filter(row => id(row.uid) !== null || id(row.fid) !== null).map(row => ({
         uid: id(row.uid), fid: id(row.fid), nick_name: text(row.nick_name),
-        kid: number(row.kid), power: number(row.power), town_center_level: number(row.town_center_level),
+        kid: number(row.kid) ?? kid, power: number(row.power),
+        town_center_level: number(kid === null ? row.town_center_level : row.tc),
         x: number(row.x), y: number(row.y), alliance_abbr: text(row.alliance_abbr),
         alliance_name: text(row.alliance_name), avatar_url: text(row.avatar_url),
       }));
-    return { ok: true as const, query, results, total: results.length };
+    return { ok: true as const, query: '', results, total: results.length };
   },
-  present(data, { kid }) {
-    const results = kid === null ? data.results : data.results.filter(row => row.kid === kid);
-    return { ...data, results, total: results.length };
+  present(data, { query, kid }) {
+    const results = (kid === null ? data.results : data.results.filter(row =>
+      row.nick_name?.toLowerCase().includes(query.toLowerCase()))).slice(0, 100);
+    return { ...data, query, results, total: results.length };
   },
 });

@@ -3,6 +3,7 @@ import { useEffect, useRef, useState, type SubmitEvent, type ReactNode } from 'r
 import ArenaHeroes, { type ArenaHero, type HeroCatalog } from './ArenaHeroes';
 import PlayerDiscovery, { type PlayerIdType } from './PlayerDiscovery';
 import KingdomMap from './KingdomMap';
+import PlayerLocationMap from './PlayerLocationMap';
 export type { HeroCatalog } from './ArenaHeroes';
 type Scalar = string | number | null;
 interface GovernorGear {
@@ -206,8 +207,9 @@ export default function PlayerLookup({ heroes: catalog }: { heroes: HeroCatalog 
         </div>
         <dl className="mt-6 grid grid-cols-2 gap-x-4 gap-y-5 sm:grid-cols-3">
           <Stat label="왕국">{format(player.kid)}</Stat><Stat label="전투력">{format(player.power)}</Stat><Stat label="도시 센터">{townLevel(player.town_center_level)}</Stat>
-          <Stat label="귀족 레벨">{format(player.vip)}</Stat><Stat label="처치 수">{format(player.kills)}</Stat><Stat label="좌표">{hasValue(player.x) && hasValue(player.y) ? `X: ${format(player.x)} · Y: ${format(player.y)}` : '—'}</Stat>
+          <Stat label="귀족 레벨">{format(player.vip)}</Stat><Stat label="처치 수">{format(player.kills)}</Stat>
         </dl>
+        <PlayerLocationMap key={JSON.stringify([result.uid, queriedId, player.kid, player.x, player.y])} kid={player.kid} x={player.x} y={player.y} uid={result.uid} onLookup={(value) => { void lookup(value, 'uid', true); }} />
         <div className="mt-6 border-t border-border pt-4 text-sm text-muted">
           {updated ? <p>갱신 시간 <time dateTime={updated.toISOString()}>{updated.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })}</time> (한국 시간)</p> : <p>갱신 시간 정보 없음</p>}
           {age !== undefined && age >= 0 && <p className="mt-1">{age < 60 ? '1분 이내 갱신' : `${format(Math.floor(age / 60))}분 전 갱신`}</p>}

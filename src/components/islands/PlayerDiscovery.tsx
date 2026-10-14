@@ -62,7 +62,7 @@ export default function PlayerDiscovery({ onSelect }: { onSelect: SelectPlayer }
     <form onSubmit={submit} noValidate aria-busy={loading} className="space-y-4">
       <div><label htmlFor="nickname-search" className="block font-bold">닉네임 또는 검색어</label><input id="nickname-search" className={`${field} mt-2`} value={query} onChange={(e) => setQuery(e.target.value)} maxLength={80} placeholder="닉네임을 입력하세요" autoComplete="off" /></div>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end"><div className="min-w-0 flex-1"><label htmlFor="search-kingdom" className="block text-sm font-bold">왕국 번호 (선택)</label><input id="search-kingdom" className={`${field} mt-2`} inputMode="numeric" maxLength={5} value={kingdom} onChange={(e) => setKingdom(e.target.value)} placeholder="예: 1622 · 비우면 전체 왕국" /></div><button className={button} disabled={loading}>{loading ? '검색 중…' : '닉네임 검색'}</button></div>
-      <p className="text-sm text-muted">영주 ID를 몰라도 검색할 수 있습니다. 닉네임·왕국·연맹을 확인한 뒤 영주를 선택하세요.</p>
+      <p className="text-sm text-muted">왕국 지정 시 지도 스냅샷의 닉네임을 검색해 최대 100명을 표시합니다. 전체 왕국 검색은 제공처의 결과 수 제한으로 누락될 수 있습니다.</p>
     </form>
     <p role="status" className="text-sm text-muted">{loading ? '닉네임을 검색하고 있습니다.' : result ? `검색 결과 ${(result.total ?? rows.length).toLocaleString('ko-KR')}명 · 표시 가능한 결과 ${rows.length.toLocaleString('ko-KR')}명` : '검색어를 입력하면 영주 목록이 표시됩니다.'}</p>
     {error && <p role="alert" className="text-sm text-danger">{error}</p>}
