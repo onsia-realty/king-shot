@@ -14,6 +14,8 @@ npm run check    # 타입 / Astro 진단
 
 Node 22 이상 필요.
 
+플레이어 조회는 `.env.example`을 참고해 로컬 `.env.local`에 `MIGHTPULSE_API_KEY`를 설정하고 개발 서버를 재시작한다. Vercel에서는 같은 이름의 서버 환경변수를 설정한다. 키에 `PUBLIC_` 접두사를 붙이거나 커밋하지 않는다. `GET /api/player/?id=241496933`(끝 슬래시 없는 주소도 지원)은 게임 내 영주 ID로 조회하며, `npm run dev`와 Vercel이 같은 `api/player.ts` Node 핸들러를 사용한다. Astro 정적 빌드는 유지되며 `npm run preview`와 일반 정적 호스팅에서는 API가 실행되지 않는다. [MightPulse의 최대 90초 갱신 대기](https://api.mightpulse.com/)를 수용하도록 공급자 요청은 95초에 중단하고 Vercel 함수 제한은 120초다. 이는 [현재 기본 활성화된 Fluid Compute의 Hobby 최대 300초 제한](https://vercel.com/docs/functions/configuring-functions/duration)을 전제로 하며 실제 배포 검증은 아직 하지 않았다. 성공 결과는 인스턴스별 최대 100개·5분 메모리 캐시와 남은 유효기간만큼 최대 5분 CDN 캐시를 사용하며 같은 인스턴스의 동일 ID 요청을 합친다. 오류는 캐시하지 않는다. 이는 전체 배포의 API 할당량을 보장하지 않으며 공급자 데이터 자체도 지연될 수 있다. 백엔드 테스트: `node --test tests/mightpulse-api.test.mjs`(실제 키 없이 모의 fetch 사용).
+
 ## 프로젝트 구조
 
 ```
@@ -291,3 +293,13 @@ CDN 의존 제거와 LCP 개선을 위해 woff2 서브셋을 직접 서빙하고
 
 본 사이트는 Kingshot 이용자가 운영하는 비공식 팬 사이트입니다.
 Kingshot 및 관련 이미지·명칭의 모든 권리는 Century Games에 있습니다.
+
+## 이름 검색·왕국 지도 백엔드
+
+- `GET /api/player/?id=241496933`은 기본 `id_type=governor_id`이며 게임 내 영주 ID(FID)를 받는다. `GET /api/player/?id=60611017&id_type=uid`는 웹사이트 내부 UID로 공식 프로필 API를 조회한다. 두 유형의 캐시·진행 중 요청은 분리된다. 응답의 `governor_id`가 실제 게임 FID이며 UID를 FID로 대체하지 않는다.
+- `GET /api/search/?q=Zeras&kid=1622`: 검색어는 공백 제거 후 2~80자, 선택 왕국 번호는 1~10000이다. 공개 웹사이트의 고정 `https://mightpulse.com/api/search?q=...&live=0`에 요청하므로 전체 게임 크롤링을 시작하지 않는다. 전역 검색이 반환한 일부 목록(최대 100개)에만 왕국 필터를 적용한다. `total`은 필터 후 반환 개수이며 왕국 전체의 일치 수가 아니다. UID·FID를 따로 반환하고 온라인·최근 접속 정보는 제거한다.
+- `GET /api/map/?kid=1622`: 공개 웹사이트의 고정 `https://mightpulse.com/api/map?kid=...&layers=cities&limit=50000`에서 도시·연맹·유한한 지도 경계·위치 갱신 시각만 반환한다. 도시 최대 50000개, 좌표 0 포함, 잘못된 좌표의 도시는 제외한다. 지도에는 FID가 없으므로 도시 선택 시 UID 프로필 조회를 사용한다. 오브젝트·캠프·프리미엄 데이터는 전달하지 않는다.
+
+프로필은 API 키가 필요한 MightPulse 공식 API이고 이름 검색·지도는 공개 웹사이트의 문서화되지 않은 엔드포인트다. 공개 엔드포인트의 구조·가용성은 변경될 수 있으며 검색·지도 요청에 API 키를 보내지 않는다. 검색은 인스턴스별 최대 100개 검색어·5분, 지도는 최대 10개 왕국·10분 캐시와 동일 요청 합치기를 사용한다. 공개 요청은 응답 본문 처리까지 30초 제한이고 Vercel 함수 제한은 60초다. 오류는 원문 HTML 없이 한국어 JSON으로 반환하며 캐시하지 않는다. 세 엔드포인트 모두 끝 슬래시 유무를 지원하며 로컬 개발은 고정 파일명만 `ssrLoadModule`로 불러온다.
+
+모의 백엔드 검증: `node --test tests/mightpulse-api.test.mjs tests/mightpulse-discovery.test.mjs`. 실제 공개 API 호출이나 실제 키가 필요하지 않다.
