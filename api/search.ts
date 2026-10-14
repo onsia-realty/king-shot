@@ -1,4 +1,4 @@
-import { discoveryHandler, DiscoveryError, id, kingdom, number, object, text } from '../src/lib/server/mightpulse-discovery';
+import { discoveryHandler, DiscoveryError, id, kingdom, number, object, text } from '../src/lib/server/mightpulse-discovery.js';
 
 export default discoveryHandler({
   ttl: 5 * 60 * 1000,

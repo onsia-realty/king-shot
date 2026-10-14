@@ -8,12 +8,23 @@ const compile = source => ts.transpileModule(source, {
   compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext },
 }).outputText;
 const shared = compile(await readFile(new URL('../src/lib/server/mightpulse-discovery.ts', import.meta.url), 'utf8'));
-const sources = Object.fromEntries(await Promise.all(['search', 'map'].map(async name => [name,
-  compile(await readFile(new URL(`../api/${name}.ts`, import.meta.url), 'utf8'))])));
+const rawSources = Object.fromEntries(await Promise.all(['search', 'map'].map(async name => [name,
+  await readFile(new URL(`../api/${name}.ts`, import.meta.url), 'utf8')])));
+const sources = Object.fromEntries(Object.entries(rawSources).map(([name, source]) => [name, compile(source)]));
+
+test('search and map use explicit .js shared imports for Node ESM deployment', () => {
+  for (const [name, source] of Object.entries(rawSources)) {
+    const file = ts.createSourceFile(`${name}.ts`, source, ts.ScriptTarget.Latest, true);
+    const imports = file.statements.filter(ts.isImportDeclaration)
+      .map(statement => statement.moduleSpecifier.text)
+      .filter(specifier => specifier.includes('mightpulse-discovery'));
+    assert.deepEqual(imports, ['../src/lib/server/mightpulse-discovery.js'], `${name} must use the Node ESM .js specifier`);
+  }
+});
 let serial = 0;
 async function handler(name) {
   const sharedURL = `data:text/javascript;base64,${Buffer.from(shared).toString('base64')}#${serial++}`;
-  const source = sources[name].replace('../src/lib/server/mightpulse-discovery', sharedURL);
+  const source = sources[name].replace(/(['"])\.\.\/src\/lib\/server\/mightpulse-discovery\.js\1/, (_, quote) => `${quote}${sharedURL}${quote}`);
   return (await import(`data:text/javascript;base64,${Buffer.from(source).toString('base64')}#${serial++}`)).default;
 }
 async function request(handler, url, method = 'GET') {
