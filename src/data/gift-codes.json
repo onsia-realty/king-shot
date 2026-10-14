@@ -1,5 +1,5 @@
 {
-  "lastChecked": "2026-10-13",
+  "lastChecked": "2026-10-14",
   "codes": [
     {
       "code": "KS0909",
@@ -908,7 +908,8 @@
       "code": "IG200KS",
       "rewards": "",
       "addedAt": "2026-10-13",
-      "note": "출처: kingshot.net/gift-codes"
+      "note": "출처: kingshot.net/gift-codes",
+      "expiresAt": "2026-10-18"
     },
     {
       "code": "CHALLENGE26",
