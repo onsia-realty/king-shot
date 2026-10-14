@@ -1,4 +1,6 @@
 ---
+import LocaleText from '@/components/LocaleText.astro';
+import { staticEnglish } from '@/lib/static-translations';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Breadcrumb from '@/components/Breadcrumb.astro';
 import Disclaimer from '@/components/Disclaimer.astro';
@@ -15,18 +17,26 @@ const description =
 
 const faq = [
   {
+    qEn: `How are costs calculated?`,
+    aEn: `For each upgrade range, required quantities are multiplied by item unit prices and added together. Unit prices use the contents of the ₩${basePrice} reference pack and change with the generation. Satin and gold thread split the set pack in half, using ₩${(BASE_PACKAGE_PRICE_KRW / 2).toLocaleString("ko-KR")} each.`,
     q: '비용은 어떻게 계산하나요?',
     a: `구간마다 필요한 재료 수량에 아이템 단가를 곱해 더합니다. 단가는 ${basePrice}원 기준 패키지에 그 아이템이 몇 개 들어 있는지로 정하고, 세대를 바꾸면 단가도 바뀝니다. 비단·금사는 세트 패키지를 반으로 나눠 ${(BASE_PACKAGE_PRICE_KRW / 2).toLocaleString('ko-KR')}원 기준으로 잡습니다.`,
   },
   {
+    qEn: `What does cost per 1% mean?`,
+    aEn: `It is the estimated cost to increase performance by one percentage point. Lower values mean more improvement for the same spending; compare them to choose where to invest first.`,
     q: '1%당 비용은 무엇인가요?',
     a: '성능을 1%p 올리는 데 드는 예상 비용입니다. 낮을수록 같은 돈으로 더 많이 오르는 구간이라, 어디부터 투자할지 정할 때 이 값을 비교하면 됩니다.',
   },
   {
+    qEn: `Why are hero gear levels 120, 160 and 200 expensive?`,
+    aEn: `Levels 101, 120, 140, 160, 180 and 200 are ascension steps that consume Mithril and Mythic gear instead of EXP. Levels 120, 160 and 200 also grant expedition ascension bonuses (+20%, +30%, +50%), which can improve their cost per 1% gain.`,
     q: '영웅 장비 120·160·200레벨은 왜 비싼가요?',
     a: '101·120·140·160·180·200레벨은 승급 단계라 EXP 대신 미스릴과 신화 장비가 들어갑니다. 대신 120·160·200레벨은 원정 효과 승급 보너스(+20·+30·+50%)가 붙어서 1%당 비용이 생각보다 나쁘지 않을 수 있습니다.',
   },
   {
+    qEn: `Why does mastery performance depend on gear level?`,
+    aEn: `Each mastery level amplifies gear stats by 10%, so higher target gear levels produce larger gains for the same number of hammers.`,
     q: '마스터리 성능은 왜 장비 레벨에 따라 달라지나요?',
     a: '마스터리 한 단계는 장비 스탯의 10%를 더하는 증폭이라서, 목표 장비 레벨이 높을수록 같은 망치로 오르는 성능이 커집니다.',
   },
@@ -59,7 +69,7 @@ const jsonLd = [
 ];
 ---
 
-<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+<BaseLayout titleEn={staticEnglish(title)} descriptionEn={`Estimate KRW costs for hero gear levels and mastery, governor gear tiers and charm levels using reference packs, and compare costs per 1% gain.`} title={title} description={description} jsonLd={jsonLd}>
   <div class="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
     <Breadcrumb
       items={[
@@ -71,25 +81,22 @@ const jsonLd = [
     />
 
     <header class="mb-8">
-      <h1 class="text-3xl font-extrabold sm:text-4xl">스펙업 계산기</h1>
+      <h1 class="text-3xl font-extrabold sm:text-4xl"><LocaleText ko={`스펙업 계산기`} en={`Upgrade Calculator`} /></h1>
       <p class="mt-3 max-w-2xl text-muted">
-        영웅 장비는 EXP와 망치로 레벨·마스터리를 올리고, 영주 장비는 비단·금사·스케치로 티어를
-        올리고, 영주 보석은 매뉴얼·도면으로 레벨을 올립니다. 현재와 목표를 고르면 드는 비용을{' '}
-        {basePrice}원 패키지 기준 원화로 바꾸고, 성능이 몇 % 오르는지와 1%당 비용을 같이
-        보여줍니다. 효율표에서 구간별 1%당 비용을 비교해 투자 순서를 정하세요.
+        <LocaleText ko={`영웅 장비는 EXP와 망치로 레벨·마스터리를 올리고, 영주 장비는 비단·금사·스케치로 티어를 올리고, 영주 보석은 매뉴얼·도면으로 레벨을 올립니다. 현재와 목표를 고르면 드는 비용을  ${basePrice}원 패키지 기준 원화로 바꾸고, 성능이 몇 % 오르는지와 1%당 비용을 같이 보여줍니다. 효율표에서 구간별 1%당 비용을 비교해 투자 순서를 정하세요.`} en={`Hero gear uses EXP and hammers for levels and mastery; governor gear uses satin, gold thread and sketches for tiers; charms use guides and designs for levels. Select current and target levels to estimate costs in KRW using the ₩${basePrice} reference pack, percentage gains and cost per 1% gain. Compare the efficiency table to plan your upgrade order.`} />
       </p>
     </header>
 
     <SpecUpCalculator client:load />
 
     <section class="mt-12">
-      <h2 class="text-xl font-bold">자주 묻는 질문</h2>
+      <h2 class="text-xl font-bold"><LocaleText ko={`자주 묻는 질문`} en={`Frequently Asked Questions`} /></h2>
       <dl class="mt-3 space-y-3">
         {
           faq.map((f) => (
             <div class="rounded-xl border border-border bg-surface px-4 py-3">
-              <dt class="font-bold">{f.q}</dt>
-              <dd class="mt-1 text-sm text-muted">{f.a}</dd>
+              <dt class="font-bold"><LocaleText ko={f.q} en={f.qEn} /></dt>
+              <dd class="mt-1 text-sm text-muted"><LocaleText ko={f.a} en={f.aEn} /></dd>
             </div>
           ))
         }
@@ -97,45 +104,43 @@ const jsonLd = [
     </section>
 
     <section class="mt-12">
-      <h2 class="text-xl font-bold">데이터 범위와 한계</h2>
+      <h2 class="text-xl font-bold"><LocaleText ko={`데이터 범위와 한계`} en={`Data Coverage and Limitations`} /></h2>
       <ul class="mt-3 space-y-2 text-sm text-muted">
         <li>
-          모든 성능 수치는 원정 효과 기준입니다. 영주 장비·보석은 원본 표기대로 2배로 계산합니다.
+          <LocaleText ko={`모든 성능 수치는 원정 효과 기준입니다. 영주 장비·보석은 원본 표기대로 2배로 계산합니다.`} en={`All performance values use expedition effects. Governor gear and charm effects are doubled as in the source data.`} />
         </li>
         <li>
-          비용은 상시 기준 패키지로 환산한 값이라 이벤트 패키지를 쓰면 실제로는 더 쌀 수 있습니다.
+          <LocaleText ko={`비용은 상시 기준 패키지로 환산한 값이라 이벤트 패키지를 쓰면 실제로는 더 쌀 수 있습니다.`} en={`Costs use standard reference packs. Event packs may make actual costs lower.`} />
         </li>
         <li>
-          순금 6/7/8·진급·9/10 세대는 패키지 구성이 예측치라 비용도 예측치입니다. 신화 장비는 영웅
-          장비 상자 100개당 1개로 봅니다.
+          <LocaleText ko={`순금 6/7/8·진급·9/10 세대는 패키지 구성이 예측치라 비용도 예측치입니다. 신화 장비는 영웅 장비 상자 100개당 1개로 봅니다.`} en={`Pack contents for Truegold 6/7/8, Advancement and 9/10 are forecasts, so their costs are estimates too. Mythic gear is valued at one piece per 100 hero gear chests.`} />
         </li>
         <li>
-          영주 장비 성능표는 레전드 T1~신화 T2★까지만 실측값이 있고, 그 앞뒤 티어는 2.5%씩 빼거나
-          더해 추정합니다.
+          <LocaleText ko={`영주 장비 성능표는 레전드 T1~신화 T2★까지만 실측값이 있고, 그 앞뒤 티어는 2.5%씩 빼거나 더해 추정합니다.`} en={`Governor gear stats are observed only from Legendary T1 to Mythic T2★. Tiers outside that range are estimated by subtracting or adding 2.5% per step.`} />
         </li>
-        <li>게임 내 표기와 다르면 게임 쪽을 따라 주세요.</li>
+        <li><LocaleText ko={`게임 내 표기와 다르면 게임 쪽을 따라 주세요.`} en={`If values differ, follow the information shown in the game.`} /></li>
         <li>
-          출처:
+          <LocaleText ko={`출처:`} en={`Source:`} />
           <a
             href="https://kshot-lab.com/tools/progress"
             target="_blank"
             rel="noopener noreferrer"
             class="text-link hover:text-link-hover">kshot-lab.com</a
-          > 공개 데이터 (2026-10-09 수집)
+          > <LocaleText ko={`공개 데이터 (2026-10-09 수집)`} en={`Public data (collected October 9, 2026)`} />
         </li>
       </ul>
     </section>
 
     <section class="mt-12">
-      <h2 class="text-xl font-bold">다른 계산기</h2>
+      <h2 class="text-xl font-bold"><LocaleText ko={`다른 계산기`} en={`Related Tools`} /></h2>
       <ul class="mt-3 space-y-2">
         {
           otherTools.map((tool) => (
             <li class="rounded-xl border border-border bg-surface px-4 py-3">
               <a href={tool.href} class="font-bold hover:text-accent">
-                {tool.label}
+                <LocaleText ko={tool.label} en={staticEnglish(tool.label)} />
               </a>
-              <p class="mt-1 text-sm text-muted">{tool.summary}</p>
+              <p class="mt-1 text-sm text-muted"><LocaleText ko={tool.summary} en={staticEnglish(tool.summary)} /></p>
             </li>
           ))
         }

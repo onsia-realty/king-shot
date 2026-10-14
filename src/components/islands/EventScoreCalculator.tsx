@@ -1,3 +1,4 @@
+import { useCalculatorLocale } from '@/lib/calculator-locale';
 import { useMemo, useState } from 'react';
 import {
   INPUT_ITEM_IDS,
@@ -32,6 +33,7 @@ function itemLabel(id: ScoreItemId): string {
 }
 
 export default function EventScoreCalculator() {
+  const { t: ui, text: tx } = useCalculatorLocale();
   const [raw, setRaw] = useState<Partial<Record<ScoreItemId, string>>>({});
   const [mode, setMode] = useState<TroopOptions['mode']>('training');
   const [tier, setTier] = useState(11);
@@ -80,15 +82,13 @@ export default function EventScoreCalculator() {
   return (
     <div className="space-y-6">
       <div className="rounded-xl border border-border bg-surface/60 p-4 sm:p-5">
-        <h2 className="text-lg font-bold">보유 아이템</h2>
-        <p className="mt-1 text-sm text-muted">
-          인벤토리 수량을 그대로 넣으세요. 가속은 분 단위입니다.
-        </p>
+        <h2 className="text-lg font-bold">{ui("보유 아이템", "Owned items")}</h2>
+        <p className="mt-1 text-sm text-muted">{ui("인벤토리 수량을 그대로 넣으세요. 가속은 분 단위입니다.", "Enter your inventory quantities. Speedups are in minutes.")}</p>
         <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {INPUT_ITEM_IDS.map((id) => (
             <div key={id}>
               <label className={labelClass} htmlFor={`evs-${id}`}>
-                {itemLabel(id)} ({SCORE_ITEMS[id].unit})
+                {tx(itemLabel(id))} ({tx(SCORE_ITEMS[id].unit)})
               </label>
               <input
                 id={`evs-${id}`}
@@ -108,33 +108,26 @@ export default function EventScoreCalculator() {
           ))}
         </div>
 
-        <h3 className="mt-6 font-bold">병력 훈련 조건</h3>
-        <p className="mt-1 text-sm text-muted">
-          훈련 가속은 그대로 쓰는 것보다 병력을 뽑는 쪽이 점수가 높을 수 있습니다. 둘 중 높은 쪽을
-          자동으로 고릅니다.
-        </p>
+        <h3 className="mt-6 font-bold">{ui("병력 훈련 조건", "Troop training settings")}</h3>
+        <p className="mt-1 text-sm text-muted">{ui("훈련 가속은 그대로 쓰는 것보다 병력을 뽑는 쪽이 점수가 높을 수 있습니다. 둘 중 높은 쪽을 자동으로 고릅니다.", "Using training speedups to train troops may earn more points than spending them directly. The higher-scoring option is selected automatically.")}</p>
         <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className={labelClass} htmlFor="evs-mode">
-              방식
-            </label>
+            <label className={labelClass} htmlFor="evs-mode">{ui("방식", "Mode")}</label>
             <select
               id="evs-mode"
               value={mode}
               onChange={(e) => changeMode(e.currentTarget.value as TroopOptions['mode'])}
               className={fieldClass}
             >
-              <option value="training">훈련 (새로 뽑기)</option>
-              <option value="promotion">승급 (기존 병력 올리기)</option>
+              <option value="training">{ui("훈련 (새로 뽑기)", "Train new troops")}</option>
+              <option value="promotion">{ui("승급 (기존 병력 올리기)", "Promote existing troops")}</option>
             </select>
           </div>
 
           {mode === 'promotion' ? (
             <>
               <div>
-                <label className={labelClass} htmlFor="evs-from">
-                  승급 출발 티어
-                </label>
+                <label className={labelClass} htmlFor="evs-from">{ui("승급 출발 티어", "Starting troop tier")}</label>
                 <select
                   id="evs-from"
                   value={fromTier}
@@ -149,9 +142,7 @@ export default function EventScoreCalculator() {
                 </select>
               </div>
               <div>
-                <label className={labelClass} htmlFor="evs-available">
-                  올릴 보유 병력 (명, 비우면 가속 상한까지)
-                </label>
+                <label className={labelClass} htmlFor="evs-available">{ui("올릴 보유 병력 (명, 비우면 가속 상한까지)", "Troops available to promote (blank = speedup limit)")}</label>
                 <input
                   id="evs-available"
                   type="number"
@@ -169,7 +160,7 @@ export default function EventScoreCalculator() {
 
           <div>
             <label className={labelClass} htmlFor="evs-tier">
-              {mode === 'promotion' ? '승급 목표 티어' : '훈련할 병력 티어'}
+              {tx(mode === 'promotion' ? '승급 목표 티어' : '훈련할 병력 티어')}
             </label>
             <select
               id="evs-tier"
@@ -186,9 +177,7 @@ export default function EventScoreCalculator() {
           </div>
 
           <div>
-            <label className={labelClass} htmlFor="evs-speed">
-              훈련 속도 보너스 %
-            </label>
+            <label className={labelClass} htmlFor="evs-speed">{ui("훈련 속도 보너스 %", "Training speed bonus %")}</label>
             <input
               id="evs-speed"
               type="number"
@@ -207,7 +196,7 @@ export default function EventScoreCalculator() {
       {hasInput ? (
         <>
           <section className="rounded-xl border border-border bg-surface/60 p-4 sm:p-5">
-            <h2 className="text-lg font-bold">어떤 이벤트에 쓸까</h2>
+            <h2 className="text-lg font-bold">{ui("어떤 이벤트에 쓸까", "Which event to use them in")}</h2>
             <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
               {plans.map((p, i) => {
                 const isSelected = p.event.id === selected.event.id;
@@ -223,84 +212,65 @@ export default function EventScoreCalculator() {
                     }`}
                   >
                     <span className="flex items-center gap-2 font-bold">
-                      {p.event.name}
+                      {tx(p.event.name)}
                       {i === 0 && !tied ? (
-                        <span className="rounded-full border border-accent/60 px-2 py-0.5 text-xs text-accent-strong">
-                          유리
-                        </span>
+                        <span className="rounded-full border border-accent/60 px-2 py-0.5 text-xs text-accent-strong">{ui("유리", "Better score")}</span>
                       ) : null}
                     </span>
                     <span className="mt-1 block text-2xl font-extrabold tabular-nums text-accent-strong">
-                      {fmt(p.totalScore)}점
-                    </span>
-                    <span className="mt-1 block text-xs text-muted">
-                      점수 나는 아이템 {p.itemPlans.length}종
-                      {troop > 0 ? ` · 병력 훈련 ${fmt(troop)}점` : ''}
-                      {i === 0 && !tied ? ` · 2위와 ${fmt(margin)}점 차이` : ''}
+                      {fmt(p.totalScore)}{ui("점", " pts")}</span>
+                    <span className="mt-1 block text-xs text-muted">{ui("점수 나는 아이템 ", "Scoring item types: ")}{p.itemPlans.length}{ui("종", " types")}{tx(troop > 0 ? ` · 병력 훈련 ${fmt(troop)}점` : '')}
+                      {tx(i === 0 && !tied ? ` · 2위와 ${fmt(margin)}점 차이` : '')}
                     </span>
                   </button>
                 );
               })}
             </div>
             {tied ? (
-              <p className="mt-3 text-sm text-muted">
-                보유 아이템 배점은 두 이벤트가 같아서 아이템만으로는 점수가 같습니다. 차이는 훈련
-                가속을 병력에 쓸 때 생깁니다(10급 기준 KvK 60점/명, 지고의 영주 39점/명).
-              </p>
+              <p className="mt-3 text-sm text-muted">{ui("보유 아이템 배점은 두 이벤트가 같아서 아이템만으로는 점수가 같습니다. 차이는 훈련 가속을 병력에 쓸 때 생깁니다(10급 기준 KvK 60점/명, 지고의 영주 39점/명).", "Inventory items score equally in both events. The difference comes from using training speedups for troops (T10: KvK 60 points/troop, Hall of Governors 39 points/troop).")}</p>
             ) : null}
             {plans.some((p) => p.event.id === 'kvk') ? (
-              <p className="mt-2 text-xs text-warning">
-                KvK는 확인된 1~5일차 항목만 반영돼 있어 실제보다 낮게 나올 수 있습니다.
-              </p>
+              <p className="mt-2 text-xs text-warning">{ui("KvK는 확인된 1~5일차 항목만 반영돼 있어 실제보다 낮게 나올 수 있습니다.", "KvK includes only verified tasks for days 1–5, so estimates may be lower than actual scores.")}</p>
             ) : null}
           </section>
 
           <PlanDetail plan={selected} />
         </>
       ) : (
-        <p className="rounded-xl border border-border bg-surface/60 px-4 py-6 text-center text-sm text-muted">
-          보유 아이템 수량을 넣으면 이벤트별 예상 총점이 나옵니다.
-        </p>
+        <p className="rounded-xl border border-border bg-surface/60 px-4 py-6 text-center text-sm text-muted">{ui("보유 아이템 수량을 넣으면 이벤트별 예상 총점이 나옵니다.", "Enter item quantities to see estimated scores for each event.")}</p>
       )}
     </div>
   );
 }
 
 function PlanDetail({ plan }: { plan: EventPlan }) {
+  const { t: ui, text: tx } = useCalculatorLocale();
   const route = plan.route;
   const usedStages = plan.stages.filter((s) => s.items.length > 0);
 
   return (
     <section className="rounded-xl border border-border bg-surface/60 p-4 sm:p-5">
-      <h2 className="text-lg font-bold">{plan.event.name} 일자별 배분</h2>
+      <h2 className="text-lg font-bold">{tx(plan.event.name)}{ui(" 일자별 배분", " daily allocation")}</h2>
 
       {route ? (
         <div className="mt-3 rounded-lg border border-border bg-bg px-3 py-3 text-sm">
           <p>
-            <span className="font-bold">
-              훈련 가속 사용처: {route.chosen === 'train' ? '병력 훈련' : '가속으로 사용'}
+            <span className="font-bold">{ui("훈련 가속 사용처: ", "Training speedup use: ")}{tx(route.chosen === 'train' ? '병력 훈련' : '가속으로 사용')}
             </span>{' '}
-            {fmt(route.chosen === 'train' ? route.trainScore : route.burnScore)}점
-            <span className="text-muted">
-              {' '}
-              (다른 선택지 {fmt(route.chosen === 'train' ? route.burnScore : route.trainScore)}점)
-            </span>
+            {fmt(route.chosen === 'train' ? route.trainScore : route.burnScore)}{ui("점", " pts")}<span className="text-muted">
+              {' '}{ui("(다른 선택지 ", "(alternative: ")}{fmt(route.chosen === 'train' ? route.burnScore : route.trainScore)}{ui("점)", " pts)")}</span>
           </p>
           {route.chosen === 'train' ? (
             <ul className="mt-1 space-y-0.5 text-xs text-muted">
-              <li>
-                훈련 병력 {fmt(route.troops)}명 · 전투력 +{fmt(route.powerGain)} · 가속으로 가능{' '}
-                {fmt(route.troopsBySpeedup)}명
-                {route.availableTroops !== null ? ` · 보유 ${fmt(route.availableTroops)}명` : ''}
+              <li>{ui("훈련 병력 ", "Troops trained: ")}{fmt(route.troops)}{ui("명 · 전투력 +", " troops · Power +")}{fmt(route.powerGain)}{ui(" · 가속으로 가능", " · Speedup capacity:")}{' '}
+                {fmt(route.troopsBySpeedup)}{ui("명", " troops")}{tx(route.availableTroops !== null ? ` · 보유 ${fmt(route.availableTroops)}명` : '')}
               </li>
               {route.leftoverMinutes > 0 ? (
-                <li>
-                  남는 가속 {fmt(route.leftoverMinutes)}분 →{' '}
-                  {route.leftoverUse === 'train'
+                <li>{ui("남는 가속 ", "Remaining speedups: ")}{fmt(route.leftoverMinutes)}{ui("분 →", " min →")}{' '}
+                  {tx(route.leftoverUse === 'train'
                     ? `신규 훈련 ${fmt(route.leftoverTroops)}명`
-                    : '가속으로 사용'}{' '}
-                  ({fmt(route.leftoverScore)}점)
-                </li>
+                    : '가속으로 사용')}{' '}
+                  ({fmt(route.leftoverScore)}{ui("점)", " pts)")}</li>
               ) : null}
             </ul>
           ) : null}
@@ -310,37 +280,29 @@ function PlanDetail({ plan }: { plan: EventPlan }) {
       {usedStages.length > 0 ? (
         <div className="mt-4 overflow-x-auto rounded-xl border border-border bg-bg">
           <table className="w-full border-collapse text-sm">
-            <caption className="sr-only">{plan.event.name} 일자별 아이템 배분</caption>
+            <caption className="sr-only">{tx(plan.event.name)}{ui(" 일자별 아이템 배분", " daily item allocation")}</caption>
             <thead>
               <tr className="bg-raised text-left">
-                <th scope="col" className="px-4 py-3 font-bold whitespace-nowrap">
-                  일자
-                </th>
-                <th scope="col" className="px-4 py-3 font-bold">
-                  투입 아이템
-                </th>
-                <th scope="col" className="px-4 py-3 text-right font-bold whitespace-nowrap">
-                  소계
-                </th>
+                <th scope="col" className="px-4 py-3 font-bold whitespace-nowrap">{ui("일자", "Day")}</th>
+                <th scope="col" className="px-4 py-3 font-bold">{ui("투입 아이템", "Items used")}</th>
+                <th scope="col" className="px-4 py-3 text-right font-bold whitespace-nowrap">{ui("소계", "Subtotal")}</th>
               </tr>
             </thead>
             <tbody>
               {usedStages.map(({ stage, items, subtotal }) => (
                 <tr key={stage.day} className="border-t border-border align-top">
                   <th scope="row" className="px-4 py-3 text-left font-bold whitespace-nowrap">
-                    {stage.day}. {stage.name}
+                    {stage.day}. {tx(stage.name)}
                   </th>
                   <td className="px-4 py-3">
                     {items.map((p) => (
                       <div key={p.id} className="tabular-nums">
-                        {itemLabel(p.id)} {fmt(p.quantity)}
-                        {SCORE_ITEMS[p.id].unit} × {fmt(p.pointsPerUnit)} ={' '}
+                        {tx(itemLabel(p.id))} {fmt(p.quantity)}
+                        {tx(SCORE_ITEMS[p.id].unit)} × {fmt(p.pointsPerUnit)} ={' '}
                         <span className="font-semibold">{fmt(p.score)}</span>
                         {p.tiedDays.length > 0 ? (
                           <span className="text-xs text-muted">
-                            {' '}
-                            (같은 점수: {p.tiedDays.join(', ')}일차)
-                          </span>
+                            {' '}{ui("(같은 점수: ", "(same score on days: ")}{tx(p.tiedDays.join(', '))}{ui("일차)", ")")}</span>
                         ) : null}
                       </div>
                     ))}
@@ -356,11 +318,10 @@ function PlanDetail({ plan }: { plan: EventPlan }) {
       ) : null}
 
       {plan.unusedItems.length > 0 ? (
-        <p className="mt-3 text-sm text-muted">
-          이 이벤트에서 점수가 없는 입력:{' '}
-          {plan.unusedItems
+        <p className="mt-3 text-sm text-muted">{ui("이 이벤트에서 점수가 없는 입력:", "Inputs that do not score in this event:")}{' '}
+          {tx(plan.unusedItems
             .map((u) => `${itemLabel(u.id)} ${fmt(u.quantity)}${SCORE_ITEMS[u.id].unit}`)
-            .join(' / ')}
+            .join(' / '))}
         </p>
       ) : null}
     </section>
@@ -369,28 +330,26 @@ function PlanDetail({ plan }: { plan: EventPlan }) {
 
 /** 이벤트별 아이템 x 일자 배점표. 페이지에서 정적으로 렌더한다. */
 export function ScoreMatrix() {
+  const { t: ui, text: tx } = useCalculatorLocale();
   return (
     <div className="space-y-6">
       {SCORE_EVENTS.map((event) => (
         <div key={event.id}>
-          <h3 className="font-bold">{event.name}</h3>
+          <h3 className="font-bold">{tx(event.name)}</h3>
           <div className="mt-2 overflow-x-auto rounded-xl border border-border bg-bg">
             <table className="w-full border-collapse text-sm">
-              <caption className="sr-only">{event.name} 아이템별 일자 배점</caption>
+              <caption className="sr-only">{tx(event.name)}{ui(" 아이템별 일자 배점", " daily points by item")}</caption>
               <thead>
                 <tr className="bg-raised text-left">
-                  <th scope="col" className="px-3 py-2 font-bold whitespace-nowrap">
-                    항목 (단위)
-                  </th>
+                  <th scope="col" className="px-3 py-2 font-bold whitespace-nowrap">{ui("항목 (단위)", "Item (unit)")}</th>
                   {event.stages.map((s) => (
                     <th
                       key={s.day}
                       scope="col"
                       className="px-3 py-2 text-right font-bold whitespace-nowrap"
-                      title={s.name}
+                      title={tx(s.name)}
                     >
-                      {s.day}일차
-                    </th>
+                      {s.day}{ui("일차", " day")}</th>
                   ))}
                 </tr>
               </thead>
@@ -398,7 +357,7 @@ export function ScoreMatrix() {
                 {event.items.map((id) => (
                   <tr key={id} className="border-t border-border">
                     <th scope="row" className="px-3 py-2 text-left font-semibold whitespace-nowrap">
-                      {itemLabel(id)} <span className="font-normal text-muted">({SCORE_ITEMS[id].unit})</span>
+                      {tx(itemLabel(id))} <span className="font-normal text-muted">({tx(SCORE_ITEMS[id].unit)})</span>
                     </th>
                     {event.stages.map((s) => {
                       const r = s.rates[id];

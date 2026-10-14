@@ -1,4 +1,6 @@
 ---
+import LocaleText from '@/components/LocaleText.astro';
+import { staticEnglish } from '@/lib/static-translations';
 /**
  * 카카오톡 오픈채팅 참여 버튼.
  * 링크·문구는 @/data/nav 의 KAKAO_OPENCHAT 한 곳에서만 가져온다.
@@ -28,6 +30,8 @@ const base =
   target="_blank"
   rel="noopener noreferrer"
   aria-label={`${KAKAO_OPENCHAT.label} 참여하기 (새 창 열림)`}
+  data-aria-label-ko={`${KAKAO_OPENCHAT.label} 참여하기 (새 창 열림)`}
+  data-aria-label-en="Join KakaoTalk Open Chat (opens in a new tab)"
   class:list={[base, variant === 'icon' ? 'h-9 w-9' : pad, className]}
 >
   <svg
@@ -42,5 +46,5 @@ const base =
       d="M12 3C6.477 3 2 6.477 2 10.8c0 2.77 1.86 5.2 4.66 6.57-.2.72-.74 2.68-.85 3.1-.13.52.19.51.4.37.17-.11 2.6-1.77 3.65-2.49.69.1 1.4.15 2.14.15 5.523 0 10-3.477 10-7.7S17.523 3 12 3Z"
     ></path>
   </svg>
-  {variant === 'full' && <span>{text}</span>}
+  {variant === 'full' && <span><LocaleText ko={text} en={staticEnglish(text)} /></span>}
 </a>

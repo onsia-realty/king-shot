@@ -16,7 +16,7 @@ export const mainNav: NavItem[] = [
   { label: '홈', href: '/', matchPrefix: false },
   { label: '공략', href: '/guides/' },
   { label: '영웅', href: '/heroes/' },
-  { label: '영주 조회', href: '/player/' },
+  { label: '영주 장비 & 지도', href: '/player/' },
   { label: '건물', href: '/buildings/' },
   { label: '펫', href: '/pets/' },
   { label: '계산기', href: '/tools/' },

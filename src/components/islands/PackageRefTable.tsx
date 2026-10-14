@@ -1,3 +1,4 @@
+import { useCalculatorLocale } from '@/lib/calculator-locale';
 import { useState } from 'react';
 import {
   BASE_PACKAGE_PRICE_KRW,
@@ -22,12 +23,13 @@ function fmtPrice(n: number): string {
 }
 
 export default function PackageRefTable() {
+  const { t: ui, text: tx } = useCalculatorLocale();
   const [index, setIndex] = useState(0);
   const gen = PACKAGE_GENERATIONS[index];
 
   return (
     <div className="rounded-xl border border-border bg-surface/60 p-4 sm:p-5">
-      <div role="tablist" aria-label="순금 세대" className="flex flex-wrap gap-2">
+      <div role="tablist" aria-label={ui("순금 세대", "Truegold generation")} className="flex flex-wrap gap-2">
         {PACKAGE_GENERATIONS.map((g, i) => (
           <button
             key={g.key}
@@ -43,8 +45,8 @@ export default function PackageRefTable() {
                 : 'border-border bg-bg text-muted hover:text-text'
             }`}
           >
-            {g.name}
-            {g.predicted ? <span className="ml-1 text-xs text-warning">예측</span> : null}
+            {tx(g.name)}
+            {g.predicted ? <span className="ml-1 text-xs text-warning">{ui("예측", "Estimated")}</span> : null}
           </button>
         ))}
       </div>
@@ -57,43 +59,33 @@ export default function PackageRefTable() {
       >
         {gen.predicted ? (
           <p className="mb-4 rounded-lg border border-warning/50 bg-bg px-3 py-3 text-sm text-muted">
-            <span className="mr-2 rounded-full border border-warning/60 px-2 py-0.5 text-xs font-bold text-warning">
-              예측치
-            </span>
-            {gen.notes ?? '아직 실측이 없어 앞 세대 증분으로 추정한 값입니다.'}
+            <span className="mr-2 rounded-full border border-warning/60 px-2 py-0.5 text-xs font-bold text-warning">{ui("예측치", "Estimate")}</span>
+            {tx(gen.notes ?? '아직 실측이 없어 앞 세대 증분으로 추정한 값입니다.')}
           </p>
         ) : null}
 
         <div className="overflow-x-auto rounded-xl border border-border bg-bg">
           <table className="w-full border-collapse text-sm">
             <caption className="sr-only">
-              {gen.name} 기준 패키지 {fmt(BASE_PACKAGE_PRICE_KRW)}원 구성과 아이템 단가
-            </caption>
+              {tx(gen.name)}{ui(" 기준 패키지 ", " reference package ")}{fmt(BASE_PACKAGE_PRICE_KRW)}{ui("원 구성과 아이템 단가", " KRW · contents and unit prices")}</caption>
             <thead>
               <tr className="bg-raised text-left">
-                <th scope="col" className="px-4 py-3 font-bold whitespace-nowrap">
-                  아이템
-                </th>
-                <th scope="col" className="px-4 py-3 text-right font-bold whitespace-nowrap">
-                  패키지당 수량
-                </th>
-                <th scope="col" className="px-4 py-3 text-right font-bold whitespace-nowrap">
-                  개당 단가
-                </th>
+                <th scope="col" className="px-4 py-3 font-bold whitespace-nowrap">{ui("아이템", "Item")}</th>
+                <th scope="col" className="px-4 py-3 text-right font-bold whitespace-nowrap">{ui("패키지당 수량", "Quantity per package")}</th>
+                <th scope="col" className="px-4 py-3 text-right font-bold whitespace-nowrap">{ui("개당 단가", "Unit price")}</th>
               </tr>
             </thead>
             <tbody>
               {PACKAGE_ITEMS.map((item) => (
                 <tr key={item.key} className="border-t border-border">
                   <th scope="row" className="px-4 py-3 text-left font-bold whitespace-nowrap">
-                    {item.name}
+                    {tx(item.name)}
                   </th>
                   <td className="px-4 py-3 text-right tabular-nums">
                     {fmt(gen.quantities[item.key])}
                   </td>
                   <td className="px-4 py-3 text-right tabular-nums text-accent-strong whitespace-nowrap">
-                    {fmtPrice(unitPrice(gen.key, item.key))}원
-                  </td>
+                    {fmtPrice(unitPrice(gen.key, item.key))}{ui("원", " KRW")}</td>
                 </tr>
               ))}
             </tbody>

@@ -1,7 +1,9 @@
+import { useLocale } from '../../lib/locale';
+import { playerText, playerNumberLocale, playerLabel, playerStatLabel, playerStatValue, type PlayerLocale } from '../../lib/player-localization';
 import { useEffect, useState, type ReactNode } from 'react';
 
 type Scalar = string | number | null;
-export type HeroCatalog = Record<string, { name: string; image?: string; gearName?: string; gearImage?: string }>;
+export type HeroCatalog = Record<string, { name: string; nameEn?: string; image?: string; gearName?: string; gearNameEn?: string; gearImage?: string }>;
 export interface ArenaHeroGear {
   eid?: Scalar; sid?: Scalar; slot?: Scalar; name?: string | null;
   enhancement_level?: Scalar; refine_level?: Scalar; gear_level?: Scalar;
@@ -44,8 +46,12 @@ function numeric(value: unknown): number | undefined {
   const n = Number(value);
   return Number.isFinite(n) && n >= 0 ? n : undefined;
 }
-const level = (value: unknown) => numeric(value)?.toLocaleString('ko-KR') ?? '—';
-const korean = (value?: string | null) => value && /[가-힣]/.test(value) ? value : undefined;
+const level = (value: unknown) => numeric(value)?.toLocaleString(playerNumberLocale()) ?? '—';
+function exclusiveName(hero: ArenaHero, known: HeroCatalog[string] | undefined, locale: PlayerLocale) {
+  return (locale === 'en' ? known?.gearNameEn : undefined)
+    ?? playerLabel(known?.gearName, locale) ?? playerLabel(hero.exclusive_gear?.name, locale)
+    ?? playerText('전용 장비', locale);
+}
 const normalize = (value: string) => value.toLowerCase().replace(/[^a-z0-9가-힣]/g, '');
 function safeImage(value?: string | null, local = false) {
   if (!value) return undefined;
@@ -75,12 +81,14 @@ function SlotIcon({ slot }: { slot: Slot }) {
   return <svg viewBox="0 0 36 36" className="size-9 text-white/90" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" aria-hidden="true"><path d={paths[slot]} /></svg>;
 }
 function Stars({ hero }: { hero: ArenaHero }) {
+  const { locale } = useLocale();
+  const tr = (text: string) => playerText(text, locale);
   const value = numeric(hero.star);
   const raw = value !== undefined && Number.isInteger(value) && value <= 30 ? value : undefined;
   const api = numeric(hero.stars);
   const complete = raw === 30 ? 5 : api !== undefined && api <= 5 && Number.isInteger(api) ? api : raw !== undefined ? Math.floor(raw / 6) : undefined;
   const petals = raw !== undefined && raw < 30 ? raw % 6 : 0;
-  const label = complete === undefined ? '성급 정보 없음' : raw !== undefined && raw < 30 ? `${complete}성 · ${petals}단계` : `${complete}성`;
+  const label = complete === undefined ? tr("성급 정보 없음") : raw !== undefined && raw < 30 ? `${complete}${tr("성 · ")}${petals}${tr("단계")}` : `${complete}${tr("성")}`;
   return <div className="mt-1">
     <div className="flex w-fit gap-1 rounded-md border border-border bg-raised px-2 py-1" role="img" aria-label={label}>
       {Array.from({ length: 5 }, (_, index) => <svg key={index} viewBox="0 0 24 24" className="size-5" aria-hidden="true">
@@ -99,37 +107,41 @@ function gearSlot(gear: ArenaHeroGear): string {
   return ({ '101': 'helmet', '102': 'gloves', '103': 'armor', '104': 'boots' } as Record<string, string>)[prefix] ?? slot;
 }
 function GearTile({ slot, gear, hero, known }: { slot: Slot; gear?: ArenaHeroGear; hero: ArenaHero; known?: HeroCatalog[string] }) {
+  const { locale } = useLocale();
+  const tr = (text: string) => playerText(text, locale);
   const exclusive = slot === 'exclusive';
   const present = exclusive ? !!hero.exclusive_gear || numeric(hero.exclusive_gear_level) !== undefined : !!gear;
   const qualityValue = String(gear?.quality_key ?? gear?.quality ?? '').toLowerCase();
   const quality = qualityKeys[qualityValue] ?? qualityValue;
   const red = gear?.red === true || quality === 'legendary' || quality === 'mythic_red' || (numeric(gear?.enhancement_level) ?? 0) >= 101;
-  const grade = exclusive ? '전용 장비' : korean(gear?.quality_label) ?? grades[quality] ?? '등급 미확인';
+  const grade = exclusive ? tr("전용 장비") : playerLabel(gear?.quality_label, locale) ?? tr(grades[quality] ?? '등급 미확인');
   const color = present ? qualityColors[exclusive ? 'mythic' : red ? 'red' : quality] ?? 'border-border bg-raised' : 'border-border bg-bg';
   const troopValue = String(gear?.troop ?? gear?.troop_label ?? '').toLowerCase();
   const troop = troops[troopKeys[troopValue] ?? troopValue] ?? troops[troopKeys[gear?.troop_label ?? '']];
-  const name = exclusive ? known?.gearName ?? korean(hero.exclusive_gear?.name) ?? slotLabels[slot] : korean(gear?.name) ?? slotLabels[slot];
+  const name = exclusive ? exclusiveName(hero, known, locale) : playerLabel(gear?.name, locale) ?? tr(slotLabels[slot]);
   const exclusiveLevel = hero.exclusive_gear?.level ?? hero.exclusive_gear_level;
-  const title = present ? `${name} · ${slotLabels[slot]}${troop ? ` · ${troop.name}` : ''} · ${grade}${red ? ' · 빨간색' : ''} · ${exclusive ? `레벨 ${level(exclusiveLevel)}` : `강화 ${level(gear?.enhancement_level)} · 제련 ${level(gear?.refine_level)} · 장비 레벨 ${level(gear?.gear_level)}`}` : `${slotLabels[slot]} · 장비 정보 없음`;
+  const title = present ? `${name} · ${tr(slotLabels[slot])}${troop ? ` · ${tr(troop.name)}` : ''} · ${grade}${red ? tr(" · 빨간색") : ''} · ${exclusive ? `${tr("레벨 ")}${level(exclusiveLevel)}` : `${tr("강화 ")}${level(gear?.enhancement_level)}${tr(" · 제련 ")}${level(gear?.refine_level)}${tr(" · 장비 레벨 ")}${level(gear?.gear_level)}`}` : `${tr(slotLabels[slot])}${tr(" · 장비 정보 없음")}`;
   const src = exclusive ? safeImage(known?.gearImage, true) ?? equipmentIcon(hero.exclusive_gear?.id) : equipmentIcon(gear?.eid);
   return <li className="min-w-0">
     <div title={title} role="img" aria-label={title} className={`relative flex aspect-square min-h-[50px] items-center justify-center rounded-lg border shadow-inner ${color}`}>
       <Icon src={present ? src : undefined} label="" className="h-full w-full object-contain p-1.5 pb-4" fallback={<SlotIcon slot={slot} />} />
-      {troop && <span className={`absolute -left-1 -top-1 flex size-4 items-center justify-center rounded-md border border-white/60 ${troop.color}`}><Icon src={`https://mightpulse.com/static/troop-types/${troop.icon}.webp`} label="" className="size-full object-contain" fallback={<span className="text-[9px] font-bold text-bg">{troop.name[0]}</span>} /></span>}
+      {troop && <span className={`absolute -left-1 -top-1 flex size-4 items-center justify-center rounded-md border border-white/60 ${troop.color}`}><Icon src={`https://mightpulse.com/static/troop-types/${troop.icon}.webp`} label="" className="size-full object-contain" fallback={<span className="text-[9px] font-bold text-bg">{tr(troop.name)[0]}</span>} /></span>}
       {!exclusive && numeric(gear?.enhancement_level) !== undefined && <span className="absolute right-0.5 top-0.5 rounded bg-bg/85 px-1 text-[10px] font-bold leading-4 text-white">+{level(gear?.enhancement_level)}</span>}
-      <span className="absolute inset-x-0 bottom-0.5 text-center text-[10px] font-bold leading-4 text-white [text-shadow:0_1px_3px_#000]">{present ? exclusive ? `레벨 ${level(exclusiveLevel)}` : `제련 ${level(gear?.refine_level)}` : '미확인'}</span>
+      <span className="absolute inset-x-0 bottom-0.5 text-center text-[10px] font-bold leading-4 text-white [text-shadow:0_1px_3px_#000]">{present ? exclusive ? `${tr("레벨 ")}${level(exclusiveLevel)}` : `${tr("제련 ")}${level(gear?.refine_level)}` : tr("미확인")}</span>
     </div>
-    <p className="mt-1 truncate text-center text-[10px] text-muted">{slotLabels[slot]}</p>
+    <p className="mt-1 truncate text-center text-[10px] text-muted">{tr(slotLabels[slot])}</p>
   </li>;
 }
 
 export default function ArenaHeroes({ heroes, catalog }: { heroes: ArenaHero[] | null | undefined; catalog: HeroCatalog }) {
+  const { locale } = useLocale();
+  const tr = (text: string) => playerText(text, locale);
   const ordered = [...(heroes ?? [])].sort((a, b) => (numeric(a.position) ?? Infinity) - (numeric(b.position) ?? Infinity));
   return <section className="min-w-0 rounded-2xl border border-border bg-surface p-4 sm:p-6" aria-labelledby="heroes-title">
-    <h2 id="heroes-title" className="text-xl font-bold">아레나 방어 영웅</h2>
+    <h2 id="heroes-title" className="text-xl font-bold">{tr("아레나 방어 영웅")}</h2>
     {ordered.length ? <ul className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">{ordered.map((hero, index) => {
       const known = catalog[normalize(hero.name ?? '')] ?? catalog[String(hero.id ?? '')];
-      const name = known?.name ?? korean(hero.name) ?? `방어 영웅 ${index + 1}`;
+      const name = (locale === 'en' ? known?.nameEn : undefined) ?? playerLabel(known?.name, locale) ?? playerLabel(hero.name, locale) ?? `${tr("방어 영웅 ")}${index + 1}`;
       const exclusiveLevel = hero.exclusive_gear?.level ?? hero.exclusive_gear_level;
       return <li key={`${hero.id ?? 'hero'}-${index}`} className="min-w-0 rounded-xl border border-border border-t-accent/70 bg-bg p-3">
         <div className="flex items-start gap-3">
@@ -137,28 +149,28 @@ export default function ArenaHeroes({ heroes, catalog }: { heroes: ArenaHero[] |
           <div className="min-w-0 flex-1"><h3 className="break-words font-bold">{name}</h3><Stars hero={hero} /></div>
         </div>
         <dl className="mt-3 space-y-1 text-xs">
-          <div className="flex justify-between gap-2"><dt className="text-muted">영웅 레벨</dt><dd className="font-semibold">{level(hero.level)}</dd></div>
-          <div className="flex justify-between gap-2"><dt className="text-muted">전용 장비 레벨</dt><dd className="font-semibold">{level(exclusiveLevel)}</dd></div>
-          <div className="flex justify-between gap-2"><dt className="text-muted">방어 편성</dt><dd className="font-semibold">{level(hero.position)}</dd></div>
+          <div className="flex justify-between gap-2"><dt className="text-muted">{tr("영웅 레벨")}</dt><dd className="font-semibold">{level(hero.level)}</dd></div>
+          <div className="flex justify-between gap-2"><dt className="text-muted">{tr("전용 장비 레벨")}</dt><dd className="font-semibold">{level(exclusiveLevel)}</dd></div>
+          <div className="flex justify-between gap-2"><dt className="text-muted">{tr("방어 편성")}</dt><dd className="font-semibold">{level(hero.position)}</dd></div>
         </dl>
-        <ul className="mt-4 grid grid-cols-5 gap-1.5" aria-label={`${name} 장비`}>
+        <ul className="mt-4 grid grid-cols-5 gap-1.5" aria-label={`${name}${tr(" 장비")}`}>
           <GearTile slot="exclusive" hero={hero} known={known} />
           {slots.map((slot) => <GearTile key={slot} slot={slot} gear={hero.gear?.find((gear) => gearSlot(gear) === slot)} hero={hero} known={known} />)}
         </ul>
         <details className="mt-3 border-t border-border pt-2 text-xs">
-          <summary className="cursor-pointer text-muted focus-visible:outline-2 focus-visible:outline-accent">장비 상세</summary>
+          <summary className="cursor-pointer text-muted focus-visible:outline-2 focus-visible:outline-accent">{tr("장비 상세")}</summary>
           <div className="mt-2 space-y-2">
-            <p>{known?.gearName ?? korean(hero.exclusive_gear?.name) ?? '전용 장비'} · 레벨 {level(exclusiveLevel)}</p>
-            {hero.exclusive_gear?.slg_attr?.filter((attr) => korean(attr.label)).map((attr, i) => <p key={i}>{attr.label}: {attr.value ?? '—'}</p>)}
+            <p>{exclusiveName(hero, known, locale)}{tr(" · 레벨 ")}{level(exclusiveLevel)}</p>
+            {hero.exclusive_gear?.slg_attr?.map((attr, i) => <p key={i}>{playerStatLabel(attr.label, attr.id, locale)}: {playerStatValue(attr.value, locale)}</p>)}
             {hero.gear?.map((gear, i) => {
               const quality = String(gear.quality_key ?? gear.quality ?? '').toLowerCase();
-              const grade = korean(gear.quality_label) ?? grades[qualityKeys[quality] ?? quality] ?? '등급 미확인';
-              return <p key={i}>{slotLabels[gearSlot(gear) as Slot] ?? '장비'} · {grade} · 강화 {level(gear.enhancement_level)} · 제련 {level(gear.refine_level)} · 장비 레벨 {level(gear.gear_level)}</p>;
+              const grade = playerLabel(gear.quality_label, locale) ?? tr(grades[qualityKeys[quality] ?? quality] ?? '등급 미확인');
+              return <p key={i}>{tr(slotLabels[gearSlot(gear) as Slot] ?? '장비')} · {grade}{tr(" · 강화 ")}{level(gear.enhancement_level)}{tr(" · 제련 ")}{level(gear.refine_level)}{tr(" · 장비 레벨 ")}{level(gear.gear_level)}</p>;
             })}
-            {hero.skill_levels?.length ? <ul className="flex flex-wrap gap-1">{hero.skill_levels.map((skill, i) => <li key={i} className="rounded bg-raised px-2 py-1">스킬 {i + 1} · 레벨 {level(skill.level)}</li>)}</ul> : null}
+            {hero.skill_levels?.length ? <ul className="flex flex-wrap gap-1">{hero.skill_levels.map((skill, i) => <li key={i} className="rounded bg-raised px-2 py-1">{tr("스킬 ")}{i + 1}{tr(" · 레벨 ")}{level(skill.level)}</li>)}</ul> : null}
           </div>
         </details>
       </li>;
-    })}</ul> : <p className="mt-4 text-muted">아레나 방어 영웅 정보가 없습니다.</p>}
+    })}</ul> : <p className="mt-4 text-muted">{tr("아레나 방어 영웅 정보가 없습니다.")}</p>}
   </section>;
 }

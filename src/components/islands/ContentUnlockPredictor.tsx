@@ -1,3 +1,4 @@
+import { useCalculatorLocale } from '@/lib/calculator-locale';
 import { useEffect, useState } from 'react';
 import {
   CATEGORY_LABELS,
@@ -31,6 +32,7 @@ function fmtDate(day: number): string {
 }
 
 export default function ContentUnlockPredictor() {
+  const { t: ui, text: tx } = useCalculatorLocale();
   const [raw, setRaw] = useState(DEFAULT_KINGDOM);
   const [today, setToday] = useState<number | null>(null);
 
@@ -61,15 +63,13 @@ export default function ContentUnlockPredictor() {
 
   return (
     <div className="rounded-xl border border-border bg-surface/60 p-4 sm:p-5">
-      <label className="mb-1.5 block text-sm font-semibold text-muted" htmlFor="unlock-kingdom">
-        왕국 번호
-      </label>
+      <label className="mb-1.5 block text-sm font-semibold text-muted" htmlFor="unlock-kingdom">{ui("왕국 번호", "Kingdom number")}</label>
       <input
         id="unlock-kingdom"
         type="text"
         inputMode="numeric"
         autoComplete="off"
-        placeholder="예: 1200"
+        placeholder={ui("예: 1200", "e.g. 1200")}
         value={raw}
         onChange={(e) => onChange(e.target.value)}
         className="w-full max-w-xs rounded-lg border border-border bg-bg px-3 py-2 text-sm text-text tabular-nums placeholder:text-muted"
@@ -77,58 +77,52 @@ export default function ContentUnlockPredictor() {
 
       <div className="mt-5 border-t border-border pt-5" aria-live="polite">
         {!valid ? (
-          <p className="rounded-lg border border-border bg-bg px-3 py-4 text-center text-sm text-muted">
-            1 이상의 왕국 번호를 넣어 주세요.
-          </p>
+          <p className="rounded-lg border border-border bg-bg px-3 py-4 text-center text-sm text-muted">{ui("1 이상의 왕국 번호를 넣어 주세요.", "Enter a kingdom number of 1 or higher.")}</p>
         ) : !prediction ? (
           <p className="rounded-lg border border-border bg-bg px-3 py-4 text-center text-sm text-muted">
-            K{kingdom}은 아직 데이터가 없습니다. 지금은 K1~K{KINGDOM_MAX}까지만 시작일을 알고 있어요.
-          </p>
+            K{kingdom}{ui("은 아직 데이터가 없습니다. 지금은 K1~K", " has no data yet. Start dates are available only for K1–K")}{KINGDOM_MAX}{ui("까지만 시작일을 알고 있어요.", ".")}</p>
         ) : (
           <>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div className="rounded-xl border border-border bg-raised p-4">
-                <p className="text-sm text-muted">K{prediction.kingdom} 계산 기준일</p>
+                <p className="text-sm text-muted">K{prediction.kingdom}{ui(" 계산 기준일", " reference date")}</p>
                 <p className="mt-1 text-xl font-extrabold tabular-nums text-accent-strong sm:text-2xl">
                   {fmtDate(prediction.baseDay)}
                 </p>
                 <p className="mt-1 text-sm text-muted">
-                  {prediction.group
+                  {tx(prediction.group
                     ? `통합 그룹 K${prediction.group.start}~K${prediction.group.end} 기준 (원래 시작일 ${fmtDate(prediction.startDay)})`
-                    : '왕국 시작일 기준'}
+                    : '왕국 시작일 기준')}
                 </p>
               </div>
               <div className="rounded-xl border border-border bg-raised p-4">
-                <p className="text-sm text-muted">다음 해금</p>
+                <p className="text-sm text-muted">{ui("다음 해금", "Next unlock")}</p>
                 {today === null ? (
-                  <p className="mt-1 text-xl font-extrabold text-muted sm:text-2xl">계산 중…</p>
+                  <p className="mt-1 text-xl font-extrabold text-muted sm:text-2xl">{ui("계산 중…", "Calculating…")}</p>
                 ) : next ? (
                   <>
                     <p className="mt-1 text-xl font-extrabold text-accent-strong sm:text-2xl">
-                      {next.rule.nameKo}
+                      {tx(next.rule.nameKo)}
                     </p>
                     <p className="mt-1 text-sm text-muted tabular-nums">
-                      {fmtDate(next.unlockDay)} · {next.daysRemaining}일 남음
-                    </p>
+                      {fmtDate(next.unlockDay)} · {next.daysRemaining}{ui("일 남음", " days remaining")}</p>
                   </>
                 ) : (
-                  <p className="mt-1 text-xl font-extrabold text-accent-strong sm:text-2xl">
-                    전부 해금됨
-                  </p>
+                  <p className="mt-1 text-xl font-extrabold text-accent-strong sm:text-2xl">{ui("전부 해금됨", "All unlocked")}</p>
                 )}
               </div>
             </div>
 
             <div className="mt-4 overflow-x-auto rounded-xl border border-border bg-bg">
               <table className="w-full border-collapse text-sm">
-                <caption className="sr-only">K{prediction.kingdom} 콘텐츠 해금 예정일</caption>
+                <caption className="sr-only">K{prediction.kingdom}{ui(" 콘텐츠 해금 예정일", " estimated content unlock dates")}</caption>
                 <thead>
                   <tr className="bg-raised text-left">
-                    <th scope="col" className="px-4 py-3 font-bold whitespace-nowrap">콘텐츠</th>
-                    <th scope="col" className="px-4 py-3 font-bold whitespace-nowrap">분류</th>
-                    <th scope="col" className="px-4 py-3 font-bold whitespace-nowrap">신뢰도</th>
-                    <th scope="col" className="px-4 py-3 text-right font-bold whitespace-nowrap">해금일</th>
-                    <th scope="col" className="px-4 py-3 text-right font-bold whitespace-nowrap">상태</th>
+                    <th scope="col" className="px-4 py-3 font-bold whitespace-nowrap">{ui("콘텐츠", "Content")}</th>
+                    <th scope="col" className="px-4 py-3 font-bold whitespace-nowrap">{ui("분류", "Category")}</th>
+                    <th scope="col" className="px-4 py-3 font-bold whitespace-nowrap">{ui("신뢰도", "Confidence")}</th>
+                    <th scope="col" className="px-4 py-3 text-right font-bold whitespace-nowrap">{ui("해금일", "Unlock date")}</th>
+                    <th scope="col" className="px-4 py-3 text-right font-bold whitespace-nowrap">{ui("상태", "Status")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -140,28 +134,28 @@ export default function ContentUnlockPredictor() {
                       }`}
                     >
                       <th scope="row" className="px-4 py-3 text-left font-bold">
-                        {it.rule.nameKo}
+                        {tx(it.rule.nameKo)}
                         {it.rule.notes ? (
-                          <p className="mt-0.5 text-xs font-normal text-muted">{it.rule.notes}</p>
+                          <p className="mt-0.5 text-xs font-normal text-muted">{tx(it.rule.notes)}</p>
                         ) : null}
                       </th>
-                      <td className="px-4 py-3 whitespace-nowrap">{CATEGORY_LABELS[it.rule.category]}</td>
+                      <td className="px-4 py-3 whitespace-nowrap">{tx(CATEGORY_LABELS[it.rule.category])}</td>
                       <td className="px-4 py-3 whitespace-nowrap">
                         <span
                           className={`rounded-full border px-2 py-0.5 text-xs font-bold ${CONFIDENCE_BADGE[it.rule.confidence]}`}
                         >
-                          {CONFIDENCE_LABELS[it.rule.confidence]}
+                          {tx(CONFIDENCE_LABELS[it.rule.confidence])}
                         </span>
                       </td>
                       <td className="px-4 py-3 text-right tabular-nums whitespace-nowrap">
                         {fmtDate(it.unlockDay)}
                       </td>
                       <td className="px-4 py-3 text-right tabular-nums whitespace-nowrap">
-                        {today === null
+                        {tx(today === null
                           ? '—'
                           : it.isUnlocked
                             ? '해금됨'
-                            : `${it.daysRemaining}일 남음`}
+                            : `${it.daysRemaining}일 남음`)}
                       </td>
                     </tr>
                   ))}

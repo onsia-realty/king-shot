@@ -1,3 +1,4 @@
+import { useCalculatorLocale } from '@/lib/calculator-locale';
 import { useMemo, useState } from 'react';
 import {
   HERO_SHARD_ROWS,
@@ -35,6 +36,7 @@ interface Step {
 }
 
 export default function HeroAscensionCalculator() {
+  const { t: ui, text: tx } = useCalculatorLocale();
   const [tier, setTier] = useState<HeroShardTier>('T6');
   const [current, setCurrent] = useState(0);
   const [target, setTarget] = useState(5);
@@ -72,9 +74,7 @@ export default function HeroAscensionCalculator() {
     <div className="rounded-xl border border-border bg-surface/60 p-4 sm:p-5">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
-          <label className={labelClass} htmlFor="asc-tier">
-            영웅 등급
-          </label>
+          <label className={labelClass} htmlFor="asc-tier">{ui("영웅 등급", "Hero tier")}</label>
           <select
             id="asc-tier"
             value={tier}
@@ -83,16 +83,14 @@ export default function HeroAscensionCalculator() {
           >
             {TIERS.map((t) => (
               <option key={t} value={t}>
-                {t}
+                {tx(t)}
               </option>
             ))}
           </select>
         </div>
 
         <div>
-          <label className={labelClass} htmlFor="asc-owned">
-            보유 파편 (선택)
-          </label>
+          <label className={labelClass} htmlFor="asc-owned">{ui("보유 파편 (선택)", "Owned shards (optional)")}</label>
           <input
             id="asc-owned"
             type="number"
@@ -107,9 +105,7 @@ export default function HeroAscensionCalculator() {
         </div>
 
         <div>
-          <label className={labelClass} htmlFor="asc-current">
-            현재 성급
-          </label>
+          <label className={labelClass} htmlFor="asc-current">{ui("현재 성급", "Current stars")}</label>
           <select
             id="asc-current"
             value={current}
@@ -118,16 +114,14 @@ export default function HeroAscensionCalculator() {
           >
             {CURRENT_STARS.map((s) => (
               <option key={s} value={s}>
-                {s === 0 ? '0성 (미승급)' : `${s}성`}
+                {tx(s === 0 ? '0성 (미승급)' : `${s}성`)}
               </option>
             ))}
           </select>
         </div>
 
         <div>
-          <label className={labelClass} htmlFor="asc-target">
-            목표 성급
-          </label>
+          <label className={labelClass} htmlFor="asc-target">{ui("목표 성급", "Target stars")}</label>
           <select
             id="asc-target"
             value={target}
@@ -136,8 +130,7 @@ export default function HeroAscensionCalculator() {
           >
             {TARGET_STARS.map((s) => (
               <option key={s} value={s}>
-                {s}성
-              </option>
+                {s}{ui("성", "★")}</option>
             ))}
           </select>
         </div>
@@ -145,28 +138,25 @@ export default function HeroAscensionCalculator() {
 
       <div className="mt-5 border-t border-border pt-5" aria-live="polite">
         {invalid ? (
-          <p className="rounded-lg border border-border bg-bg px-3 py-4 text-center text-sm text-muted">
-            목표 성급을 현재 성급보다 높게 골라주세요.
-          </p>
+          <p className="rounded-lg border border-border bg-bg px-3 py-4 text-center text-sm text-muted">{ui("목표 성급을 현재 성급보다 높게 골라주세요.", "Choose a target star level above the current level.")}</p>
         ) : (
           <>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div className="rounded-xl border border-border bg-raised p-4">
                 <p className="text-sm text-muted">
-                  {current}성 → {target}성 필요 파편
-                </p>
+                  {current}{ui("성 → ", "★ → ")}{target}{ui("성 필요 파편", "★ · required shards")}</p>
                 <p className="mt-1 text-3xl font-extrabold tabular-nums text-accent-strong sm:text-4xl">
                   {fmt(total)}
                 </p>
               </div>
               <div className="rounded-xl border border-border bg-raised p-4">
-                <p className="text-sm text-muted">보유 {fmt(owned)}개 기준 부족분</p>
+                <p className="text-sm text-muted">{ui("보유 ", "Owned: ")}{fmt(owned)}{ui("개 기준 부족분", " · shards missing")}</p>
                 <p
                   className={`mt-1 text-3xl font-extrabold tabular-nums sm:text-4xl ${
                     enough ? 'text-success' : 'text-text'
                   }`}
                 >
-                  {enough ? '충분' : fmt(missing)}
+                  {tx(enough ? '충분' : fmt(missing))}
                 </p>
               </div>
             </div>
@@ -174,27 +164,19 @@ export default function HeroAscensionCalculator() {
             <div className="mt-4 overflow-x-auto rounded-xl border border-border">
               <table className="w-full border-collapse text-sm">
                 <caption className="sr-only">
-                  {tier} 영웅 {current}성에서 {target}성까지 단계별 파편 소요량
-                </caption>
+                  {tier}{ui(" 영웅 ", " Hero ")}{current}{ui("성에서 ", "★ to ")}{target}{ui("성까지 단계별 파편 소요량", "★ · shards required by step")}</caption>
                 <thead>
                   <tr className="bg-raised text-left">
-                    <th scope="col" className="px-4 py-3 font-bold whitespace-nowrap">
-                      단계
-                    </th>
-                    <th scope="col" className="px-4 py-3 text-right font-bold whitespace-nowrap">
-                      소요 파편
-                    </th>
-                    <th scope="col" className="px-4 py-3 text-right font-bold whitespace-nowrap">
-                      누적
-                    </th>
+                    <th scope="col" className="px-4 py-3 font-bold whitespace-nowrap">{ui("단계", " steps")}</th>
+                    <th scope="col" className="px-4 py-3 text-right font-bold whitespace-nowrap">{ui("소요 파편", "Required shards")}</th>
+                    <th scope="col" className="px-4 py-3 text-right font-bold whitespace-nowrap">{ui("누적", "Cumulative")}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {steps.map((step) => (
                     <tr key={step.star} className="border-t border-border">
                       <td className="px-4 py-3 whitespace-nowrap">
-                        {step.star - 1}성 → {step.star}성
-                      </td>
+                        {step.star - 1}{ui("성 → ", "★ → ")}{step.star}{ui("성", "★")}</td>
                       <td className="px-4 py-3 text-right tabular-nums">{fmt(step.cost)}</td>
                       <td className="px-4 py-3 text-right font-bold tabular-nums">
                         {fmt(step.cumulative)}

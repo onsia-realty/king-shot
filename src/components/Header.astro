@@ -1,25 +1,31 @@
 ---
+import LocaleText from '@/components/LocaleText.astro';
+import { staticEnglish } from '@/lib/static-translations';
+import LanguageSwitch from '@/components/LanguageSwitch.astro';
+import { isLocaleScope } from '@/lib/locale';
 import KakaoButton from '@/components/KakaoButton.astro';
 import { mainNav, isActive, SITE_NAME, KAKAO_OPENCHAT } from '@/data/nav';
 
 const pathname = Astro.url.pathname;
+const localeScope = isLocaleScope(pathname);
 ---
 
 <header
   class="sticky top-0 z-50 border-b border-border bg-bg/85 backdrop-blur supports-[backdrop-filter]:bg-bg/70"
 >
-  <div class="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3 sm:gap-4">
+  <div class:list={['mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3 sm:gap-4', localeScope && 'flex-wrap']}>
     <a
       href="/"
       class="flex shrink-0 items-center gap-2 text-lg font-extrabold tracking-tight whitespace-nowrap text-text no-underline hover:text-accent"
     >
       <span aria-hidden="true" class="text-accent">👑</span>
-      <span>{SITE_NAME}</span>
+      <span><LocaleText ko={SITE_NAME} en={staticEnglish(SITE_NAME)} /></span>
     </a>
 
-    <div class="flex items-center gap-2 sm:gap-3">
+    <div class:list={['flex items-center gap-2 sm:gap-3', localeScope && 'w-full justify-between sm:w-auto sm:justify-end']}>
+    {localeScope && <LanguageSwitch />}
     <!-- 데스크톱 네비 -->
-    <nav aria-label="주요 메뉴" class="hidden md:block">
+    <nav aria-label="주요 메뉴" data-aria-label-ko="주요 메뉴" data-aria-label-en="Main navigation" class:list={['hidden', localeScope ? 'xl:block' : 'md:block']}>
       <ul class="flex items-center gap-1">
         {
           mainNav.map((item) => (
@@ -28,13 +34,14 @@ const pathname = Astro.url.pathname;
                 href={item.href}
                 aria-current={isActive(item, pathname) ? 'page' : undefined}
                 class:list={[
-                  'rounded-lg px-3 py-2 text-sm font-semibold no-underline transition-colors',
+                  'rounded-lg py-2 font-semibold no-underline transition-colors',
+                  localeScope ? 'px-2 text-xs' : 'px-3 text-sm',
                   isActive(item, pathname)
                     ? 'bg-raised text-accent'
                     : 'text-muted hover:bg-surface hover:text-text',
                 ]}
               >
-                {item.label}
+                <LocaleText ko={item.label} en={staticEnglish(item.label)} />
               </a>
             </li>
           ))
@@ -43,14 +50,14 @@ const pathname = Astro.url.pathname;
     </nav>
 
     <!-- 오픈채팅: 데스크톱은 글자 버튼, 모바일은 메뉴를 열지 않아도 보이는 아이콘 버튼 -->
-    <span class="hidden md:inline-flex"><KakaoButton variant="full" text="오픈채팅" /></span>
-    <span class="inline-flex md:hidden"><KakaoButton variant="icon" /></span>
+    <span class:list={['hidden', localeScope ? 'xl:inline-flex' : 'md:inline-flex']}><KakaoButton variant="full" text="오픈채팅" /></span>
+    <span class:list={['inline-flex', localeScope ? 'xl:hidden' : 'md:hidden']}><KakaoButton variant="icon" /></span>
 
     <!-- 모바일 토글: JS 없이 details/summary -->
-    <details class="ks-menu relative md:hidden">
+    <details class:list={['ks-menu relative', localeScope ? 'xl:hidden' : 'md:hidden']}>
       <summary
         class="flex cursor-pointer list-none items-center gap-2 rounded-lg border border-border bg-surface px-3 py-2 text-sm font-semibold text-text"
-        aria-label="메뉴 열기"
+        aria-label="메뉴 열기" data-aria-label-ko="메뉴 열기" data-aria-label-en="Open menu"
       >
         <svg
           width="18"
@@ -64,10 +71,10 @@ const pathname = Astro.url.pathname;
         >
           <path d="M3 6h18M3 12h18M3 18h18" />
         </svg>
-        <span>메뉴</span>
+        <span><LocaleText ko="메뉴" en="Menu" /></span>
       </summary>
       <nav
-        aria-label="모바일 메뉴"
+        aria-label="모바일 메뉴" data-aria-label-ko="모바일 메뉴" data-aria-label-en="Mobile navigation"
         class="absolute right-0 top-[calc(100%+0.5rem)] w-52 rounded-xl border border-border bg-surface p-2 shadow-2xl shadow-black/50"
       >
         <ul class="flex flex-col">
@@ -84,7 +91,7 @@ const pathname = Astro.url.pathname;
                       : 'text-text hover:bg-raised',
                   ]}
                 >
-                  {item.label}
+                  <LocaleText ko={item.label} en={staticEnglish(item.label)} />
                 </a>
               </li>
             ))
@@ -95,9 +102,11 @@ const pathname = Astro.url.pathname;
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`${KAKAO_OPENCHAT.label} 참여하기 (새 창 열림)`}
+          data-aria-label-ko={`${KAKAO_OPENCHAT.label} 참여하기 (새 창 열림)`}
+          data-aria-label-en="Join KakaoTalk Open Chat (opens in a new tab)"
           class="mt-2 block rounded-lg border-t border-border px-3 pt-3 text-sm font-semibold text-kakao no-underline hover:text-kakao"
         >
-          카카오톡 오픈채팅 참여
+          <LocaleText ko="카카오톡 오픈채팅 참여" en="Join KakaoTalk Open Chat" />
         </a>
       </nav>
     </details>

@@ -1,4 +1,6 @@
 ---
+import LocaleText from '@/components/LocaleText.astro';
+import { staticEnglish } from '@/lib/static-translations';
 export interface BreadcrumbItem {
   label: string;
   href?: string;
@@ -25,7 +27,7 @@ const jsonLd = {
 };
 ---
 
-<nav aria-label="현재 위치" class:list={['text-sm', className]}>
+<nav aria-label="현재 위치" data-aria-label-ko="현재 위치" data-aria-label-en="Breadcrumb" class:list={['text-sm', className]}>
   <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-muted">
     {
       items.map((item, i) => (
@@ -37,11 +39,11 @@ const jsonLd = {
           )}
           {item.href && i < items.length - 1 ? (
             <a class="no-underline hover:text-link hover:underline" href={item.href}>
-              {item.label}
+              <LocaleText ko={item.label} en={staticEnglish(item.label)} />
             </a>
           ) : (
             <span aria-current="page" class="font-semibold text-text">
-              {item.label}
+              <LocaleText ko={item.label} en={staticEnglish(item.label)} />
             </span>
           )}
         </li>

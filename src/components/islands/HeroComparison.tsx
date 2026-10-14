@@ -1,3 +1,4 @@
+import { useCalculatorLocale } from '@/lib/calculator-locale';
 import { useEffect, useMemo, useState } from 'react';
 import { RARITY_LABEL, TROOP_CLASS_GLYPH, type Rarity, type TroopClass } from '@/lib/labels';
 
@@ -29,7 +30,9 @@ export interface ComparisonHero {
   rarity: Rarity;
   troopClass: TroopClass;
   acquisition: string;
+  acquisitionEn?: string;
   summary: string;
+  summaryEn?: string;
   heroClass?: string;
   /** 최적화를 마친 초상화 경로. 없으면 등급색 이니셜로 대체한다 */
   portrait?: string;
@@ -37,6 +40,7 @@ export interface ComparisonHero {
   expedition?: { attack: string; defense: string };
   skills: ComparisonSkill[];
   gearName?: string;
+  gearNameEn?: string;
 }
 
 interface Props {
@@ -114,14 +118,15 @@ function StatRow({
   verdict: Verdict;
   diff?: string;
 }) {
+  const { text: tx } = useCalculatorLocale();
   return (
     <div className="flex items-baseline justify-between gap-3 border-t border-border py-2 first:border-t-0">
-      <span className="text-xs text-muted">{label}</span>
+      <span className="text-xs text-muted">{tx(label)}</span>
       <span className="flex items-baseline gap-2 tabular-nums">
-        <span className={`text-sm font-bold ${VALUE_CLASS[verdict]}`}>{display}</span>
+        <span className={`text-sm font-bold ${VALUE_CLASS[verdict]}`}>{tx(display)}</span>
         {verdict === 'win' && diff && (
           <span className="rounded-md border border-accent/40 bg-accent/12 px-1.5 py-0.5 text-[11px] font-bold text-accent">
-            +{diff}
+            +{tx(diff)}
           </span>
         )}
       </span>
@@ -130,6 +135,7 @@ function StatRow({
 }
 
 function HeroColumn({ hero, other }: { hero: ComparisonHero; other?: ComparisonHero }) {
+  const { t: ui, text: tx } = useCalculatorLocale();
   const rarityVar = `var(--ks-rarity-${hero.rarity.toLowerCase()})`;
   const placeholderStyle = {
     backgroundImage: `linear-gradient(150deg, color-mix(in oklab, ${rarityVar} 45%, transparent), color-mix(in oklab, ${rarityVar} 8%, transparent) 65%, transparent)`,
@@ -156,7 +162,7 @@ function HeroColumn({ hero, other }: { hero: ComparisonHero; other?: ComparisonH
           {hero.portrait ? (
             <img
               src={hero.portrait}
-              alt={`${hero.name} (${hero.nameEn}) 초상`}
+              alt={ui(`${hero.name} (${hero.nameEn}) 초상`, `${hero.nameEn || tx(hero.name)} portrait`)}
               width={128}
               height={128}
               loading="lazy"
@@ -164,13 +170,13 @@ function HeroColumn({ hero, other }: { hero: ComparisonHero; other?: ComparisonH
               className="size-16 object-cover"
             />
           ) : (
-            hero.name.trim().slice(0, 1)
+            ui(hero.name, hero.nameEn || tx(hero.name)).trim().slice(0, 1)
           )}
         </div>
         <div className="min-w-0">
           <h3 className="truncate text-lg font-bold leading-tight">
             <a href={`/heroes/${hero.id}/`} className="text-text no-underline hover:text-accent">
-              {hero.name}
+              {ui(hero.name, hero.nameEn || tx(hero.name))}
             </a>
           </h3>
           <p className="truncate text-xs text-muted">{hero.nameEn}</p>
@@ -180,31 +186,28 @@ function HeroColumn({ hero, other }: { hero: ComparisonHero; other?: ComparisonH
       <div className="flex flex-wrap items-center gap-1.5">
         <span
           className={`inline-flex items-center rounded-md border px-1.5 py-0.5 text-[11px] font-bold tracking-wide ${RARITY_BADGE[hero.rarity]}`}
-          title={`${RARITY_LABEL[hero.rarity]} 등급 (${hero.rarity})`}
+          title={tx(`${RARITY_LABEL[hero.rarity]} 등급 (${hero.rarity})`)}
         >
-          {RARITY_LABEL[hero.rarity]}
+          {tx(RARITY_LABEL[hero.rarity])}
         </span>
         <span className="inline-flex items-center gap-1 rounded-md border border-border bg-raised px-1.5 py-0.5 text-[11px] font-bold text-muted">
           <span aria-hidden="true">{TROOP_CLASS_GLYPH[hero.troopClass]}</span>
-          {hero.troopClass}
+          {tx(hero.troopClass)}
         </span>
         <span className="inline-flex items-center rounded-md border border-border bg-raised px-1.5 py-0.5 text-[11px] font-bold text-muted">
-          {hero.generation}세대
-        </span>
+          {hero.generation}{ui("세대", " generation")}</span>
         {hero.heroClass && (
           <span className="inline-flex items-center rounded-md border border-border bg-raised px-1.5 py-0.5 text-[11px] font-bold text-muted">
-            {hero.heroClass}형
-          </span>
+            {tx(hero.heroClass)}{ui("형", " type")}</span>
         )}
-        <span className="inline-flex items-center rounded-md border border-border px-1.5 py-0.5 text-[11px] text-muted">
-          획득: {hero.acquisition}
+        <span className="inline-flex items-center rounded-md border border-border px-1.5 py-0.5 text-[11px] text-muted">{ui("획득: ", "Acquisition: ")}{ui(hero.acquisition, hero.acquisitionEn || tx(hero.acquisition))}
         </span>
       </div>
 
-      <p className="text-sm leading-relaxed text-muted">{hero.summary}</p>
+      <p className="text-sm leading-relaxed text-muted">{ui(hero.summary, hero.summaryEn || tx(hero.summary))}</p>
 
       <section>
-        <h4 className="text-sm font-bold text-accent">토벌</h4>
+        <h4 className="text-sm font-bold text-accent">{ui("토벌", "Exploration")}</h4>
         <div className="mt-1.5">
           {EXPLORATION_ROWS.map((row) => {
             const mine = hero.exploration?.[row.key];
@@ -213,7 +216,7 @@ function HeroColumn({ hero, other }: { hero: ComparisonHero; other?: ComparisonH
             return (
               <StatRow
                 key={row.key}
-                label={row.label}
+                label={tx(row.label)}
                 display={mine === undefined ? '—' : num(mine)}
                 verdict={verdict}
                 diff={
@@ -228,7 +231,7 @@ function HeroColumn({ hero, other }: { hero: ComparisonHero; other?: ComparisonH
       </section>
 
       <section>
-        <h4 className="text-sm font-bold text-accent">원정</h4>
+        <h4 className="text-sm font-bold text-accent">{ui("원정", "Expedition")}</h4>
         <div className="mt-1.5">
           {EXPEDITION_ROWS.map((row) => {
             const raw = hero.expedition?.[row.key];
@@ -238,7 +241,7 @@ function HeroColumn({ hero, other }: { hero: ComparisonHero; other?: ComparisonH
             return (
               <StatRow
                 key={row.key}
-                label={row.label}
+                label={tx(row.label)}
                 display={raw ?? '—'}
                 verdict={verdict}
                 diff={
@@ -253,23 +256,23 @@ function HeroColumn({ hero, other }: { hero: ComparisonHero; other?: ComparisonH
       </section>
 
       <section>
-        <h4 className="text-sm font-bold text-accent">스킬</h4>
+        <h4 className="text-sm font-bold text-accent">{ui("스킬", "Skills")}</h4>
         {skillsByMode.length === 0 ? (
-          <p className="mt-1.5 text-sm text-muted">아직 정리된 스킬이 없습니다.</p>
+          <p className="mt-1.5 text-sm text-muted">{ui("아직 정리된 스킬이 없습니다.", "No skill data available yet.")}</p>
         ) : (
           skillsByMode.map((group) => (
             <div key={group.mode} className="mt-2">
-              <h5 className="text-xs font-bold text-muted">{group.mode}</h5>
+              <h5 className="text-xs font-bold text-muted">{tx(group.mode)}</h5>
               <ul className="mt-1 flex flex-col gap-1">
                 {group.list.map((skill) => (
                   <li
                     key={`${group.mode}-${skill.nameEn}`}
                     className="flex items-baseline justify-between gap-3 text-sm"
                   >
-                    <span className="min-w-0 truncate">{skill.name}</span>
+                    <span className="min-w-0 truncate">{ui(skill.name, skill.nameEn || tx(skill.name))}</span>
                     {(skill.max || skill.max2) && (
                       <span className="shrink-0 font-bold text-accent tabular-nums">
-                        {[skill.max, skill.max2].filter(Boolean).join(' / ')}
+                        {tx([skill.max, skill.max2].filter(Boolean).join(' / '))}
                       </span>
                     )}
                   </li>
@@ -281,14 +284,15 @@ function HeroColumn({ hero, other }: { hero: ComparisonHero; other?: ComparisonH
       </section>
 
       <section>
-        <h4 className="text-sm font-bold text-accent">전용 장비</h4>
-        <p className="mt-1.5 text-sm">{hero.gearName ?? <span className="text-muted">없음</span>}</p>
+        <h4 className="text-sm font-bold text-accent">{ui("전용 장비", "Exclusive gear")}</h4>
+        <p className="mt-1.5 text-sm">{hero.gearName ? ui(hero.gearName, hero.gearNameEn || tx(hero.gearName)) : <span className="text-muted">{ui("없음", "None")}</span>}</p>
       </section>
     </article>
   );
 }
 
 export default function HeroComparison({ heroes }: Props) {
+  const { t: ui, text: tx } = useCalculatorLocale();
   const [leftId, setLeftId] = useState(heroes[0]?.id ?? '');
   const [rightId, setRightId] = useState(heroes[1]?.id ?? '');
 
@@ -319,7 +323,7 @@ export default function HeroComparison({ heroes }: Props) {
 
   const options = heroes.map((hero) => (
     <option key={hero.id} value={hero.id}>
-      {hero.name} ({hero.nameEn}) · {hero.generation}세대 {RARITY_LABEL[hero.rarity]}
+      {ui(`${hero.name} (${hero.nameEn}) · ${hero.generation}세대 ${RARITY_LABEL[hero.rarity]}`, `${hero.nameEn || tx(hero.name)} · Gen ${hero.generation} ${tx(RARITY_LABEL[hero.rarity])}`)}
     </option>
   ));
 
@@ -327,37 +331,31 @@ export default function HeroComparison({ heroes }: Props) {
     <div className="flex flex-col gap-5">
       <div className="grid grid-cols-1 gap-3 rounded-xl border border-border bg-surface/60 p-4 sm:grid-cols-2 sm:p-5">
         <div>
-          <label className="mb-1.5 block text-sm font-semibold text-muted" htmlFor="hero-a">
-            첫 번째 영웅
-          </label>
+          <label className="mb-1.5 block text-sm font-semibold text-muted" htmlFor="hero-a">{ui("첫 번째 영웅", "First hero")}</label>
           <select
             id="hero-a"
             className={selectClass}
             value={leftId}
             onChange={(e) => setLeftId(e.currentTarget.value)}
           >
-            <option value="">선택 안 함</option>
+            <option value="">{ui("선택 안 함", "None selected")}</option>
             {options}
           </select>
         </div>
         <div>
-          <label className="mb-1.5 block text-sm font-semibold text-muted" htmlFor="hero-b">
-            두 번째 영웅
-          </label>
+          <label className="mb-1.5 block text-sm font-semibold text-muted" htmlFor="hero-b">{ui("두 번째 영웅", "Second hero")}</label>
           <select
             id="hero-b"
             className={selectClass}
             value={rightId}
             onChange={(e) => setRightId(e.currentTarget.value)}
           >
-            <option value="">선택 안 함</option>
+            <option value="">{ui("선택 안 함", "None selected")}</option>
             {options}
           </select>
         </div>
         {left && right && left.id === right.id && (
-          <p className="text-sm text-muted sm:col-span-2">
-            같은 영웅을 두 번 골랐습니다. 한쪽을 다른 영웅으로 바꾸면 차이가 보입니다.
-          </p>
+          <p className="text-sm text-muted sm:col-span-2">{ui("같은 영웅을 두 번 골랐습니다. 한쪽을 다른 영웅으로 바꾸면 차이가 보입니다.", "You selected the same hero twice. Select a different hero to see the differences.")}</p>
         )}
       </div>
 
@@ -367,9 +365,7 @@ export default function HeroComparison({ heroes }: Props) {
           {right && <HeroColumn hero={right} other={left} />}
         </div>
       ) : (
-        <p className="rounded-xl border border-border bg-surface px-4 py-6 text-center text-sm text-muted">
-          위에서 영웅을 골라주세요. 두 명을 고르면 토벌 스탯이 높은 쪽에 색과 차이값이 붙습니다.
-        </p>
+        <p className="rounded-xl border border-border bg-surface px-4 py-6 text-center text-sm text-muted">{ui("위에서 영웅을 골라주세요. 두 명을 고르면 토벌 스탯이 높은 쪽에 색과 차이값이 붙습니다.", "Select heroes above. With two selected, higher Exploration stats are highlighted with the difference.")}</p>
       )}
     </div>
   );

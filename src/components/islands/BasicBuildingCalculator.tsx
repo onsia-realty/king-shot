@@ -1,3 +1,4 @@
+import { useCalculatorLocale } from '@/lib/calculator-locale';
 import { useMemo, useState } from 'react';
 import {
   BUILDING_COSTS,
@@ -63,6 +64,7 @@ interface Totals {
 const EMPTY_TOTALS: Totals = { bread: 0, wood: 0, stone: 0, iron: 0, seconds: 0 };
 
 export default function BasicBuildingCalculator() {
+  const { t: ui, text: tx } = useCalculatorLocale();
   const [slug, setSlug] = useState(BUILDING_COSTS[0].slug);
   const [current, setCurrent] = useState(1);
   const [target, setTarget] = useState(BUILDING_MAX_LEVEL);
@@ -113,9 +115,7 @@ export default function BasicBuildingCalculator() {
     <div className="rounded-xl border border-border bg-surface/60 p-4 sm:p-5">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
-          <label className={labelClass} htmlFor="basic-bld-building">
-            건물
-          </label>
+          <label className={labelClass} htmlFor="basic-bld-building">{ui("건물", "Building")}</label>
           <select
             id="basic-bld-building"
             value={slug}
@@ -124,16 +124,14 @@ export default function BasicBuildingCalculator() {
           >
             {BUILDING_COSTS.map((b) => (
               <option key={b.slug} value={b.slug}>
-                {b.name}
+                {tx(b.name)}
               </option>
             ))}
           </select>
         </div>
 
         <div>
-          <label className={labelClass} htmlFor="basic-bld-bonus">
-            건설 속도 보너스 % (선택)
-          </label>
+          <label className={labelClass} htmlFor="basic-bld-bonus">{ui("건설 속도 보너스 % (선택)", "Construction speed bonus % (optional)")}</label>
           <input
             id="basic-bld-bonus"
             type="number"
@@ -148,9 +146,7 @@ export default function BasicBuildingCalculator() {
         </div>
 
         <div>
-          <label className={labelClass} htmlFor="basic-bld-current">
-            현재 레벨
-          </label>
+          <label className={labelClass} htmlFor="basic-bld-current">{ui("현재 레벨", "Current level")}</label>
           <select
             id="basic-bld-current"
             value={safeCurrent}
@@ -159,16 +155,13 @@ export default function BasicBuildingCalculator() {
           >
             {CURRENT_LEVELS.map((lv) => (
               <option key={lv} value={lv}>
-                {lv}레벨
-              </option>
+                {lv}{ui("레벨", " level")}</option>
             ))}
           </select>
         </div>
 
         <div>
-          <label className={labelClass} htmlFor="basic-bld-target">
-            목표 레벨
-          </label>
+          <label className={labelClass} htmlFor="basic-bld-target">{ui("목표 레벨", "Target level")}</label>
           <select
             id="basic-bld-target"
             value={safeTarget}
@@ -177,8 +170,7 @@ export default function BasicBuildingCalculator() {
           >
             {TARGET_LEVELS.map((lv) => (
               <option key={lv} value={lv}>
-                {lv}레벨
-              </option>
+                {lv}{ui("레벨", " level")}</option>
             ))}
           </select>
         </div>
@@ -186,15 +178,13 @@ export default function BasicBuildingCalculator() {
 
       <div className="mt-5 border-t border-border pt-5" aria-live="polite">
         {invalid ? (
-          <p className="rounded-lg border border-border bg-bg px-3 py-4 text-center text-sm text-muted">
-            목표 레벨을 현재 레벨보다 높게 설정해 주세요.
-          </p>
+          <p className="rounded-lg border border-border bg-bg px-3 py-4 text-center text-sm text-muted">{ui("목표 레벨을 현재 레벨보다 높게 설정해 주세요.", "Set the target level above the current level.")}</p>
         ) : (
           <>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
               {tiles.map((tile) => (
                 <div key={tile.key} className="rounded-xl border border-border bg-raised p-4">
-                  <p className="text-sm text-muted">{tile.label}</p>
+                  <p className="text-sm text-muted">{tx(tile.label)}</p>
                   <p className="mt-1 text-xl font-extrabold tabular-nums text-accent-strong sm:text-2xl">
                     {fmt(tile.value)}
                   </p>
@@ -204,48 +194,31 @@ export default function BasicBuildingCalculator() {
 
             <div className="mt-3 rounded-xl border border-border bg-raised p-4">
               <p className="text-sm text-muted">
-                {building.name} {safeCurrent}레벨 → {safeTarget}레벨 총 소요 시간
-                {bonus > 0 ? ` (건설 속도 +${fmt(bonus)}% 반영)` : ''}
+                {tx(building.name)} {safeCurrent}{ui("레벨 → ", " → ")}{safeTarget}{ui("레벨 총 소요 시간", " · total time")}{tx(bonus > 0 ? ` (건설 속도 +${fmt(bonus)}% 반영)` : '')}
               </p>
               <p className="mt-1 text-2xl font-extrabold tabular-nums text-accent-strong sm:text-3xl">
-                {fmtDuration(adjustedSeconds)}
+                {tx(fmtDuration(adjustedSeconds))}
               </p>
               {bonus > 0 ? (
-                <p className="mt-1 text-sm text-muted tabular-nums">
-                  보너스 없을 때 {fmtDuration(totals.seconds)}
+                <p className="mt-1 text-sm text-muted tabular-nums">{ui("보너스 없을 때 ", "Without bonuses ")}{tx(fmtDuration(totals.seconds))}
                 </p>
               ) : null}
             </div>
 
             <details className="mt-4 rounded-xl border border-border bg-bg">
-              <summary className="cursor-pointer px-4 py-3 text-sm font-semibold">
-                레벨별 상세 보기 ({rows.length}단계)
-              </summary>
+              <summary className="cursor-pointer px-4 py-3 text-sm font-semibold">{ui("레벨별 상세 보기 (", "Details by level (")}{rows.length}{ui("단계)", " steps)")}</summary>
               <div className="overflow-x-auto border-t border-border">
                 <table className="w-full border-collapse text-sm">
                   <caption className="sr-only">
-                    {building.name} {safeCurrent}레벨에서 {safeTarget}레벨까지 단계별 자원과 시간
-                  </caption>
+                    {tx(building.name)} {safeCurrent}{ui("레벨에서 ", " to ")}{safeTarget}{ui("레벨까지 단계별 자원과 시간", " · resources and time by step")}</caption>
                   <thead>
                     <tr className="bg-raised text-left">
-                      <th scope="col" className="px-4 py-3 font-bold whitespace-nowrap">
-                        레벨
-                      </th>
-                      <th scope="col" className="px-4 py-3 text-right font-bold whitespace-nowrap">
-                        빵
-                      </th>
-                      <th scope="col" className="px-4 py-3 text-right font-bold whitespace-nowrap">
-                        나무
-                      </th>
-                      <th scope="col" className="px-4 py-3 text-right font-bold whitespace-nowrap">
-                        석재
-                      </th>
-                      <th scope="col" className="px-4 py-3 text-right font-bold whitespace-nowrap">
-                        철
-                      </th>
-                      <th scope="col" className="px-4 py-3 text-right font-bold whitespace-nowrap">
-                        시간
-                      </th>
+                      <th scope="col" className="px-4 py-3 font-bold whitespace-nowrap">{ui("레벨", " level")}</th>
+                      <th scope="col" className="px-4 py-3 text-right font-bold whitespace-nowrap">{ui("빵", "Bread")}</th>
+                      <th scope="col" className="px-4 py-3 text-right font-bold whitespace-nowrap">{ui("나무", "Wood")}</th>
+                      <th scope="col" className="px-4 py-3 text-right font-bold whitespace-nowrap">{ui("석재", "Stone")}</th>
+                      <th scope="col" className="px-4 py-3 text-right font-bold whitespace-nowrap">{ui("철", "Iron")}</th>
+                      <th scope="col" className="px-4 py-3 text-right font-bold whitespace-nowrap">{ui("시간", "Time")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -259,7 +232,7 @@ export default function BasicBuildingCalculator() {
                         <td className="px-4 py-3 text-right tabular-nums">{fmt(row[3])}</td>
                         <td className="px-4 py-3 text-right tabular-nums">{fmt(row[4])}</td>
                         <td className="px-4 py-3 text-right tabular-nums whitespace-nowrap">
-                          {fmtDuration(row[5] / (1 + bonus / 100))}
+                          {tx(fmtDuration(row[5] / (1 + bonus / 100)))}
                         </td>
                       </tr>
                     ))}

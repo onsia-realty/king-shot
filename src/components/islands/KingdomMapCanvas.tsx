@@ -1,3 +1,5 @@
+import { useLocale } from '../../lib/locale';
+import { playerText, playerText as tr, playerNumberLocale } from '../../lib/player-localization';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { groundRadii, pickCity, type CityHit, type Rect } from './mapHitGeometry';
 
@@ -27,8 +29,8 @@ export function allianceColor(aid: MapCity['aid']) {
 }
 export function cityLevel(city: MapCity) {
   const tc = city.tc;
-  if (tc == null) return '도시 레벨 정보 없음';
-  return tc >= 35 ? `순금 ${Math.min(8, Math.floor((tc - 35) / 5) + 1)}` : `도시 레벨 ${tc}`;
+  if (tc == null) return tr("도시 레벨 정보 없음");
+  return tc >= 35 ? `${tr("순금 ")}${Math.min(8, Math.floor((tc - 35) / 5) + 1)}` : `${tr("도시 레벨 ")}${tc}`;
 }
 export function cityImage(path?: string | null) {
   if (!path) return undefined;
@@ -62,6 +64,8 @@ function unproject(x: number, y: number, camera: Camera, width: number, height: 
 const control = 'rounded-lg border border-border bg-raised px-3 py-2 text-sm disabled:opacity-40';
 
 export default function KingdomMapCanvas(props: Props) {
+  const { locale } = useLocale();
+  const tr = (text: string) => playerText(text, locale);
   const canvas = useRef<HTMLCanvasElement | null>(null);
   const wrapper = useRef<HTMLDivElement | null>(null);
   const popup = useRef<HTMLElement | null>(null);
@@ -73,6 +77,12 @@ export default function KingdomMapCanvas(props: Props) {
   const closePopup = useRef<() => void>(() => {});
   const [scale, setScale] = useState(14);
   const coordinates = useRef<HTMLSpanElement | null>(null);
+  const coordinateText = useRef<string | null>(null);
+  useEffect(() => {
+    if (coordinates.current && coordinateText.current === null) {
+      coordinates.current.textContent = playerText('도시를 선택해 정보를 확인하세요', locale);
+    }
+  }, [locale]);
   const pointerRing = useRef<HTMLDivElement | null>(null);
   const [expanded, setExpanded] = useState(false);
   const clusters = useMemo(() => {
@@ -158,9 +168,11 @@ export default function KingdomMapCanvas(props: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.allCities, props.bounds]);
   useEffect(() => { if (props.focus) update({ ...props.focus, scale: props.focus.scale ?? 18 }); }, [props.focus]);
-  useEffect(() => { redraw.current(); }, [props.cities, props.selected, props.alliances]);
+  useEffect(() => { redraw.current(); }, [props.cities, props.selected, props.alliances, locale]);
 
   useEffect(() => {
+    // The draw/event loop stays mounted; read current copy without resetting camera or images.
+    const tr = playerText;
     const element = canvas.current;
     if (!element) return;
     const ctx = element.getContext('2d');
@@ -181,7 +193,8 @@ export default function KingdomMapCanvas(props: Props) {
       hudFrame = window.requestAnimationFrame(() => {
         hudFrame = 0;
         const world = hudPoint && unproject(hudPoint.x, hudPoint.y, camera.current, dimensions.current.width, dimensions.current.height);
-        const text = world ? `X: ${Math.round(world.x)} · Y: ${Math.round(world.y)}` : '도시를 선택해 정보를 확인하세요';
+        coordinateText.current = world ? `X: ${Math.round(world.x)} · Y: ${Math.round(world.y)}` : null;
+        const text = coordinateText.current ?? tr('도시를 선택해 정보를 확인하세요');
         if (coordinates.current && coordinates.current.textContent !== text) coordinates.current.textContent = text;
         const ring = pointerRing.current;
         if (ring) {
@@ -253,7 +266,7 @@ export default function KingdomMapCanvas(props: Props) {
         ctx.font = `600 ${size}px system-ui, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
         ctx.lineWidth = 3; ctx.strokeStyle = '#16251ce6'; ctx.strokeText(text, x, y); ctx.fillStyle = color; ctx.fillText(text, x, y);
       };
-      for (const [name, x, y] of [['설원', 200, 200], ['평야', 365, 365], ['비옥한 땅', 500, 500]] as const) {
+      for (const [name, x, y] of [[tr("설원"), 200, 200], [tr("평야"), 365, 365], [tr("비옥한 땅"), 500, 500]] as const) {
         const p = screen(x, y); label(name, p.x, p.y, '#f2eee1', cam.scale < 1 ? 11 : 16);
       }
       // Royal castle at its real coordinate; city skins below are supplied by the map dataset.
@@ -271,7 +284,7 @@ export default function KingdomMapCanvas(props: Props) {
         ctx.fillStyle = '#273b3a'; ctx.fillRect(x - size * 0.09, y - size * 0.3, size * 0.18, size * 0.25);
       };
       if (castle.x > -200 && castle.x < width + 200 && castle.y > -200 && castle.y < height + 200) {
-        fallbackCastle(castle.x, castle.y, castleSize, '#d9c17c'); label('왕성', castle.x, castle.y + 14, '#ffdf84');
+        fallbackCastle(castle.x, castle.y, castleSize, '#d9c17c'); label(tr("왕성"), castle.x, castle.y + 14, '#ffdf84');
       }
       hits = [];
       const visible = current.cities.map((city) => ({ city, point: screen(city.x, city.y) }))
@@ -297,7 +310,7 @@ export default function KingdomMapCanvas(props: Props) {
           else fallbackCastle(p.x, p.y, size * 0.8, '#d0d4cc');
           hits.push({ city, point: p, tile, body: { x: p.x - size * 0.36, y: p.y - (img ? spriteHeight * 0.9 : size * 0.82), width: size * 0.72, height: img ? spriteHeight * 0.9 : size * 0.82 } });
           if (cam.scale >= 7 || chosen) {
-            const text = `${city.alliance_abbr ? `[${city.alliance_abbr}] ` : ''}${city.nick_name || '이름 정보 없음'}`;
+            const text = `${city.alliance_abbr ? `[${city.alliance_abbr}] ` : ''}${city.nick_name || tr("이름 정보 없음")}`;
             ctx.font = '600 11px system-ui, sans-serif';
             const labelWidth = Math.min(190, ctx.measureText(text).width + 8);
             const box = { x: p.x - labelWidth / 2, y: p.y + 9, width: labelWidth, height: 28 };
@@ -316,7 +329,7 @@ export default function KingdomMapCanvas(props: Props) {
         label(cityLevel(box.city), box.point.x, box.point.y + 24, '#ffdf84', 10);
       }
       if (cam.scale < 3) for (const { alliance, focus } of clusterModel.current) {
-        const p = screen(focus.x, focus.y); label(`[${alliance.abbr || '연맹'}]`, p.x, p.y - 8, allianceColor(alliance.aid), 11);
+        const p = screen(focus.x, focus.y); label(`[${alliance.abbr || tr("연맹")}]`, p.x, p.y - 8, allianceColor(alliance.aid), 11);
       }
     }
     const resize = () => {
@@ -395,24 +408,24 @@ export default function KingdomMapCanvas(props: Props) {
 
   return <div ref={wrapper} className={expanded ? 'fixed inset-0 z-50 flex flex-col bg-bg p-3 sm:p-5' : 'min-w-0'}>
     <div className="mb-3 flex flex-wrap items-center gap-2">
-      <button type="button" className={control} aria-label="지도 확대" disabled={scale >= 40} onClick={() => zoom(1.5)}>확대 ＋</button>
-      <button type="button" className={control} aria-label="지도 축소" disabled={scale <= limits().minScale} onClick={() => zoom(1 / 1.5)}>축소 −</button>
-      <button type="button" className={control} onClick={() => update({ x: (props.bounds.min + props.bounds.max) / 2, y: (props.bounds.min + props.bounds.max) / 2, scale: limits().minScale })}>전체 왕국</button>
-      <button type="button" className={control} onClick={() => update({ x: 600, y: 600, scale: 4 })}>왕성</button>
-      <button type="button" className={control} aria-pressed={expanded} onClick={() => setExpanded(!expanded)}>{expanded ? '확장 닫기' : '화면 확장'}</button>
+      <button type="button" className={control} aria-label={tr("지도 확대")} disabled={scale >= 40} onClick={() => zoom(1.5)}>{tr("확대 ＋")}</button>
+      <button type="button" className={control} aria-label={tr("지도 축소")} disabled={scale <= limits().minScale} onClick={() => zoom(1 / 1.5)}>{tr("축소 −")}</button>
+      <button type="button" className={control} onClick={() => update({ x: (props.bounds.min + props.bounds.max) / 2, y: (props.bounds.min + props.bounds.max) / 2, scale: limits().minScale })}>{tr("전체 왕국")}</button>
+      <button type="button" className={control} onClick={() => update({ x: 600, y: 600, scale: 4 })}>{tr("왕성")}</button>
+      <button type="button" className={control} aria-pressed={expanded} onClick={() => setExpanded(!expanded)}>{expanded ? tr("확장 닫기") : tr("화면 확장")}</button>
     </div>
     <div className={`relative min-h-0 overflow-hidden rounded-xl border border-border ${expanded ? 'flex-1' : 'h-[420px] sm:h-[560px]'}`}>
-      <canvas ref={canvas} role="img" aria-label="등각 투영 왕국 지도. 휠 또는 확대 버튼으로 확대하고 드래그하여 이동할 수 있습니다. 아래 도시 목록으로도 영주를 선택할 수 있습니다." className="block h-full w-full touch-none" style={{ cursor: 'none' }} />
+      <canvas ref={canvas} role="img" aria-label={tr("등각 투영 왕국 지도. 휠 또는 확대 버튼으로 확대하고 드래그하여 이동할 수 있습니다. 아래 도시 목록으로도 영주를 선택할 수 있습니다.")} className="block h-full w-full touch-none" style={{ cursor: 'none' }} />
       <div ref={pointerRing} aria-hidden="true" className="pointer-events-none absolute left-0 top-0 rounded-full" style={{ width: 28, height: 28, boxSizing: 'border-box', border: '2px solid #82ff8b', background: '#70ff7918', visibility: 'hidden', willChange: 'transform' }} />
-      <div className="pointer-events-none absolute bottom-3 left-3 rounded-lg bg-bg/85 px-3 py-2 text-xs text-text"><span ref={coordinates}>도시를 선택해 정보를 확인하세요</span><span className="mt-1 block text-muted">휠·두 손가락으로 확대 · 드래그로 이동</span></div>
-      <div className="pointer-events-none absolute right-3 top-3 rounded-md bg-bg/85 px-2 py-1 text-xs text-muted">배율 {scale.toFixed(1)}</div>
-      {props.selected && <section ref={popup} aria-label="선택한 도시 정보" className="absolute z-10 overflow-y-auto overscroll-contain rounded-xl border border-accent/50 bg-raised p-4 shadow-xl" style={{ left: 8, top: 8, width: 'min(300px, calc(100% - 16px))', maxHeight: 'calc(100% - 16px)' }}>
-        <div className="flex items-start justify-between gap-3"><h3 className="min-w-0 break-words font-bold [overflow-wrap:anywhere]">{props.selected.nick_name || '이름 정보 없음'}</h3><button type="button" className="shrink-0 rounded px-2 py-1 hover:bg-bg" aria-label="도시 정보 닫기" onClick={() => closePopup.current()}>✕</button></div>
-        <p className="mt-1 text-sm text-muted">{props.selected.alliance_abbr ? `[${props.selected.alliance_abbr}]` : '연맹 정보 없음'} · {cityLevel(props.selected)}</p>
+      <div className="pointer-events-none absolute bottom-3 left-3 rounded-lg bg-bg/85 px-3 py-2 text-xs text-text"><span ref={coordinates}>{coordinateText.current ?? tr("도시를 선택해 정보를 확인하세요")}</span><span className="mt-1 block text-muted">{tr("휠·두 손가락으로 확대 · 드래그로 이동")}</span></div>
+      <div className="pointer-events-none absolute right-3 top-3 rounded-md bg-bg/85 px-2 py-1 text-xs text-muted">{tr("배율 ")}{scale.toFixed(1)}</div>
+      {props.selected && <section ref={popup} aria-label={tr("선택한 도시 정보")} className="absolute z-10 overflow-y-auto overscroll-contain rounded-xl border border-accent/50 bg-raised p-4 shadow-xl" style={{ left: 8, top: 8, width: 'min(300px, calc(100% - 16px))', maxHeight: 'calc(100% - 16px)' }}>
+        <div className="flex items-start justify-between gap-3"><h3 className="min-w-0 break-words font-bold [overflow-wrap:anywhere]">{props.selected.nick_name || tr("이름 정보 없음")}</h3><button type="button" className="shrink-0 rounded px-2 py-1 hover:bg-bg" aria-label={tr("도시 정보 닫기")} onClick={() => closePopup.current()}>✕</button></div>
+        <p className="mt-1 text-sm text-muted">{props.selected.alliance_abbr ? `[${props.selected.alliance_abbr}]` : tr("연맹 정보 없음")} · {cityLevel(props.selected)}</p>
         <p className="mt-3 text-sm">X: {props.selected.x} · Y: {props.selected.y}</p>
-        <p className="mt-1 text-sm">전투력 {props.selected.power?.toLocaleString('ko-KR') ?? '정보 없음'}</p>
-        <p className="mt-2 text-xs text-muted">저장 시점 보호막: {props.selected.shield_active == null ? '정보 없음' : props.selected.shield_active ? '있음' : '없음'} · 연소: {props.selected.burn_active == null ? '정보 없음' : props.selected.burn_active ? '있음' : '없음'}</p>
-        <button type="button" className="mt-4 w-full rounded-lg bg-accent px-4 py-3 font-bold text-on-accent" onClick={() => { setExpanded(false); props.onLookup(props.selected!); }}>장비 보기</button>
+        <p className="mt-1 text-sm">{tr("전투력 ")}{props.selected.power?.toLocaleString(playerNumberLocale()) ?? tr("정보 없음")}</p>
+        <p className="mt-2 text-xs text-muted">{tr("저장 시점 보호막: ")}{props.selected.shield_active == null ? tr("정보 없음") : props.selected.shield_active ? tr("있음") : tr("없음")}{tr(" · 연소: ")}{props.selected.burn_active == null ? tr("정보 없음") : props.selected.burn_active ? tr("있음") : tr("없음")}</p>
+        <button type="button" className="mt-4 w-full rounded-lg bg-accent px-4 py-3 font-bold text-on-accent" onClick={() => { setExpanded(false); props.onLookup(props.selected!); }}>{tr("장비 보기")}</button>
       </section>}
     </div>
   </div>;

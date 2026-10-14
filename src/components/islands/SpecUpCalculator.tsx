@@ -1,3 +1,4 @@
+import { useCalculatorLocale } from '@/lib/calculator-locale';
 import { useState } from 'react';
 import { PACKAGE_GENERATIONS, type PackageGeneration } from '@/data/package-ref';
 import {
@@ -72,10 +73,11 @@ const GRADE_STYLE: Record<CostGrade, { label: string; className: string }> = {
 };
 
 function GradeBadge({ value }: { value: number }) {
+  const { text: tx } = useCalculatorLocale();
   const g = GRADE_STYLE[costGrade(value)];
   return (
     <span className={`rounded-full border px-2 py-0.5 text-xs font-bold whitespace-nowrap ${g.className}`}>
-      {g.label}
+      {tx(g.label)}
     </span>
   );
 }
@@ -90,10 +92,11 @@ function LevelSelect(props: {
   options: readonly { value: number; label: string }[];
   onChange: (n: number) => void;
 }) {
+  const { text: tx } = useCalculatorLocale();
   return (
     <div>
       <label className={labelClass} htmlFor={props.id}>
-        {props.label}
+        {tx(props.label)}
       </label>
       <select
         id={props.id}
@@ -103,7 +106,7 @@ function LevelSelect(props: {
       >
         {props.options.map((o) => (
           <option key={o.value} value={o.value}>
-            {o.label}
+            {tx(o.label)}
           </option>
         ))}
       </select>
@@ -115,6 +118,7 @@ const levelOptions = (levels: readonly number[], prefix = 'Lv.') =>
   levels.map((lv) => ({ value: lv, label: `${prefix}${lv}` }));
 
 function Summary({ total }: { total: SpecUpTotals }) {
+  const { text: tx } = useCalculatorLocale();
   const tiles = [
     { label: '총 비용', value: fmtKrw(total.costKRW) },
     { label: '총 성능 증가', value: `+${fmtPct(total.statGain)}` },
@@ -124,8 +128,8 @@ function Summary({ total }: { total: SpecUpTotals }) {
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
       {tiles.map((t) => (
         <div key={t.label} className="rounded-xl border border-border bg-raised p-4">
-          <p className="text-sm text-muted">{t.label}</p>
-          <p className="mt-1 text-2xl font-extrabold tabular-nums text-accent-strong">{t.value}</p>
+          <p className="text-sm text-muted">{tx(t.label)}</p>
+          <p className="mt-1 text-2xl font-extrabold tabular-nums text-accent-strong">{tx(t.value)}</p>
         </div>
       ))}
     </div>
@@ -133,13 +137,14 @@ function Summary({ total }: { total: SpecUpTotals }) {
 }
 
 function UnitPrices({ rows }: { rows: readonly { label: string; value: number }[] }) {
+  const { t: ui, text: tx } = useCalculatorLocale();
   return (
     <div className="mt-3 rounded-xl border border-border bg-bg px-4 py-3">
-      <p className="text-sm font-semibold">단가 정보</p>
+      <p className="text-sm font-semibold">{ui("단가 정보", "Unit prices")}</p>
       <ul className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-sm text-muted tabular-nums">
         {rows.map((r) => (
           <li key={r.label}>
-            {r.label} <span className="font-semibold text-text">{fmtUnit(r.value)}</span>
+            {tx(r.label)} <span className="font-semibold text-text">{tx(fmtUnit(r.value))}</span>
           </li>
         ))}
       </ul>
@@ -149,48 +154,39 @@ function UnitPrices({ rows }: { rows: readonly { label: string; value: number }[
 
 /** 구간별 효율표 */
 function StepTable({ title, steps }: { title: string; steps: readonly SpecUpStep[] }) {
+  const { t: ui, text: tx } = useCalculatorLocale();
   if (steps.length === 0) return null;
   return (
     <div className="mt-4 overflow-x-auto rounded-xl border border-border bg-bg">
       <table className="w-full border-collapse text-sm">
-        <caption className="px-4 py-3 text-left font-semibold">{title}</caption>
+        <caption className="px-4 py-3 text-left font-semibold">{tx(title)}</caption>
         <thead>
           <tr className="bg-raised text-left">
-            <th scope="col" className="px-4 py-3 font-bold whitespace-nowrap">
-              구간
-            </th>
-            <th scope="col" className="px-4 py-3 font-bold whitespace-nowrap">
-              재료
-            </th>
-            <th scope="col" className="px-4 py-3 text-right font-bold whitespace-nowrap">
-              비용
-            </th>
-            <th scope="col" className="px-4 py-3 text-right font-bold whitespace-nowrap">
-              성능
-            </th>
-            <th scope="col" className="px-4 py-3 text-right font-bold whitespace-nowrap">
-              1%당
-            </th>
+            <th scope="col" className="px-4 py-3 font-bold whitespace-nowrap">{ui("구간", "Range")}</th>
+            <th scope="col" className="px-4 py-3 font-bold whitespace-nowrap">{ui("재료", "Materials")}</th>
+            <th scope="col" className="px-4 py-3 text-right font-bold whitespace-nowrap">{ui("비용", "Cost")}</th>
+            <th scope="col" className="px-4 py-3 text-right font-bold whitespace-nowrap">{ui("성능", "Stat gain")}</th>
+            <th scope="col" className="px-4 py-3 text-right font-bold whitespace-nowrap">{ui("1%당", "Per 1%")}</th>
           </tr>
         </thead>
         <tbody>
           {steps.map((s) => (
             <tr key={s.label} className={`border-t border-border ${s.milestone ? 'bg-accent/5' : ''}`}>
               <th scope="row" className="px-4 py-3 text-left font-bold whitespace-nowrap">
-                {s.label}
+                {tx(s.label)}
               </th>
               <td className="px-4 py-3 text-muted">
-                {s.items.map((it) => `${it.name} ${fmt(it.amount)}`).join(' · ')}
+                {tx(s.items.map((it) => `${it.name} ${fmt(it.amount)}`).join(' · '))}
               </td>
-              <td className="px-4 py-3 text-right tabular-nums whitespace-nowrap">{fmtKrw(s.costKRW)}</td>
+              <td className="px-4 py-3 text-right tabular-nums whitespace-nowrap">{tx(fmtKrw(s.costKRW))}</td>
               <td className="px-4 py-3 text-right tabular-nums whitespace-nowrap">
                 +{fmtPct(s.statGain + s.promotionBonus, 2)}
                 {s.promotionBonus > 0 ? (
-                  <span className="block text-xs text-muted">승급 보너스 +{s.promotionBonus}% 포함</span>
+                  <span className="block text-xs text-muted">{ui("승급 보너스 +", "Includes promotion bonus +")}{s.promotionBonus}{ui("% 포함", "%")}</span>
                 ) : null}
               </td>
               <td className="px-4 py-3 text-right whitespace-nowrap">
-                <span className="tabular-nums">{fmtKrw(s.costPer1Percent)}</span>{' '}
+                <span className="tabular-nums">{tx(fmtKrw(s.costPer1Percent))}</span>{' '}
                 <GradeBadge value={s.costPer1Percent} />
               </td>
             </tr>
@@ -202,12 +198,14 @@ function StepTable({ title, steps }: { title: string; steps: readonly SpecUpStep
 }
 
 function Invalid({ children }: { children: string }) {
+  const { text: tx } = useCalculatorLocale();
   return (
-    <p className="rounded-lg border border-border bg-bg px-3 py-4 text-center text-sm text-muted">{children}</p>
+    <p className="rounded-lg border border-border bg-bg px-3 py-4 text-center text-sm text-muted">{tx(children)}</p>
   );
 }
 
 function HeroPanel({ generation }: { generation: PackageGeneration }) {
+  const { t: ui, text: tx } = useCalculatorLocale();
   const [fromLevel, setFromLevel] = useState(80);
   const [toLevel, setToLevel] = useState(100);
   const [masteryFrom, setMasteryFrom] = useState(5);
@@ -219,10 +217,10 @@ function HeroPanel({ generation }: { generation: PackageGeneration }) {
   return (
     <>
       <div className="grid grid-cols-2 gap-4">
-        <LevelSelect id="su-hero-from" label="장비 현재 레벨" value={fromLevel} options={levelOptions(HERO_LEVELS)} onChange={setFromLevel} />
-        <LevelSelect id="su-hero-to" label="장비 목표 레벨" value={toLevel} options={levelOptions(HERO_LEVELS)} onChange={setToLevel} />
-        <LevelSelect id="su-mastery-from" label="마스터리 현재" value={masteryFrom} options={levelOptions(MASTERY_LEVELS)} onChange={setMasteryFrom} />
-        <LevelSelect id="su-mastery-to" label="마스터리 목표" value={masteryTo} options={levelOptions(MASTERY_LEVELS)} onChange={setMasteryTo} />
+        <LevelSelect id="su-hero-from" label={ui("장비 현재 레벨", "Current gear level")} value={fromLevel} options={levelOptions(HERO_LEVELS)} onChange={setFromLevel} />
+        <LevelSelect id="su-hero-to" label={ui("장비 목표 레벨", "Target gear level")} value={toLevel} options={levelOptions(HERO_LEVELS)} onChange={setToLevel} />
+        <LevelSelect id="su-mastery-from" label={ui("마스터리 현재", "Current mastery")} value={masteryFrom} options={levelOptions(MASTERY_LEVELS)} onChange={setMasteryFrom} />
+        <LevelSelect id="su-mastery-to" label={ui("마스터리 목표", "Target mastery")} value={masteryTo} options={levelOptions(MASTERY_LEVELS)} onChange={setMasteryTo} />
       </div>
       <div className="mt-5 border-t border-border pt-5" aria-live="polite">
         {r ? (
@@ -236,14 +234,14 @@ function HeroPanel({ generation }: { generation: PackageGeneration }) {
                 { label: '신화 장비 1개', value: r.prices.mythicGearKRW },
               ]}
             />
-            <StepTable title={`장비 레벨 (소계 ${fmtKrw(r.leveling.costKRW)} / +${fmtPct(r.leveling.statGain)})`} steps={r.levelingSteps} />
+            <StepTable title={tx(`장비 레벨 (소계 ${fmtKrw(r.leveling.costKRW)} / +${fmtPct(r.leveling.statGain)})`)} steps={r.levelingSteps} />
             <StepTable
-              title={`마스터리 — Lv.${toLevel} 장비 기준 단계당 +${fmtPct(r.masterySteps[0]?.statGain ?? 0)} (소계 ${fmtKrw(r.mastery.costKRW)})`}
+              title={tx(`마스터리 — Lv.${toLevel} 장비 기준 단계당 +${fmtPct(r.masterySteps[0]?.statGain ?? 0)} (소계 ${fmtKrw(r.mastery.costKRW)})`)}
               steps={r.masterySteps}
             />
           </>
         ) : (
-          <Invalid>목표 레벨을 현재 레벨 이상으로, 둘 중 하나는 더 높게 설정해 주세요.</Invalid>
+          <Invalid>{ui("목표 레벨을 현재 레벨 이상으로, 둘 중 하나는 더 높게 설정해 주세요.", "Targets must be at least the current levels, with at least one higher.")}</Invalid>
         )}
       </div>
     </>
@@ -251,6 +249,7 @@ function HeroPanel({ generation }: { generation: PackageGeneration }) {
 }
 
 function GovernorPanel({ generation }: { generation: PackageGeneration }) {
+  const { t: ui } = useCalculatorLocale();
   const [fromTier, setFromTier] = useState(-1);
   const [toTier, setToTier] = useState(GOVERNOR_GEAR_MAX_TIER);
   const r = fromTier < toTier ? calculateGovernorGear({ generation, fromTier, toTier }) : null;
@@ -258,8 +257,8 @@ function GovernorPanel({ generation }: { generation: PackageGeneration }) {
   return (
     <>
       <div className="grid grid-cols-2 gap-4">
-        <LevelSelect id="su-gov-from" label="현재 티어" value={fromTier} options={GOVERNOR_OPTIONS} onChange={setFromTier} />
-        <LevelSelect id="su-gov-to" label="목표 티어" value={toTier} options={GOVERNOR_OPTIONS} onChange={setToTier} />
+        <LevelSelect id="su-gov-from" label={ui("현재 티어", "Current tier")} value={fromTier} options={GOVERNOR_OPTIONS} onChange={setFromTier} />
+        <LevelSelect id="su-gov-to" label={ui("목표 티어", "Target tier")} value={toTier} options={GOVERNOR_OPTIONS} onChange={setToTier} />
       </div>
       <div className="mt-5 border-t border-border pt-5" aria-live="polite">
         {r ? (
@@ -272,10 +271,10 @@ function GovernorPanel({ generation }: { generation: PackageGeneration }) {
                 { label: '스케치 1개', value: r.prices.sketchKRW },
               ]}
             />
-            <StepTable title="티어별 비용 (장비 한 부위 기준)" steps={r.steps} />
+            <StepTable title={ui("티어별 비용 (장비 한 부위 기준)", "Cost by tier (one gear piece)")} steps={r.steps} />
           </>
         ) : (
-          <Invalid>목표 티어를 현재 티어보다 높게 설정해 주세요.</Invalid>
+          <Invalid>{ui("목표 티어를 현재 티어보다 높게 설정해 주세요.", "Set the target tier above the current tier.")}</Invalid>
         )}
       </div>
     </>
@@ -283,6 +282,7 @@ function GovernorPanel({ generation }: { generation: PackageGeneration }) {
 }
 
 function JewelPanel({ generation }: { generation: PackageGeneration }) {
+  const { t: ui } = useCalculatorLocale();
   const [fromLevel, setFromLevel] = useState(0);
   const [toLevel, setToLevel] = useState(JEWEL_MAX_LEVEL);
   const r = fromLevel < toLevel ? calculateJewel({ generation, fromLevel, toLevel }) : null;
@@ -290,18 +290,18 @@ function JewelPanel({ generation }: { generation: PackageGeneration }) {
   return (
     <>
       <div className="grid grid-cols-2 gap-4">
-        <LevelSelect id="su-jewel-from" label="현재 레벨" value={fromLevel} options={levelOptions(JEWEL_LEVELS)} onChange={setFromLevel} />
-        <LevelSelect id="su-jewel-to" label="목표 레벨" value={toLevel} options={levelOptions(JEWEL_LEVELS)} onChange={setToLevel} />
+        <LevelSelect id="su-jewel-from" label={ui("현재 레벨", "Current level")} value={fromLevel} options={levelOptions(JEWEL_LEVELS)} onChange={setFromLevel} />
+        <LevelSelect id="su-jewel-to" label={ui("목표 레벨", "Target level")} value={toLevel} options={levelOptions(JEWEL_LEVELS)} onChange={setToLevel} />
       </div>
       <div className="mt-5 border-t border-border pt-5" aria-live="polite">
         {r ? (
           <>
             <Summary total={r.total} />
             <UnitPrices rows={[{ label: '매뉴얼·도면 1개', value: r.unitPriceKRW }]} />
-            <StepTable title="레벨별 비용 (보석 한 개 기준)" steps={r.steps} />
+            <StepTable title={ui("레벨별 비용 (보석 한 개 기준)", "Cost by level (one Charm)")} steps={r.steps} />
           </>
         ) : (
-          <Invalid>목표 레벨을 현재 레벨보다 높게 설정해 주세요.</Invalid>
+          <Invalid>{ui("목표 레벨을 현재 레벨보다 높게 설정해 주세요.", "Set the target level above the current level.")}</Invalid>
         )}
       </div>
     </>
@@ -309,13 +309,14 @@ function JewelPanel({ generation }: { generation: PackageGeneration }) {
 }
 
 export default function SpecUpCalculator() {
+  const { t: ui, text: tx } = useCalculatorLocale();
   const [tab, setTab] = useState<Tab>('hero');
   const [generation, setGeneration] = useState<PackageGeneration>('gold_123');
   const gen = PACKAGE_GENERATIONS.find((g) => g.key === generation)!;
 
   return (
     <div className="rounded-xl border border-border bg-surface/60 p-4 sm:p-5">
-      <div role="tablist" aria-label="스펙업 항목" className="flex flex-wrap gap-2">
+      <div role="tablist" aria-label={ui("스펙업 항목", "Upgrade category")} className="flex flex-wrap gap-2">
         {TABS.map((t) => (
           <button
             key={t.key}
@@ -331,15 +332,13 @@ export default function SpecUpCalculator() {
                 : 'border-border bg-bg text-muted hover:text-text'
             }`}
           >
-            {t.label}
+            {tx(t.label)}
           </button>
         ))}
       </div>
 
       <div className="mt-4">
-        <label className={labelClass} htmlFor="su-generation">
-          세대 (패키지 단가 기준)
-        </label>
+        <label className={labelClass} htmlFor="su-generation">{ui("세대 (패키지 단가 기준)", "Generation (package pricing basis)")}</label>
         <select
           id="su-generation"
           value={generation}
@@ -348,15 +347,13 @@ export default function SpecUpCalculator() {
         >
           {PACKAGE_GENERATIONS.map((g) => (
             <option key={g.key} value={g.key}>
-              {g.name}
-              {g.predicted ? ' (예측)' : ''}
+              {tx(g.name)}
+              {tx(g.predicted ? ' (예측)' : '')}
             </option>
           ))}
         </select>
         {gen.predicted ? (
-          <p className="mt-2 text-xs text-warning">
-            이 세대는 패키지 구성이 예측치라 비용도 예측치입니다.
-          </p>
+          <p className="mt-2 text-xs text-warning">{ui("이 세대는 패키지 구성이 예측치라 비용도 예측치입니다.", "Package contents for this generation are estimated, so costs are estimates too.")}</p>
         ) : null}
       </div>
 

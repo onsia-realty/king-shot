@@ -1,4 +1,6 @@
 ---
+import LocaleText from '@/components/LocaleText.astro';
+import { staticEnglish } from '@/lib/static-translations';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Breadcrumb from '@/components/Breadcrumb.astro';
 import Disclaimer from '@/components/Disclaimer.astro';
@@ -25,15 +27,14 @@ const jsonLd = {
 };
 ---
 
-<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+<BaseLayout titleEn={staticEnglish(title)} descriptionEn={`Kingshot tools for planning upgrades. Calculate hero ascension shards, compare heroes and estimate building upgrade costs.`} title={title} description={description} jsonLd={jsonLd}>
   <div class="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
     <Breadcrumb items={[{ label: '홈', href: '/' }, { label: '계산기' }]} class="mb-6" />
 
     <header class="mb-8">
-      <h1 class="text-3xl font-extrabold sm:text-4xl">계산기</h1>
+      <h1 class="text-3xl font-extrabold sm:text-4xl"><LocaleText ko={`계산기`} en={`Tools`} /></h1>
       <p class="mt-3 max-w-2xl text-muted">
-        감으로 때려 맞히던 수치를 직접 넣어 보는 도구들입니다. 파편이 몇 개 더 필요한지, 이번
-        업그레이드에 자원이 얼마나 들어가는지 미리 확인하고 투자 순서를 정하세요.
+        <LocaleText ko={`감으로 때려 맞히던 수치를 직접 넣어 보는 도구들입니다. 파편이 몇 개 더 필요한지, 이번 업그레이드에 자원이 얼마나 들어가는지 미리 확인하고 투자 순서를 정하세요.`} en={`Replace guesswork with numbers. Check how many more shards you need and how many resources your next upgrade costs, then plan your investment order.`} />
       </p>
     </header>
 
@@ -45,8 +46,8 @@ const jsonLd = {
               href={tool.href}
               class="group flex h-full flex-col rounded-xl border border-border bg-surface p-5 no-underline transition-colors hover:border-accent/60 hover:bg-raised"
             >
-              <span class="text-lg font-bold text-text group-hover:text-accent">{tool.label}</span>
-              <span class="mt-2 text-sm text-muted">{tool.summary}</span>
+              <span class="text-lg font-bold text-text group-hover:text-accent"><LocaleText ko={tool.label} en={staticEnglish(tool.label)} /></span>
+              <span class="mt-2 text-sm text-muted"><LocaleText ko={tool.summary} en={staticEnglish(tool.summary)} /></span>
             </a>
           </li>
         ))
@@ -55,8 +56,7 @@ const jsonLd = {
 
     <div class="mt-12 border-t border-border pt-6">
       <p class="mb-3 text-sm text-muted">
-        계산 결과는 공개된 수치표를 바탕으로 한 추정입니다. 게임 업데이트나 개인 버프에 따라
-        실제 값과 차이가 날 수 있으니 참고용으로 쓰세요.
+        <LocaleText ko={`계산 결과는 공개된 수치표를 바탕으로 한 추정입니다. 게임 업데이트나 개인 버프에 따라 실제 값과 차이가 날 수 있으니 참고용으로 쓰세요.`} en={`Results are estimates based on public data tables. Game updates and personal buffs may change the actual values; use these tools as a reference.`} />
       </p>
       <Disclaimer />
     </div>

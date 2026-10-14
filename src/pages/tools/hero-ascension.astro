@@ -1,4 +1,6 @@
 ---
+import LocaleText from '@/components/LocaleText.astro';
+import { staticEnglish } from '@/lib/static-translations';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Breadcrumb from '@/components/Breadcrumb.astro';
 import Disclaimer from '@/components/Disclaimer.astro';
@@ -33,7 +35,7 @@ const jsonLd = {
 };
 ---
 
-<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+<BaseLayout titleEn={staticEnglish(title)} descriptionEn={`Calculate shards needed to raise Kingshot heroes to your target star level. Select the tier and current and target stars to see each step and any shortfall.`} title={title} description={description} jsonLd={jsonLd}>
   <div class="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
     <Breadcrumb
       items={[
@@ -45,33 +47,32 @@ const jsonLd = {
     />
 
     <header class="mb-8">
-      <h1 class="text-3xl font-extrabold sm:text-4xl">영웅 승급 파편 계산기</h1>
+      <h1 class="text-3xl font-extrabold sm:text-4xl"><LocaleText ko={`영웅 승급 파편 계산기`} en={`Hero Ascension Shard Calculator`} /></h1>
       <p class="mt-3 max-w-2xl text-muted">
-        영웅 성급을 올리려면 같은 영웅의 파편이 필요합니다. 등급과 현재 성급, 목표 성급을 고르면
-        단계별로 얼마가 드는지 계산합니다. 보유 파편을 입력하면 부족한 양까지 같이 보여줍니다.
+        <LocaleText ko={`영웅 성급을 올리려면 같은 영웅의 파편이 필요합니다. 등급과 현재 성급, 목표 성급을 고르면 단계별로 얼마가 드는지 계산합니다. 보유 파편을 입력하면 부족한 양까지 같이 보여줍니다.`} en={`Raising a hero’s star level requires shards for that hero. Choose the tier, current stars and target stars to calculate each step. Enter owned shards to see the shortfall.`} />
       </p>
     </header>
 
     <HeroAscensionCalculator client:load />
 
     <section class="mt-12">
-      <h2 class="text-xl font-bold">등급별 파편 요구량 전체 표</h2>
+      <h2 class="text-xl font-bold"><LocaleText ko={`등급별 파편 요구량 전체 표`} en={`Full Shard Requirements by Tier`} /></h2>
       <p class="mt-2 text-sm text-muted">
-        각 칸은 해당 성급으로 올리는 데 드는 파편 수입니다. 누적이 아니라 그 단계 한 번의 비용입니다.
+        <LocaleText ko={`각 칸은 해당 성급으로 올리는 데 드는 파편 수입니다. 누적이 아니라 그 단계 한 번의 비용입니다.`} en={`Each cell shows the shards needed for that star upgrade only, not a cumulative total.`} />
       </p>
       <div class="mt-3 overflow-x-auto rounded-xl border border-border">
         <table class="w-full border-collapse text-sm">
           <thead>
             <tr class="bg-raised text-left">
-              <th scope="col" class="px-4 py-3 font-bold whitespace-nowrap">등급</th>
+              <th scope="col" class="px-4 py-3 font-bold whitespace-nowrap"><LocaleText ko={`등급`} en={`Tier`} /></th>
               {
                 HERO_SHARD_STARS.map((star) => (
                   <th scope="col" class="px-4 py-3 text-right font-bold whitespace-nowrap">
-                    {star}성
+                    <LocaleText ko={`${star}성`} en={`${star}★`} />
                   </th>
                 ))
               }
-              <th scope="col" class="px-4 py-3 text-right font-bold whitespace-nowrap">합계</th>
+              <th scope="col" class="px-4 py-3 text-right font-bold whitespace-nowrap"><LocaleText ko={`합계`} en={`Total`} /></th>
             </tr>
           </thead>
           <tbody>
@@ -92,7 +93,7 @@ const jsonLd = {
             }
             <tr class="border-t border-border bg-raised">
               <th scope="row" class="px-4 py-3 text-left font-bold whitespace-nowrap">
-                성급별 합계
+                <LocaleText ko={`성급별 합계`} en={`Totals by Star Level`} />
               </th>
               {
                 HERO_SHARD_TOTALS.map((total) => (
@@ -109,35 +110,33 @@ const jsonLd = {
     </section>
 
     <section class="mt-10">
-      <h2 class="text-xl font-bold">읽는 법</h2>
+      <h2 class="text-xl font-bold"><LocaleText ko={`읽는 법`} en={`How to Read This Table`} /></h2>
       <ul class="mt-3 space-y-2 text-sm text-muted">
         <li>
-          파편은 영웅마다 따로 쌓입니다. 다른 영웅 파편으로는 승급이 되지 않습니다.
+          <LocaleText ko={`파편은 영웅마다 따로 쌓입니다. 다른 영웅 파편으로는 승급이 되지 않습니다.`} en={`Shards are collected separately for each hero. Shards for a different hero cannot be used for ascension.`} />
         </li>
         <li>
-          앞 단계는 부담이 적지만 4성과 5성에서 비용이 크게 뜁니다. 주력으로 쓸 영웅을 먼저 정하고
-          모으는 편이 낫습니다.
+          <LocaleText ko={`앞 단계는 부담이 적지만 4성과 5성에서 비용이 크게 뜁니다. 주력으로 쓸 영웅을 먼저 정하고 모으는 편이 낫습니다.`} en={`Early steps are inexpensive, but costs rise sharply at 4 and 5 stars. Choose your main heroes before collecting shards.`} />
         </li>
         <li>
-          T6 영웅은 다른 등급과 요구량 배분이 다릅니다. 2성 구간부터 비용이 앞당겨져 붙습니다.
+          <LocaleText ko={`T6 영웅은 다른 등급과 요구량 배분이 다릅니다. 2성 구간부터 비용이 앞당겨져 붙습니다.`} en={`T6 heroes distribute shard requirements differently from other tiers, with more of the cost appearing from 2 stars onward.`} />
         </li>
         <li>
-          성급별 합계는 등급을 가리지 않는 원본 표 기준 수치입니다. 개별 등급의 행 합계와는 다를 수
-          있습니다.
+          <LocaleText ko={`성급별 합계는 등급을 가리지 않는 원본 표 기준 수치입니다. 개별 등급의 행 합계와는 다를 수 있습니다.`} en={`Star-level totals reproduce the source table regardless of tier. They may differ from the row totals for an individual tier.`} />
         </li>
       </ul>
     </section>
 
     <section class="mt-12">
-      <h2 class="text-xl font-bold">다른 계산기</h2>
+      <h2 class="text-xl font-bold"><LocaleText ko={`다른 계산기`} en={`Related Tools`} /></h2>
       <ul class="mt-3 space-y-2">
         {
           otherTools.map((tool) => (
             <li class="rounded-xl border border-border bg-surface px-4 py-3">
               <a href={tool.href} class="font-bold hover:text-accent">
-                {tool.label}
+                <LocaleText ko={tool.label} en={staticEnglish(tool.label)} />
               </a>
-              <p class="mt-1 text-sm text-muted">{tool.summary}</p>
+              <p class="mt-1 text-sm text-muted"><LocaleText ko={tool.summary} en={staticEnglish(tool.summary)} /></p>
             </li>
           ))
         }

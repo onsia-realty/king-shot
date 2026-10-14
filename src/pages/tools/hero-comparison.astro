@@ -1,4 +1,6 @@
 ---
+import LocaleText from '@/components/LocaleText.astro';
+import { staticEnglish } from '@/lib/static-translations';
 import { getCollection } from 'astro:content';
 import { getImage } from 'astro:assets';
 import BaseLayout from '@/layouts/BaseLayout.astro';
@@ -52,7 +54,7 @@ const title = '영웅 비교';
 const description = `킹샷 영웅 ${heroes.length}명 중 둘을 골라 토벌·원정 스탯, 스킬 만렙 수치, 전용 장비를 나란히 비교합니다.`;
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout titleEn={staticEnglish(title)} descriptionEn={`Choose two of ${heroes.length} Kingshot heroes to compare exploration and expedition stats, max-level skills and exclusive gear side by side.`} title={title} description={description}>
   <div class="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
     <Breadcrumb
       items={[
@@ -64,26 +66,24 @@ const description = `킹샷 영웅 ${heroes.length}명 중 둘을 골라 토벌�
     />
 
     <header class="mb-8">
-      <h1 class="text-3xl font-extrabold sm:text-4xl">영웅 비교</h1>
+      <h1 class="text-3xl font-extrabold sm:text-4xl"><LocaleText ko={`영웅 비교`} en={`Hero Comparison`} /></h1>
       <p class="mt-3 max-w-2xl text-muted">
-        영웅 둘을 골라 나란히 놓고 봅니다. 토벌 스탯은 높은 쪽에 색과 차이값이 붙고, 원정 스탯은
-        퍼센트끼리 비교합니다. 스킬은 만렙 수치만 추려 뒀으니, 자세한 설명은 각 영웅 상세에서
-        확인하세요.
+        <LocaleText ko={`영웅 둘을 골라 나란히 놓고 봅니다. 토벌 스탯은 높은 쪽에 색과 차이값이 붙고, 원정 스탯은 퍼센트끼리 비교합니다. 스킬은 만렙 수치만 추려 뒀으니, 자세한 설명은 각 영웅 상세에서 확인하세요.`} en={`Select two heroes to compare side by side. Higher exploration stats are highlighted with the difference; expedition stats are compared as percentages. Skills show max-level values only. Visit each hero’s detail page for full descriptions.`} />
       </p>
     </header>
 
     <HeroComparison client:load heroes={heroes} />
 
     <section class="mt-12">
-      <h2 class="text-xl font-bold">다른 계산기</h2>
+      <h2 class="text-xl font-bold"><LocaleText ko={`다른 계산기`} en={`Related Tools`} /></h2>
       <ul class="mt-3 space-y-2">
         {
           otherTools.map((tool) => (
             <li class="rounded-xl border border-border bg-surface px-4 py-3">
               <a href={tool.href} class="font-bold hover:text-accent">
-                {tool.label}
+                <LocaleText ko={tool.label} en={staticEnglish(tool.label)} />
               </a>
-              <p class="mt-1 text-sm text-muted">{tool.summary}</p>
+              <p class="mt-1 text-sm text-muted"><LocaleText ko={tool.summary} en={staticEnglish(tool.summary)} /></p>
             </li>
           ))
         }
@@ -92,8 +92,7 @@ const description = `킹샷 영웅 ${heroes.length}명 중 둘을 골라 토벌�
 
     <div class="mt-12 border-t border-border pt-6">
       <p class="mb-3 text-sm text-muted">
-        스탯은 만렙·최대 성급 기준 수치이며, 아직 채우지 못한 영웅은 빈칸(—)으로 둡니다. 원정 수치는
-        퍼센트 표기라 절대 전투력과는 비교하지 마세요.
+        <LocaleText ko={`스탯은 만렙·최대 성급 기준 수치이며, 아직 채우지 못한 영웅은 빈칸(—)으로 둡니다. 원정 수치는 퍼센트 표기라 절대 전투력과는 비교하지 마세요.`} en={`Stats assume maximum level and stars. Missing hero data is shown as —. Expedition values are percentages and should not be compared with absolute power.`} />
       </p>
       <Disclaimer />
     </div>

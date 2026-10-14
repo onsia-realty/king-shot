@@ -1,0 +1,40 @@
+<div class="ks-language inline-flex shrink-0 rounded-lg border border-border bg-surface p-0.5" role="group" aria-label="언어 / Language">
+  <button type="button" data-set-locale="ko" lang="ko" aria-pressed="true" class="rounded-md px-2 py-1.5 text-xs font-bold focus-visible:outline-2 focus-visible:outline-accent">한국어</button>
+  <button type="button" data-set-locale="en" lang="en" aria-pressed="false" class="rounded-md px-2 py-1.5 text-xs font-bold focus-visible:outline-2 focus-visible:outline-accent">English</button>
+</div>
+
+<style>
+  button[aria-pressed='true'] { background: var(--ks-raised); color: var(--ks-accent); }
+</style>
+
+<script>
+  import { getLocale, setLocale, subscribe, isLocaleScope } from '@/lib/locale';
+
+  function renderLocale() {
+    const supported = isLocaleScope(window.location.pathname);
+    const locale = supported ? getLocale() : 'ko';
+    document.documentElement.lang = locale;
+    if (!supported) return;
+    // Only authored translation targets are updated; React island DOM is untouched.
+    document.querySelectorAll<HTMLElement>('[data-locale-ko][data-locale-en]').forEach((element) => {
+      element.textContent = element.dataset[locale === 'en' ? 'localeEn' : 'localeKo'] ?? '';
+    });
+    for (const attribute of ['aria-label', 'content'] as const) {
+      document.querySelectorAll<HTMLElement>(`[data-${attribute}-ko][data-${attribute}-en]`).forEach((element) => {
+        element.setAttribute(attribute, element.getAttribute(`data-${attribute}-${locale}`) ?? '');
+      });
+    }
+    document.querySelectorAll<HTMLButtonElement>('[data-set-locale]').forEach((button) => {
+      button.setAttribute('aria-pressed', String(button.dataset.setLocale === locale));
+    });
+  }
+
+  document.addEventListener('click', (event) => {
+    const button = event.target instanceof Element ? event.target.closest<HTMLButtonElement>('[data-set-locale]') : null;
+    const locale = button?.dataset.setLocale;
+    if (isLocaleScope(location.pathname) && (locale === 'ko' || locale === 'en')) setLocale(locale);
+  });
+  subscribe(renderLocale);
+  document.addEventListener('astro:page-load', renderLocale);
+  renderLocale();
+</script>

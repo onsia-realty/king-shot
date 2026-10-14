@@ -1,3 +1,4 @@
+import { useCalculatorLocale } from '@/lib/calculator-locale';
 import { useEffect, useMemo, useState } from 'react';
 import { PACKAGE_GENERATIONS, type PackageGeneration } from '@/data/package-ref';
 import {
@@ -87,10 +88,11 @@ function Select(props: {
   options: readonly { value: number; label: string }[];
   onChange: (n: number) => void;
 }) {
+  const { text: tx } = useCalculatorLocale();
   return (
     <div>
       <label className={labelClass} htmlFor={props.id}>
-        {props.label}
+        {tx(props.label)}
       </label>
       <select
         id={props.id}
@@ -100,7 +102,7 @@ function Select(props: {
       >
         {props.options.map((o) => (
           <option key={o.value} value={o.value}>
-            {o.label}
+            {tx(o.label)}
           </option>
         ))}
       </select>
@@ -117,13 +119,14 @@ function TroopForm({
   character: CharacterInfo;
   update: (fn: (c: CharacterInfo) => CharacterInfo) => void;
 }) {
+  const { t: ui, text: tx } = useCalculatorLocale();
   const t = TROOP_LABELS[troop];
   const jewels = character.governorJewels.find((j) => j.troop === troop)!;
 
   return (
     <div className="space-y-5">
       <fieldset>
-        <legend className="text-sm font-bold">{t} 영웅 장비</legend>
+        <legend className="text-sm font-bold">{tx(t)}{ui(" 영웅 장비", " Hero Gear")}</legend>
         <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-4">
           {character.heroGear
             .filter((g) => g.troop === troop)
@@ -136,10 +139,10 @@ function TroopForm({
                 }));
               return (
                 <div key={g.slot} className="rounded-lg border border-border bg-bg p-2">
-                  <p className="mb-1.5 text-sm font-semibold">{slot}</p>
+                  <p className="mb-1.5 text-sm font-semibold">{tx(slot)}</p>
                   <div className="space-y-2">
-                    <Select id={`rm-${troop}-${g.slot}-lv`} label={`${slot} 레벨`} value={g.level} options={HERO_LEVEL_OPTIONS} onChange={(level) => set({ level })} />
-                    <Select id={`rm-${troop}-${g.slot}-m`} label={`${slot} 마스터리`} value={g.mastery} options={MASTERY_OPTIONS} onChange={(mastery) => set({ mastery })} />
+                    <Select id={`rm-${troop}-${g.slot}-lv`} label={tx(`${slot} 레벨`)} value={g.level} options={HERO_LEVEL_OPTIONS} onChange={(level) => set({ level })} />
+                    <Select id={`rm-${troop}-${g.slot}-m`} label={tx(`${slot} 마스터리`)} value={g.mastery} options={MASTERY_OPTIONS} onChange={(mastery) => set({ mastery })} />
                   </div>
                 </div>
               );
@@ -148,7 +151,7 @@ function TroopForm({
       </fieldset>
 
       <fieldset>
-        <legend className="text-sm font-bold">{t} 영주 장비</legend>
+        <legend className="text-sm font-bold">{tx(t)}{ui(" 영주 장비", " Governor Gear")}</legend>
         <div className="mt-2 grid grid-cols-2 gap-3">
           {character.governorGear
             .filter((g) => g.troop === troop)
@@ -156,7 +159,7 @@ function TroopForm({
               <Select
                 key={g.slotIndex}
                 id={`rm-${troop}-gov-${g.slotIndex}`}
-                label={`슬롯${g.slotIndex} 티어`}
+                label={tx(`슬롯${g.slotIndex} 티어`)}
                 value={g.tier}
                 options={GOVERNOR_OPTIONS}
                 onChange={(tier) =>
@@ -173,13 +176,13 @@ function TroopForm({
       </fieldset>
 
       <fieldset>
-        <legend className="text-sm font-bold">{t} 영주 보석</legend>
+        <legend className="text-sm font-bold">{tx(t)}{ui(" 영주 보석", " Governor Charms")}</legend>
         <div className="mt-2 grid grid-cols-3 gap-3 sm:grid-cols-6">
           {jewels.levels.map((lv, i) => (
             <Select
               key={i}
               id={`rm-${troop}-jewel-${i + 1}`}
-              label={`${i + 1}칸`}
+              label={tx(`${i + 1}칸`)}
               value={lv}
               options={JEWEL_OPTIONS}
               onChange={(level) =>
@@ -199,6 +202,7 @@ function TroopForm({
 }
 
 export default function SpecUpRoadmap() {
+  const { t: ui, text: tx } = useCalculatorLocale();
   const [character, setCharacter] = useState<CharacterInfo>(SAMPLE_CHARACTER);
   const [edited, setEdited] = useState(false);
   const [troop, setTroop] = useState<Troop>('infantry');
@@ -246,27 +250,23 @@ export default function SpecUpRoadmap() {
     <div className="space-y-6">
       <div className="rounded-xl border border-border bg-surface/60 p-4 sm:p-5">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-lg font-bold">내 캐릭터 정보</h2>
+          <h2 className="text-lg font-bold">{ui("내 캐릭터 정보", "My character")}</h2>
           {edited ? (
             <button
               type="button"
               onClick={reset}
               className="rounded-lg border border-border bg-bg px-3 py-1.5 text-sm font-semibold text-muted hover:text-text"
-            >
-              예시로 되돌리기
-            </button>
+            >{ui("예시로 되돌리기", "Reset to example")}</button>
           ) : null}
         </div>
         <p className="mt-1 text-sm text-muted">
-          {edited
+          {tx(edited
             ? '입력한 내용은 이 브라우저에만 저장됩니다.'
-            : '지금은 예시 캐릭터가 채워져 있습니다. 내 장비 상태로 바꾸면 바로 내 추천으로 바뀝니다.'}
+            : '지금은 예시 캐릭터가 채워져 있습니다. 내 장비 상태로 바꾸면 바로 내 추천으로 바뀝니다.')}
         </p>
 
         <div className="mt-4">
-          <label className="mb-1.5 block text-sm font-semibold text-muted" htmlFor="rm-generation">
-            세대 (패키지 단가 기준)
-          </label>
+          <label className="mb-1.5 block text-sm font-semibold text-muted" htmlFor="rm-generation">{ui("세대 (패키지 단가 기준)", "Generation (package pricing basis)")}</label>
           <select
             id="rm-generation"
             value={character.generation}
@@ -278,17 +278,17 @@ export default function SpecUpRoadmap() {
           >
             {PACKAGE_GENERATIONS.map((g) => (
               <option key={g.key} value={g.key}>
-                {g.name}
-                {g.predicted ? ' (예측)' : ''}
+                {tx(g.name)}
+                {tx(g.predicted ? ' (예측)' : '')}
               </option>
             ))}
           </select>
           {gen.predicted ? (
-            <p className="mt-2 text-xs text-warning">이 세대는 패키지 구성이 예측치라 비용도 예측치입니다.</p>
+            <p className="mt-2 text-xs text-warning">{ui("이 세대는 패키지 구성이 예측치라 비용도 예측치입니다.", "Package contents for this generation are estimated, so costs are estimates too.")}</p>
           ) : null}
         </div>
 
-        <div role="tablist" aria-label="병종" className="mt-5 flex flex-wrap gap-2">
+        <div role="tablist" aria-label={ui("병종", "Troop type")} className="mt-5 flex flex-wrap gap-2">
           {TROOPS.map((t) => (
             <button
               key={t}
@@ -302,7 +302,7 @@ export default function SpecUpRoadmap() {
                 t === troop ? 'border-accent bg-accent/15 text-accent-strong' : 'border-border bg-bg text-muted hover:text-text'
               }`}
             >
-              {TROOP_LABELS[t]}
+              {tx(TROOP_LABELS[t])}
             </button>
           ))}
         </div>
@@ -312,14 +312,12 @@ export default function SpecUpRoadmap() {
       </div>
 
       <div className="rounded-xl border border-border bg-surface/60 p-4 sm:p-5">
-        <h2 className="text-lg font-bold">{edited ? '추천 순서' : '샘플 결과 (예시)'}</h2>
+        <h2 className="text-lg font-bold">{tx(edited ? '추천 순서' : '샘플 결과 (예시)')}</h2>
         {!edited ? (
-          <p className="mt-1 text-sm text-warning">
-            위 예시 캐릭터 기준 결과입니다. 내 장비 상태를 입력하면 내 추천으로 바뀝니다.
-          </p>
+          <p className="mt-1 text-sm text-warning">{ui("위 예시 캐릭터 기준 결과입니다. 내 장비 상태를 입력하면 내 추천으로 바뀝니다.", "These results use the example character above. Enter your gear to get your recommendations.")}</p>
         ) : null}
 
-        <div className="mt-4 grid grid-cols-2 gap-2" role="group" aria-label="추천 모드">
+        <div className="mt-4 grid grid-cols-2 gap-2" role="group" aria-label={ui("추천 모드", "Recommendation mode")}>
           {MODES.map((m) => (
             <button
               key={m.key}
@@ -330,8 +328,8 @@ export default function SpecUpRoadmap() {
                 m.key === mode ? 'border-accent bg-accent/15 text-accent-strong' : 'border-border bg-bg text-muted hover:text-text'
               }`}
             >
-              <span className="block font-bold">{m.label}</span>
-              <span className="block text-xs">{m.desc}</span>
+              <span className="block font-bold">{tx(m.label)}</span>
+              <span className="block text-xs">{tx(m.desc)}</span>
             </button>
           ))}
         </div>
@@ -339,7 +337,7 @@ export default function SpecUpRoadmap() {
         <div className="mt-4" aria-live="polite">
           {items.length === 0 ? (
             <p className="rounded-lg border border-border bg-bg px-3 py-4 text-center text-sm text-muted">
-              {mode === 'all' ? '모든 장비가 최대 레벨입니다.' : '이 조건의 장비가 모두 최대 레벨입니다.'}
+              {tx(mode === 'all' ? '모든 장비가 최대 레벨입니다.' : '이 조건의 장비가 모두 최대 레벨입니다.')}
             </p>
           ) : (
             <ol className="space-y-3">
@@ -357,25 +355,23 @@ export default function SpecUpRoadmap() {
                       >
                         {x.rank}
                       </span>
-                      <span className={`${badgeClass} ${CATEGORY_STYLE[x.category]}`}>{ROADMAP_CATEGORY_LABELS[x.category]}</span>
-                      <span className={`${badgeClass} border-border text-muted`}>{TROOP_LABELS[x.troop]}</span>
+                      <span className={`${badgeClass} ${CATEGORY_STYLE[x.category]}`}>{tx(ROADMAP_CATEGORY_LABELS[x.category])}</span>
+                      <span className={`${badgeClass} border-border text-muted`}>{tx(TROOP_LABELS[x.troop])}</span>
                     </div>
-                    <span className={`${badgeClass} ${GRADE_STYLE[costGrade(x.costPer1Percent)]}`}>
-                      1%당 {fmtKrw(x.costPer1Percent)}
+                    <span className={`${badgeClass} ${GRADE_STYLE[costGrade(x.costPer1Percent)]}`}>{ui("1%당 ", "Per 1% ")}{tx(fmtKrw(x.costPer1Percent))}
                     </span>
                   </div>
                   <p className="mt-2 font-bold">
-                    {x.slotLabel} · {x.currentState} → {x.nextTarget}
+                    {tx(x.slotLabel)} · {tx(x.currentState)} → {tx(x.nextTarget)}
                   </p>
                   <p className="mt-1 flex flex-wrap gap-x-5 gap-y-1 text-sm tabular-nums">
-                    <span className="text-muted">
-                      성능 +{x.rawStatGain.toFixed(2)}% ({x.affectedStats.map((s) => STAT_LABELS[s]).join('+')})
+                    <span className="text-muted">{ui("성능 +", "Stat gain +")}{x.rawStatGain.toFixed(2)}% ({tx(x.affectedStats.map((s) => STAT_LABELS[s]).join('+'))})
                     </span>
-                    <span className="font-semibold">비용 {fmtKrw(x.totalCostKRW)}</span>
+                    <span className="font-semibold">{ui("비용 ", "Cost ")}{tx(fmtKrw(x.totalCostKRW))}</span>
                   </p>
                   {x.resources.length > 0 ? (
                     <p className="mt-2 border-t border-border pt-2 text-xs text-muted">
-                      {x.resources.map((r) => `${r.name} ${fmt(r.amount)}`).join(' · ')}
+                      {tx(x.resources.map((r) => `${r.name} ${fmt(r.amount)}`).join(' · '))}
                     </p>
                   ) : null}
                 </li>
@@ -385,19 +381,19 @@ export default function SpecUpRoadmap() {
         </div>
 
         <div className="mt-5 rounded-xl border border-border bg-bg px-4 py-3 text-sm">
-          <p className="font-semibold">추천 점수 가중치 ({MODES.find((m) => m.key === mode)!.label})</p>
+          <p className="font-semibold">{ui("추천 점수 가중치 (", "Recommendation weights (")}{tx(MODES.find((m) => m.key === mode)!.label)})</p>
           <ul className="mt-2 grid grid-cols-2 gap-1 text-muted tabular-nums">
             {(['hp', 'destruction', 'attack', 'defense'] as const).map((s) => (
               <li key={s}>
-                {STAT_LABELS[s]} ×{w[s].toFixed(1)}
+                {tx(STAT_LABELS[s])} ×{w[s].toFixed(1)}
               </li>
             ))}
           </ul>
           <ul className="mt-2 space-y-1 text-xs text-muted">
-            <li>갑옷·장갑: 체력 · 헬멧·신발: 파괴력 · 마스터리: 슬롯 스탯과 같음</li>
-            <li>승급 보너스 — 갑옷·헬멧: 공격→방어→공격 · 장갑·신발: 방어→공격→방어 (120·160·200레벨)</li>
-            <li>영주 장비: 공격+방어 · 영주 보석: 체력+파괴력 (두 가중치 평균)</li>
-            <li>동점이면 보병방어 &gt; 궁병공격 &gt; 기병공격 &gt; 궁병방어 &gt; 보병공격 &gt; 기병방어, 영주 장비·보석은 보병 &gt; 궁병 &gt; 기병</li>
+            <li>{ui("갑옷·장갑: 체력 · 헬멧·신발: 파괴력 · 마스터리: 슬롯 스탯과 같음", "Armor/Gloves: Health · Helmet/Boots: Lethality · Mastery: same stat as the slot")}</li>
+            <li>{ui("승급 보너스 — 갑옷·헬멧: 공격→방어→공격 · 장갑·신발: 방어→공격→방어 (120·160·200레벨)", "Promotion bonus — Armor/Helmet: Attack→Defense→Attack · Gloves/Boots: Defense→Attack→Defense (levels 120/160/200)")}</li>
+            <li>{ui("영주 장비: 공격+방어 · 영주 보석: 체력+파괴력 (두 가중치 평균)", "Governor Gear: Attack+Defense · Governor Charms: Health+Lethality (average of both weights)")}</li>
+            <li>{ui("동점이면 보병방어 > 궁병공격 > 기병공격 > 궁병방어 > 보병공격 > 기병방어, 영주 장비·보석은 보병 > 궁병 > 기병", "Ties: Infantry Defense > Archer Attack > Cavalry Attack > Archer Defense > Infantry Attack > Cavalry Defense. Governor Gear/Charms: Infantry > Archer > Cavalry.")}</li>
           </ul>
         </div>
       </div>

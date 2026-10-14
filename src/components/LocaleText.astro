@@ -1,0 +1,7 @@
+---
+import { isLocaleScope } from '@/lib/locale';
+interface Props { ko: string; en: string }
+const { ko, en } = Astro.props;
+const scoped = isLocaleScope(Astro.url.pathname);
+---
+{scoped ? <span data-locale-ko={ko} data-locale-en={en}>{ko}</span> : ko}
