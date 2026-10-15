@@ -74,8 +74,10 @@ export default function KingdomMap({ playerKingdom, playerLocation, playerAid, o
     setSelected(city);
     if (jump) setFocus({ x: city.x, y: city.y, scale: 20 });
   }
-  function jumpAlliance(aid: string) {
-    setAlliance(aid); setFilter(''); setPage(0); setSelected(null);
+  function jumpAlliance(aid: string, filterOnly = false) {
+    // Sidebar navigation moves the camera without removing neighboring cities.
+    // Only the explicitly selected dropdown filter hides other alliances.
+    setAlliance(filterOnly ? aid : ''); setFilter(''); setPage(0); setSelected(null);
     const target = clusterFocus(allCities.filter((city) => !aid || String(city.aid) === aid));
     if (target) setFocus({ ...target });
   }
@@ -87,7 +89,7 @@ export default function KingdomMap({ playerKingdom, playerLocation, playerAid, o
     }
   }
   const allianceList = <ul className="space-y-1">{alliances.map((a) => <li key={a.aid}>
-    <button type="button" aria-pressed={alliance === String(a.aid)} onClick={() => jumpAlliance(String(a.aid))}
+    <button type="button" onClick={() => jumpAlliance(String(a.aid))}
       className={`w-full min-w-0 rounded-lg border px-3 py-2 text-left text-sm ${alliance === String(a.aid) ? 'border-accent bg-accent/10' : 'border-transparent hover:bg-raised'}`}>
       <span className="flex items-center gap-2"><span aria-hidden="true" className="size-3 shrink-0 rounded-sm" style={{ background: allianceColor(a.aid) }} /><span className="min-w-0 break-words font-bold">[{a.abbr || tr("약칭 없음")}]</span></span>
       <span className="mt-1 block break-words text-xs text-muted">{a.name || tr("이름 정보 없음")}</span>
@@ -106,7 +108,7 @@ export default function KingdomMap({ playerKingdom, playerLocation, playerAid, o
       <div className="text-xs text-muted"><p>{validTime ? <>{tr("위치 데이터 갱신 시간 ")}<time dateTime={updated.toISOString()}>{updated.toLocaleString(playerNumberLocale(), { timeZone: 'Asia/Seoul' })}</time>{tr(" (한국 시간)")}</> : tr("위치 데이터 갱신 시간 정보 없음")}</p><p className="mt-1">{tr("저장된 지도입니다. 현재 위치·보호막·연소 상태와 다를 수 있습니다.")}</p></div>
       <div className="grid gap-3 sm:grid-cols-2">
         <div><label htmlFor="city-filter" className="block text-sm font-bold">{tr("도시 이름 또는 연맹 약칭")}</label><div className="mt-2 flex gap-2"><input id="city-filter" className={field} value={filter} onChange={(e) => { setFilter(e.target.value); setPage(0); }} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); jumpResults(); } }} placeholder={tr("닉네임 또는 연맹 약칭을 입력하세요")} /><button type="button" disabled={!cities.length} className={`${control} shrink-0`} onClick={jumpResults}>{tr("이동")}</button></div></div>
-        <div><label htmlFor="alliance-filter" className="block text-sm font-bold">{tr("연맹 선택 · 밀집 구역으로 이동")}</label><select id="alliance-filter" className={`${field} mt-2`} value={alliance} onChange={(e) => jumpAlliance(e.target.value)}><option value="">{tr("모든 연맹")}</option>{alliances.map((a) => <option key={a.aid} value={String(a.aid)}>[{a.abbr || tr("약칭 없음")}] {a.name || tr("이름 정보 없음")}{tr(" · 도시 ")}{a.city_count ?? 0}{tr("개")}</option>)}</select></div>
+        <div><label htmlFor="alliance-filter" className="block text-sm font-bold">{locale === 'en' ? 'Show only this alliance' : '이 연맹만 표시'}</label><select id="alliance-filter" className={`${field} mt-2`} value={alliance} onChange={(e) => jumpAlliance(e.target.value, true)}><option value="">{tr("모든 연맹")}</option>{alliances.map((a) => <option key={a.aid} value={String(a.aid)}>[{a.abbr || tr("약칭 없음")}] {a.name || tr("이름 정보 없음")}{tr(" · 도시 ")}{a.city_count ?? 0}{tr("개")}</option>)}</select></div>
       </div>
       {sameKingdom && (playerLocation || playerAid) && <div className="flex flex-wrap gap-2">
         {playerLocation && <button type="button" className={control} onClick={() => { setFilter(''); setAlliance(''); setPage(0); setFocus({ ...playerLocation, scale: 20 }); }}>{tr("조회한 영주 위치")}</button>}

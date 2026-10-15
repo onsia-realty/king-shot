@@ -1,7 +1,7 @@
 import { useLocale } from '../../lib/locale';
 import { playerText, playerText as tr, playerNumberLocale } from '../../lib/player-localization';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { groundRadii, pickCity, type CityHit, type Rect } from './mapHitGeometry';
+import { groundRadii, pickCities, placeCityLabel, citySpriteRect, citySpriteSize, compactCityLevel, overlaps, MAX_CITY_SCALE, type CityHit, type Rect } from './mapHitGeometry';
 
 export interface MapCity {
   uid: number | string; nick_name?: string | null; power?: number | null; tc?: number | null;
@@ -50,7 +50,7 @@ export function clusterFocus(cities: MapCity[]): MapFocus | undefined {
   }
   const dense = [...bins.values()].sort((a, b) => b.length - a.length)[0];
   const median = (values: number[]) => values.sort((a, b) => a - b)[Math.floor(values.length / 2)];
-  return { x: median(dense.map((c) => c.x)), y: median(dense.map((c) => c.y)), scale: 14 };
+  return { x: median(dense.map((c) => c.x)), y: median(dense.map((c) => c.y)), scale: 30 };
 }
 function project(x: number, y: number, camera: Camera, width: number, height: number) {
   return { x: ((x - camera.x) - (y - camera.y)) * camera.scale / 2 + width / 2,
@@ -69,6 +69,11 @@ export default function KingdomMapCanvas(props: Props) {
   const canvas = useRef<HTMLCanvasElement | null>(null);
   const wrapper = useRef<HTMLDivElement | null>(null);
   const popup = useRef<HTMLElement | null>(null);
+  const hoverTooltip = useRef<HTMLDivElement | null>(null);
+  const hoverHighlight = useRef<HTMLDivElement | null>(null);
+  const hideHover = useRef<() => void>(() => {});
+  const localeRef = useRef(locale);
+  localeRef.current = locale;
   const model = useRef(props);
   model.current = props;
   const camera = useRef<Camera>({ x: 600, y: 600, scale: 14 });
@@ -76,6 +81,8 @@ export default function KingdomMapCanvas(props: Props) {
   const redraw = useRef<() => void>(() => {});
   const closePopup = useRef<() => void>(() => {});
   const [scale, setScale] = useState(14);
+  const [candidates, setCandidates] = useState<MapCity[]>([]);
+  useEffect(() => { setCandidates([]); }, [props.cities]);
   const coordinates = useRef<HTMLSpanElement | null>(null);
   const coordinateText = useRef<string | null>(null);
   useEffect(() => {
@@ -131,6 +138,7 @@ export default function KingdomMapCanvas(props: Props) {
     if (!el) return;
     // Controls consume wheel without zooming. Popup keeps its own scrolling.
     const isolate = (e: WheelEvent) => {
+      hideHover.current();
       e.stopPropagation();
       const panel = popup.current;
       if (e.target instanceof Node && panel?.contains(e.target)) {
@@ -147,14 +155,16 @@ export default function KingdomMapCanvas(props: Props) {
     return { min, max, minScale: Math.max(0.15, Math.min(dimensions.current.width, dimensions.current.height) * 0.9 / (max - min)) };
   }
   function update(next: Camera) {
+    hideHover.current();
     const { min, max, minScale } = limits();
-    camera.current = { x: Math.max(min, Math.min(max, next.x)), y: Math.max(min, Math.min(max, next.y)), scale: Math.max(minScale, Math.min(40, next.scale)) };
+    camera.current = { x: Math.max(min, Math.min(max, next.x)), y: Math.max(min, Math.min(max, next.y)), scale: Math.max(minScale, Math.min(MAX_CITY_SCALE, next.scale)) };
+    setCandidates((old) => old.length ? [] : old);
     setScale(camera.current.scale); redraw.current();
   }
   function zoom(factor: number, point = { x: dimensions.current.width / 2, y: dimensions.current.height / 2 }) {
     const { width, height } = dimensions.current;
     const before = unproject(point.x, point.y, camera.current, width, height);
-    const next = { ...camera.current, scale: Math.max(limits().minScale, Math.min(40, camera.current.scale * factor)) };
+    const next = { ...camera.current, scale: Math.max(limits().minScale, Math.min(MAX_CITY_SCALE, camera.current.scale * factor)) };
     const after = unproject(point.x, point.y, next, width, height);
     update({ ...next, x: next.x + before.x - after.x, y: next.y + before.y - after.y });
   }
@@ -182,12 +192,22 @@ export default function KingdomMapCanvas(props: Props) {
     const images = new Map<string, HTMLImageElement>();
     let hits: CityHit<MapCity>[] = [];
     let labelHits: (Rect & { city: MapCity })[] = [];
-    closePopup.current = () => model.current.onClose();
+    closePopup.current = () => { setCandidates([]); model.current.onClose(); };
     let hudFrame = 0;
     let hudPoint: { x: number; y: number } | null = null;
     let showPointerRing = false;
-    const updateCoordinates = (point: { x: number; y: number } | null, pointerType?: string) => {
+    let hoverAllowed = false;
+    let hoverIdentity: MapCity | undefined;
+    let hoverLocale = '';
+    const hide = () => {
+      hoverAllowed = false;
+      if (hoverTooltip.current) hoverTooltip.current.style.visibility = 'hidden';
+      if (hoverHighlight.current) hoverHighlight.current.style.visibility = 'hidden';
+    };
+    hideHover.current = hide;
+    const updateCoordinates = (point: { x: number; y: number } | null, pointerType?: string, allowHover = false) => {
       hudPoint = point;
+      hoverAllowed = allowHover;
       showPointerRing = pointerType === 'mouse' || pointerType === 'pen';
       if (hudFrame) return;
       hudFrame = window.requestAnimationFrame(() => {
@@ -205,6 +225,29 @@ export default function KingdomMapCanvas(props: Props) {
             && p.x <= dimensions.current.width && p.y <= dimensions.current.height && !overPopup;
           ring.style.visibility = visible ? 'visible' : 'hidden';
           if (visible) ring.style.transform = `translate3d(${p.x - 14}px, ${p.y - 14}px, 0)`;
+          const tooltip = hoverTooltip.current, highlight = hoverHighlight.current;
+          const city = visible && hoverAllowed && !pointers.size && !frame ? pickCities(p, hits, labelHits)[0] : undefined;
+          const hit = city && hits.find((entry) => entry.city === city);
+          if (!p || !city || !hit || !tooltip || !highlight) {
+            if (tooltip) tooltip.style.visibility = 'hidden';
+            if (highlight) highlight.style.visibility = 'hidden';
+          } else {
+            const lang = localeRef.current;
+            if (hoverIdentity !== city || hoverLocale !== lang) {
+              const text = (value: string) => playerText(value, lang);
+              tooltip.textContent = `${city.nick_name || text('이름 정보 없음')}\n${city.alliance_abbr ? `[${city.alliance_abbr}]` : text('연맹 정보 없음')} · ${compactCityLevel(city.tc)}\n${text('전투력 ')}${city.power?.toLocaleString(lang === 'ko' ? 'ko-KR' : 'en-US') ?? text('정보 없음')}\nX: ${city.x} · Y: ${city.y}`;
+              hoverIdentity = city; hoverLocale = lang;
+            }
+            const { width, height } = dimensions.current;
+            tooltip.style.maxWidth = `${Math.max(0, width - 16)}px`;
+            tooltip.style.left = `${Math.max(8, Math.min(width - tooltip.offsetWidth - 8, p.x + 18))}px`;
+            tooltip.style.top = `${Math.max(8, Math.min(height - tooltip.offsetHeight - 8, p.y + 18))}px`;
+            tooltip.style.visibility = 'visible';
+            const radius = groundRadii(hit.tile);
+            highlight.style.width = `${radius.x * 2}px`; highlight.style.height = `${radius.y * 2}px`;
+            highlight.style.transform = `translate3d(${hit.point.x - radius.x}px, ${hit.point.y - radius.y}px, 0)`;
+            highlight.style.visibility = 'visible';
+          }
         }
       });
     };
@@ -287,52 +330,71 @@ export default function KingdomMapCanvas(props: Props) {
         fallbackCastle(castle.x, castle.y, castleSize, '#d9c17c'); label(tr("왕성"), castle.x, castle.y + 14, '#ffdf84');
       }
       hits = [];
+      const size = citySpriteSize(cam.scale);
+      const viewport = { x: 0, y: 0, width, height };
+      const groundVisible = (point: { x: number; y: number }) => {
+        const radius = groundRadii(Math.max(2, cam.scale));
+        return overlaps({ x: point.x - radius.x, y: point.y - radius.y, width: radius.x * 2, height: radius.y * 2 }, viewport);
+      };
       const visible = current.cities.map((city) => ({ city, point: screen(city.x, city.y) }))
-        .filter(({ point }) => point.x > -120 && point.x < width + 120 && point.y > -20 && point.y < height + 150)
+        // Cull before image lookup: maximum skin height is 1.5 times its width.
+        .filter(({ point }) => groundVisible(point) || (cam.scale >= 3 && overlaps(citySpriteRect(point, size, size * 1.5), viewport)))
+        .map(({ city, point }) => {
+        const img = cam.scale >= 3 ? image(city.city_skin_icon) : undefined;
+        const spriteHeight = img ? Math.min(size * 1.5, size * img.naturalHeight / img.naturalWidth) : size;
+        const body = img ? citySpriteRect(point, size, spriteHeight)
+          : { x: point.x - size * 0.368, y: point.y - size * 0.824, width: size * 0.736, height: size * 0.792 };
+        return { city, point, img, spriteHeight, body };
+      })
+        .filter(({ point, body }) => (cam.scale >= 3 && overlaps(body, viewport)) || groundVisible(point))
         .sort((a, b) => a.point.y - b.point.y);
       const labels: { x: number; y: number; width: number; height: number; text: string; city: MapCity; point: { x: number; y: number } }[] = [];
-      for (const { city, point: p } of visible) {
+      for (const { city, point: p, img, spriteHeight, body } of visible) {
         const color = allianceColor(city.aid);
-        const tile = Math.max(2, cam.scale * 1.6);
+        const tile = Math.max(2, cam.scale);
         const chosen = String(city.uid) === String(current.selected?.uid);
-        polygon([{ x: p.x - tile, y: p.y }, { x: p.x, y: p.y - tile / 2 }, { x: p.x + tile, y: p.y }, { x: p.x, y: p.y + tile / 2 }], color, '#23362a66');
-        if (chosen) {
+        {
           const radius = groundRadii(tile);
           ctx.beginPath(); ctx.ellipse(p.x, p.y, radius.x, radius.y, 0, 0, Math.PI * 2);
-          ctx.fillStyle = '#70ff7933'; ctx.fill();
-          ctx.strokeStyle = '#82ff8b'; ctx.lineWidth = 2; ctx.stroke();
+          ctx.globalAlpha = chosen ? 0.22 : 0.12; ctx.fillStyle = color; ctx.fill();
+          ctx.globalAlpha = chosen ? 1 : 0.35; ctx.strokeStyle = chosen ? '#82ff8b' : color; ctx.lineWidth = chosen ? 2 : 1; ctx.stroke(); ctx.globalAlpha = 1;
         }
         if (cam.scale >= 3) {
-          const size = Math.min(100, Math.max(20, cam.scale * 2.5));
-          const img = image(city.city_skin_icon);
-          let spriteHeight = size;
-          if (img) { spriteHeight = Math.min(size * 1.5, size * img.naturalHeight / img.naturalWidth); ctx.drawImage(img, p.x - size / 2, p.y - spriteHeight + 4, size, spriteHeight); }
+          if (img) {
+            const rect = citySpriteRect(p, size, spriteHeight);
+            ctx.drawImage(img, rect.x, rect.y, rect.width, rect.height);
+          }
           else fallbackCastle(p.x, p.y, size * 0.8, '#d0d4cc');
-          hits.push({ city, point: p, tile, body: { x: p.x - size * 0.36, y: p.y - (img ? spriteHeight * 0.9 : size * 0.82), width: size * 0.72, height: img ? spriteHeight * 0.9 : size * 0.82 } });
-          if (cam.scale >= 7 || chosen) {
-            const text = `${city.alliance_abbr ? `[${city.alliance_abbr}] ` : ''}${city.nick_name || tr("이름 정보 없음")}`;
-            ctx.font = '600 11px system-ui, sans-serif';
-            const labelWidth = Math.min(190, ctx.measureText(text).width + 8);
-            const box = { x: p.x - labelWidth / 2, y: p.y + 9, width: labelWidth, height: 28 };
-            const overlaps = labels.some((b) => box.x < b.x + b.width && box.x + box.width > b.x && box.y < b.y + b.height && box.y + box.height > b.y);
-            if (!overlaps || chosen) {
-              labels.push({ ...box, text, city, point: p });
-            }
+          // The skin host does not allow CORS pixel reads. Match the drawn rectangle
+          // and expose all overlaps rather than guessing which sprite owns the pixel.
+          hits.push({ city, point: p, tile, body });
+          {
+            const text = compactCityLevel(city.tc);
+            ctx.font = '600 9px system-ui, sans-serif';
+            const labelWidth = ctx.measureText(text).width + 8;
+            labels.push({ x: 0, y: 0, width: labelWidth, height: 14, text, city, point: p });
           }
         } else hits.push({ city, point: p, tile });
       }
       labelHits = [];
-      for (const box of labels.sort((a, b) => Number(String(a.city.uid) === String(current.selected?.uid)) - Number(String(b.city.uid) === String(current.selected?.uid)))) {
-        labelHits.push({ city: box.city, x: box.x - 3, y: box.y - 6, width: box.width + 6, height: box.height + 2 });
-        ctx.fillStyle = '#12231bc9'; ctx.fillRect(box.x - 3, box.y - 6, box.width + 6, box.height + 2);
-        label(box.text.length > 26 ? `${box.text.slice(0, 25)}…` : box.text, box.point.x, box.point.y + 11, '#ffffff', 11);
-        label(cityLevel(box.city), box.point.x, box.point.y + 24, '#ffdf84', 10);
+      const occupied: Rect[] = [];
+      for (const candidate of labels.sort((a, b) => Number(String(b.city.uid) === String(current.selected?.uid)) - Number(String(a.city.uid) === String(current.selected?.uid)) || b.point.y - a.point.y)) {
+        const box = placeCityLabel(candidate.point, candidate.width, occupied, { x: 0, y: 0, width, height });
+        if (!box) continue;
+        occupied.push(box); labelHits.push({ ...box, city: candidate.city });
+        const center = box.x + box.width / 2;
+        ctx.strokeStyle = '#12231b99'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(candidate.point.x, candidate.point.y + 3); ctx.lineTo(center, box.y + box.height / 2); ctx.stroke();
+        ctx.fillStyle = '#12231bc9'; ctx.fillRect(box.x, box.y, box.width, box.height);
+        label(candidate.text, center, box.y + 7, '#ffdf84', 9);
       }
       if (cam.scale < 3) for (const { alliance, focus } of clusterModel.current) {
         const p = screen(focus.x, focus.y); label(`[${alliance.abbr || tr("연맹")}]`, p.x, p.y - 8, allianceColor(alliance.aid), 11);
       }
+      // Refresh geometry or language after an existing redraw, never redraw for hover.
+      if (hoverAllowed) updateCoordinates(hudPoint, showPointerRing ? 'mouse' : 'touch', true);
     }
     const resize = () => {
+      hide();
       const rect = element.getBoundingClientRect();
       if (!rect.width || !rect.height) return;
       dimensions.current = { width: rect.width, height: rect.height };
@@ -342,6 +404,7 @@ export default function KingdomMapCanvas(props: Props) {
     const observer = new ResizeObserver(resize); observer.observe(element); resize();
     const position = (e: MouseEvent | PointerEvent) => { const rect = element.getBoundingClientRect(); return { x: e.clientX - rect.left, y: e.clientY - rect.top }; };
     const down = (e: PointerEvent) => {
+      hide();
       if (e.button !== 0) return;
       if (frame) { window.cancelAnimationFrame(frame); draw(); }
       const p = position(e); pointers.set(e.pointerId, p); element.setPointerCapture(e.pointerId);
@@ -366,15 +429,18 @@ export default function KingdomMapCanvas(props: Props) {
           }
         }
       }
-      updateCoordinates(p, e.pointerType);
+      updateCoordinates(p, e.pointerType, !pointers.size);
     };
     const up = (e: PointerEvent) => {
       if (!pointers.has(e.pointerId)) return;
       const p = position(e);
       if (e.type === 'pointerup' && press && !press.moved && Math.hypot(p.x - press.x, p.y - press.y) <= 4 && pointers.size === 1) {
         if (frame) { window.cancelAnimationFrame(frame); draw(); }
-        const hit = pickCity(p, hits, labelHits);
+        const matches = pickCities(p, hits, labelHits);
+        setCandidates(matches.length > 1 ? matches : []);
+        const hit = matches[0];
         if (hit) model.current.onSelect(hit);
+        else closePopup.current();
       }
       pointers.delete(e.pointerId); pinchDistance = 0;
       if (element.hasPointerCapture(e.pointerId)) element.releasePointerCapture(e.pointerId);
@@ -383,8 +449,8 @@ export default function KingdomMapCanvas(props: Props) {
       updateCoordinates(e.type === 'pointerup' ? p : null, e.pointerType);
     };
     const wheel = (e: WheelEvent) => { e.preventDefault(); e.stopPropagation(); const delta = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? dimensions.current.height : 1); zoom(Math.exp(-Math.max(-150, Math.min(150, delta)) * 0.004), position(e)); };
-    const enter = (e: PointerEvent) => updateCoordinates(position(e), e.pointerType);
-    const leave = () => updateCoordinates(null);
+    const enter = (e: PointerEvent) => updateCoordinates(position(e), e.pointerType, true);
+    const leave = () => { hide(); updateCoordinates(null); };
     element.addEventListener('pointerenter', enter);
     element.addEventListener('pointerdown', down); element.addEventListener('pointermove', move);
     element.addEventListener('pointerup', up); element.addEventListener('pointercancel', up);
@@ -394,6 +460,7 @@ export default function KingdomMapCanvas(props: Props) {
     window.addEventListener('keydown', escape);
     return () => {
       disposed = true; observer.disconnect(); window.cancelAnimationFrame(frame); redraw.current = () => {};
+      hide(); hideHover.current = () => {};
       window.cancelAnimationFrame(hudFrame); closePopup.current = () => {};
       if (pointerRing.current) pointerRing.current.style.visibility = 'hidden';
       element.removeEventListener('pointerenter', enter);
@@ -408,7 +475,7 @@ export default function KingdomMapCanvas(props: Props) {
 
   return <div ref={wrapper} className={expanded ? 'fixed inset-0 z-50 flex flex-col bg-bg p-3 sm:p-5' : 'min-w-0'}>
     <div className="mb-3 flex flex-wrap items-center gap-2">
-      <button type="button" className={control} aria-label={tr("지도 확대")} disabled={scale >= 40} onClick={() => zoom(1.5)}>{tr("확대 ＋")}</button>
+      <button type="button" className={control} aria-label={tr("지도 확대")} disabled={scale >= MAX_CITY_SCALE} onClick={() => zoom(1.5)}>{tr("확대 ＋")}</button>
       <button type="button" className={control} aria-label={tr("지도 축소")} disabled={scale <= limits().minScale} onClick={() => zoom(1 / 1.5)}>{tr("축소 −")}</button>
       <button type="button" className={control} onClick={() => update({ x: (props.bounds.min + props.bounds.max) / 2, y: (props.bounds.min + props.bounds.max) / 2, scale: limits().minScale })}>{tr("전체 왕국")}</button>
       <button type="button" className={control} onClick={() => update({ x: 600, y: 600, scale: 4 })}>{tr("왕성")}</button>
@@ -417,9 +484,17 @@ export default function KingdomMapCanvas(props: Props) {
     <div className={`relative min-h-0 overflow-hidden rounded-xl border border-border ${expanded ? 'flex-1' : 'h-[420px] sm:h-[560px]'}`}>
       <canvas ref={canvas} role="img" aria-label={tr("등각 투영 왕국 지도. 휠 또는 확대 버튼으로 확대하고 드래그하여 이동할 수 있습니다. 아래 도시 목록으로도 영주를 선택할 수 있습니다.")} className="block h-full w-full touch-none" style={{ cursor: 'none' }} />
       <div ref={pointerRing} aria-hidden="true" className="pointer-events-none absolute left-0 top-0 rounded-full" style={{ width: 28, height: 28, boxSizing: 'border-box', border: '2px solid #82ff8b', background: '#70ff7918', visibility: 'hidden', willChange: 'transform' }} />
+      <div ref={hoverHighlight} aria-hidden="true" className="pointer-events-none absolute left-0 top-0 rounded-full border-2 border-[#82ff8b] bg-[#70ff7922]" style={{ visibility: 'hidden' }} />
+      <div ref={hoverTooltip} role="tooltip" className="pointer-events-none absolute z-[5] whitespace-pre-line break-words rounded-lg border border-border bg-raised px-3 py-2 text-xs text-text shadow-lg" style={{ visibility: 'hidden', maxWidth: 280 }} />
       <div className="pointer-events-none absolute bottom-3 left-3 rounded-lg bg-bg/85 px-3 py-2 text-xs text-text"><span ref={coordinates}>{coordinateText.current ?? tr("도시를 선택해 정보를 확인하세요")}</span><span className="mt-1 block text-muted">{tr("휠·두 손가락으로 확대 · 드래그로 이동")}</span></div>
       <div className="pointer-events-none absolute right-3 top-3 rounded-md bg-bg/85 px-2 py-1 text-xs text-muted">{tr("배율 ")}{scale.toFixed(1)}</div>
       {props.selected && <section ref={popup} aria-label={tr("선택한 도시 정보")} className="absolute z-10 overflow-y-auto overscroll-contain rounded-xl border border-accent/50 bg-raised p-4 shadow-xl" style={{ left: 8, top: 8, width: 'min(300px, calc(100% - 16px))', maxHeight: 'calc(100% - 16px)' }}>
+        {candidates.length > 1 && <div className="mb-3 border-b border-border pb-3">
+          <p className="mb-2 text-xs text-muted">{locale === 'ko' ? '겹친 도시 선택' : 'Choose an overlapping city'} ({candidates.length})</p>
+          <div className="flex flex-col gap-1">{candidates.map((city) => <button type="button" key={city.uid} aria-pressed={String(city.uid) === String(props.selected?.uid)} className="rounded border border-border px-2 py-2 text-left text-xs aria-pressed:border-accent" onClick={() => model.current.onSelect(city)}>
+            {city.alliance_abbr ? `[${city.alliance_abbr}] ` : ''}{city.nick_name || tr('이름 정보 없음')} · {city.x}, {city.y}
+          </button>)}</div>
+        </div>}
         <div className="flex items-start justify-between gap-3"><h3 className="min-w-0 break-words font-bold [overflow-wrap:anywhere]">{props.selected.nick_name || tr("이름 정보 없음")}</h3><button type="button" className="shrink-0 rounded px-2 py-1 hover:bg-bg" aria-label={tr("도시 정보 닫기")} onClick={() => closePopup.current()}>✕</button></div>
         <p className="mt-1 text-sm text-muted">{props.selected.alliance_abbr ? `[${props.selected.alliance_abbr}]` : tr("연맹 정보 없음")} · {cityLevel(props.selected)}</p>
         <p className="mt-3 text-sm">X: {props.selected.x} · Y: {props.selected.y}</p>
