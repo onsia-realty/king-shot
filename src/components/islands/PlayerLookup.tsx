@@ -210,7 +210,7 @@ export default function PlayerLookup({ heroes: catalog }: { heroes: HeroCatalog 
         </div>
         <dl className="mt-6 grid grid-cols-2 gap-x-4 gap-y-5 sm:grid-cols-3">
           <Stat label={tr("왕국")}>{format(player.kid)}</Stat><Stat label={tr("전투력")}>{format(player.power)}</Stat><Stat label={tr("도시 센터")}>{townLevel(player.town_center_level)}</Stat>
-          <Stat label={tr("귀족 레벨")}>{format(player.vip)}</Stat><Stat label={tr("처치 수")}>{format(player.kills)}</Stat>
+          <Stat label={tr("VIP 레벨")}>{format(player.vip)}</Stat><Stat label={tr("처치 수")}>{format(player.kills)}</Stat>
         </dl>
         <PlayerLocationMap key={JSON.stringify([result.uid, queriedId, player.kid, player.x, player.y])} kid={player.kid} x={player.x} y={player.y} uid={result.uid} onLookup={(value) => { void lookup(value, 'uid', true); }} />
         <div className="mt-6 border-t border-border pt-4 text-sm text-muted">

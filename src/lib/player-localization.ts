@@ -26,7 +26,7 @@ const labels: Record<string, string> = {
   '게임에서 프로필을 열어 닉네임 아래의 ID를 확인하세요. 숫자 1~15자리를 입력해 주세요.': 'Open your in-game profile and find the ID below your nickname. Enter 1–15 digits.',
   '영주 정보를 불러오고 있습니다. 정보 갱신에 시간이 걸릴 수 있습니다.': 'Loading governor information. Refreshing the data may take a while.',
   '영주 조회 결과': 'Governor lookup results', '영주': 'Governor', '이름 정보 없음': 'Name unavailable', '영주 ID 정보 없음': 'Governor ID unavailable',
-  '왕국': 'Kingdom', '귀족 레벨': 'VIP Level', '갱신 시간': 'Updated', '(한국 시간)': '(KST)', '갱신 시간 정보 없음': 'Update time unavailable',
+  '왕국': 'Kingdom', 'VIP 레벨': 'VIP Level', '갱신 시간': 'Updated', '(한국 시간)': '(KST)', '갱신 시간 정보 없음': 'Update time unavailable',
   '1분 이내 갱신': 'Updated less than a minute ago', '분 전 갱신': ' min ago',
   '연맹': 'Alliance', '연맹 ID': 'Alliance ID', '연맹 전투력': 'Alliance Power', '연맹원 수': 'Members', '맹주': 'Leader',
   '연맹 직위': 'Alliance Rank', '직위': 'Rank', '연맹 정보가 없습니다.': 'Alliance information unavailable.',
