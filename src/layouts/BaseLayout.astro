@@ -10,10 +10,11 @@ import { SITE_NAME, SITE_DESCRIPTION } from '@/data/nav';
  * 네이버 서치어드바이저 소유확인 메타.
  * 사이트 등록 후 발급받은 content 값을 여기에 채우면 자동으로 렌더된다.
  */
-const NAVER_SITE_VERIFICATION = '';
+const NAVER_SITE_VERIFICATION = '677b72e7ed9aaf15d462add07287e5daece3d72b';
 
 interface Props {
   title?: string;
+  fullTitle?: string;
   titleEn?: string;
   descriptionEn?: string;
   description?: string;
@@ -26,6 +27,7 @@ interface Props {
 
 const {
   title,
+  fullTitle,
   titleEn,
   descriptionEn,
   description = SITE_DESCRIPTION,
@@ -36,7 +38,7 @@ const {
 
 const localeScope = isLocaleScope(Astro.url.pathname);
 const englishTitle = titleEn ? `${titleEn} | Kingshot Guide` : undefined;
-const pageTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} — 킹샷 한국어 공략`;
+const pageTitle = fullTitle ?? (title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} — 킹샷 한국어 공략`);
 const site = Astro.site ?? new URL('https://example.com');
 const canonical = new URL(Astro.url.pathname, site).href;
 const ogImage = new URL(image, site).href;
@@ -98,5 +100,9 @@ const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
       </main>
       <Footer />
     </div>
+    <script>
+      import { startVisitCounter } from '@/lib/visits';
+      startVisitCounter();
+    </script>
   </body>
 </html>

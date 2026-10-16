@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import VisitCounter from '@/components/VisitCounter.astro';
 import Disclaimer from '@/components/Disclaimer.astro';
 import GuideCard from '@/components/GuideCard.astro';
 import {
@@ -62,7 +63,7 @@ const database = [
 ];
 ---
 
-<BaseLayout title="킹샷 한국어 공략" description={SITE_DESCRIPTION} jsonLd={jsonLd}>
+<BaseLayout fullTitle="킹샷 공략 — 영주 장비·왕국 지도·순금 계산기" description={SITE_DESCRIPTION} jsonLd={jsonLd}>
   {/* 1. 히어로 */}
   <section class="mx-auto max-w-6xl px-4 pt-14 pb-12 sm:pt-20">
     <p class="mb-3 text-sm font-bold tracking-widest text-accent uppercase">Kingshot</p>
@@ -70,7 +71,7 @@ const database = [
       킹샷 공략, <span class="text-accent">한국어로 한 곳에서</span>
     </h1>
     <p class="mt-5 max-w-2xl text-base text-muted sm:text-lg">
-      영웅 티어, 건물 순서, 곰사냥, 기프트 코드까지. 게임 안에서 직접 확인한 내용만 골라 정리했습니다.
+      {SITE_DESCRIPTION}
     </p>
 
     <div class="mt-8 flex flex-wrap gap-3">
@@ -94,6 +95,8 @@ const database = [
         )
       }
     </div>
+
+    <VisitCounter />
 
     {/* 인트로 영상 */}
     <figure class="mt-10" data-intro>

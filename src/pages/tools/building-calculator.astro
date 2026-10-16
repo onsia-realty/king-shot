@@ -11,7 +11,7 @@ const otherTools = TOOLS.filter((t) => t.href !== '/tools/building-calculator/')
 
 const title = '순금·건설 비용 계산기';
 const description =
-  '킹샷 도시센터와 선행 건물의 건설 계획을 세우고 빵·나무·석재·철·순금·담금질 순금과 시간을 계산합니다. TG 단계와 건설 속도 보너스, 건설 법령을 지원합니다.';
+  '현재 단계와 목표 단계를 선택하면 필요한 순금과 건설 시간을 계산합니다. 선행 건물 비용까지 확인하고 성장 계획을 세워보세요.';
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -29,7 +29,7 @@ const jsonLd = {
 };
 ---
 
-<BaseLayout titleEn={staticEnglish(title)} descriptionEn={`Plan Town Center and prerequisite building upgrades in Kingshot. Calculate bread, wood, stone, iron, Truegold, Tempered Truegold and construction time, with TG stages, speed bonuses and the construction decree.`} title={title} description={description} jsonLd={jsonLd}>
+<BaseLayout titleEn={staticEnglish(title)} descriptionEn={`Plan Town Center and prerequisite building upgrades in Kingshot. Calculate bread, wood, stone, iron, Truegold, Tempered Truegold and construction time, with TG stages, speed bonuses and the construction decree.`} fullTitle="킹샷 순금 계산기 — 업그레이드 재료·건설 시간 계산" description={description} jsonLd={jsonLd}>
   <div class="mx-auto w-full max-w-6xl px-4 py-5 sm:px-6 sm:py-10">
     <Breadcrumb
       items={[

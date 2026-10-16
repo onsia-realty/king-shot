@@ -10,7 +10,7 @@ export interface NavItem {
 
 export const SITE_NAME = '킹샷 공략';
 export const SITE_DESCRIPTION =
-  '킹샷(Kingshot) 한국어 공략 사이트. 영웅 티어, 건물 테크, 펫, 곰 사냥, 기프트 코드까지 초보자도 바로 쓰는 정보만 정리했습니다.';
+  '닉네임으로 영주를 찾고 공개된 장비와 왕국 지도 속 위치를 확인하세요. 순금 업그레이드에 필요한 재료와 시간부터 영웅 정보, 쿠폰까지 한곳에서 무료로 이용하세요.';
 
 export const mainNav: NavItem[] = [
   { label: '홈', href: '/', matchPrefix: false },
