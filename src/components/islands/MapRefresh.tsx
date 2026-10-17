@@ -69,7 +69,6 @@ export default function MapRefresh({ kid, baseline, disabled = false, onSnapshot
       {busy && <button type="button" data-testid="map-refresh-cancel" className="rounded-lg border border-border px-3 py-2 text-sm" onClick={() => request.current?.abort()}>{en ? 'Stop waiting' : '대기 중지'}</button>}
       {remaining > 0 && <span className="text-xs text-muted">{en ? `Cooldown: ${remaining}s` : `재요청 대기: ${remaining}초`}</span>}
     </div>
-    <p className="text-xs text-muted">{en ? 'Requests a MightPulse map rescan. Provider cooldown and queue limits apply.' : 'MightPulse에 지도 재수집을 요청합니다. 제공처의 재요청 제한과 대기열이 적용됩니다.'}</p>
     {message && <p role="status" data-testid="map-refresh-status" className="text-sm text-muted">{message}{busy && percent != null && Number.isFinite(percent) ? ` ${Math.round(Math.max(0, Math.min(100, percent)))}%` : ''}</p>}
     {state?.updates_paused && <p className="text-xs text-muted">{en ? 'Map updates are paused by the provider.' : '제공처가 지도 갱신을 일시 중지했습니다.'}</p>}
     {(state?.error === 'ip_cooldown' || (state?.ip_cooldown_remaining_sec ?? 0) > 0) && <p className="text-xs text-muted">{en ? 'Other visitors’ refresh requests may also cause a waiting period.' : '다른 이용자의 갱신 요청으로 대기 시간이 적용될 수 있습니다.'}</p>}
