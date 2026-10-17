@@ -239,6 +239,40 @@ const database = [
       </div>
     </section>
 
+    {/* 영상 파일이 준비되면 각 9:16 프레임 안에 연결합니다. */}
+    <section aria-label="킹샷 세로 영상" class="mt-8 min-w-0">
+      <div tabindex="0" role="region" aria-label="영상 자리 4개, 좌우로 스크롤" class="grid grid-flow-col auto-cols-[76%] gap-4 overflow-x-auto overscroll-x-contain snap-x snap-mandatory rounded-2xl pb-3 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent sm:auto-cols-[42%] lg:grid-flow-row lg:grid-cols-4 lg:auto-cols-auto lg:overflow-visible">
+        {[1, 2, 3, 4].map((slot) => (
+          <div data-short-slot={slot} class="relative aspect-[9/16] min-w-0 snap-start overflow-hidden rounded-2xl border border-border bg-surface">
+            {slot === 1 ? (
+              <video data-short-video class="h-full w-full object-contain" src="/video/amane-kvk.mp4" poster="/video/amane-kvk-poster.jpg" aria-label="아마네 KvK 영상" controls muted loop playsinline preload="none"></video>
+            ) : slot === 2 ? (
+              <video data-short-video class="h-full w-full object-contain" src="/video/snow-bear-hunt.mp4" poster="/video/snow-bear-hunt-poster.jpg" aria-label="설원곰 사냥 영상" controls muted loop playsinline preload="none"></video>
+            ) : slot === 3 ? (
+              <video data-short-video class="h-full w-full object-contain" src="/video/gate-battle.mp4" poster="/video/gate-battle-poster.jpg" aria-label="성문 전투 영상" controls muted loop playsinline preload="none"></video>
+            ) : <span class="sr-only">영상 {slot} 준비 중</span>}
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <script>
+      const shorts = document.querySelectorAll<HTMLVideoElement>('[data-short-video]');
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const observer = new IntersectionObserver(entries => {
+        for (const entry of entries) {
+          const video = entry.target as HTMLVideoElement;
+          if (entry.isIntersecting && !document.hidden && !reducedMotion.matches) {
+            void video.play().catch(() => {});
+          } else video.pause();
+        }
+      }, { threshold: 0.5 });
+      shorts.forEach(video => observer.observe(video));
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) shorts.forEach(video => video.pause());
+      });
+    </script>
+
     <script is:inline>
       (function () {
         var root = document.querySelector('[data-intro]');
