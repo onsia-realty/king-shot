@@ -1,7 +1,9 @@
 ---
+import LocaleText from '@/components/LocaleText.astro';
 const explanation = '새로고침을 포함한 페이지 접속 횟수입니다. 오늘 접속은 한국시간 자정에 새로 시작하며, 누적 접속은 전체 접속 횟수입니다. 집계할 수 없으면 —로 표시합니다.';
+const explanationEn = 'Page views, including reloads. Today resets at midnight in Korea (KST); total includes all recorded views. A dash means counts are unavailable.';
 ---
-<p class="mt-5 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted tabular-nums" title={explanation} aria-label={explanation}>
-  <span>오늘 접속 <span class="ml-1 font-semibold text-text" data-visits-today>—</span></span>
-  <span>누적 접속 <span class="ml-1 font-semibold text-text" data-visits-total>—</span></span>
+<p class="mt-5 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted tabular-nums" title={explanation} data-title-ko={explanation} data-title-en={explanationEn} aria-label={explanation} data-aria-label-ko={explanation} data-aria-label-en={explanationEn}>
+  <span><LocaleText ko="오늘 접속" en="Views today" /> <span class="ml-1 font-semibold text-text" data-visits-today>—</span></span>
+  <span><LocaleText ko="누적 접속" en="Total views" /> <span class="ml-1 font-semibold text-text" data-visits-total>—</span></span>
 </p>

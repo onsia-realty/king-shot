@@ -1,4 +1,7 @@
 ---
+import LocaleText from '@/components/LocaleText.astro';
+import { isLocaleScope } from '@/lib/locale';
+import { staticEnglish } from '@/lib/static-translations';
 import {
   CATEGORY_EMOJI,
   DIFFICULTY_STYLES,
@@ -44,7 +47,7 @@ const searchIndex = searchable
       href={categoryHref(category)}
       class="relative z-10 inline-flex items-center gap-1 rounded-md border border-accent/40 bg-accent/12 px-2 py-0.5 text-xs font-bold text-accent no-underline hover:bg-accent/20 hover:text-accent"
     >
-      <span aria-hidden="true">{CATEGORY_EMOJI[category]}</span>{category}
+      <span aria-hidden="true">{CATEGORY_EMOJI[category]}</span><LocaleText ko={category} en={staticEnglish(category)} />
     </a>
     <span
       class:list={[
@@ -52,26 +55,29 @@ const searchIndex = searchable
         DIFFICULTY_STYLES[difficulty],
       ]}
       title={`난이도 ${difficulty}`}
+      data-title-ko={`난이도 ${difficulty}`}
+      data-title-en={`Difficulty: ${staticEnglish(difficulty)}`}
     >
-      {difficulty}
+      <LocaleText ko={difficulty} en={staticEnglish(difficulty)} />
     </span>
+    {isLocaleScope(Astro.url.pathname) && <span class="text-xs text-muted"><LocaleText ko="한국어 공략" en="Korean-language guide" /></span>}
   </div>
 
-  <Heading class="text-lg font-extrabold text-text">
+  <Heading lang="ko" class="text-lg font-extrabold text-text">
     <a href={href} class="text-text no-underline before:absolute before:inset-0 hover:text-accent">
       {title}
     </a>
   </Heading>
 
-  <p class="mt-2 line-clamp-3 flex-1 text-sm leading-relaxed text-muted">{description}</p>
+  <p lang="ko" class="mt-2 line-clamp-3 flex-1 text-sm leading-relaxed text-muted">{description}</p>
 
   <div class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-muted">
     <time datetime={isoDate(date)}>
-      {isRevised ? '수정' : '발행'} {formatDate(date)}
+      <LocaleText ko={`${isRevised ? '수정' : '발행'} ${formatDate(date)}`} en={`${isRevised ? 'Updated' : 'Published'} ${new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeZone: 'UTC' }).format(date)}`} />
     </time>
     {
       tags.length > 0 && (
-        <ul class="flex flex-wrap gap-1.5">
+        <ul lang="ko" class="flex flex-wrap gap-1.5">
           {tags.slice(0, 4).map((tag) => (
             <li class="rounded border border-border px-1.5 py-0.5 text-[11px] text-muted">#{tag}</li>
           ))}

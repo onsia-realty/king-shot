@@ -13,7 +13,7 @@ type LocaleWindow = Window & { __ksLocale?: Locale };
 const validLocale = (value: unknown): value is Locale => value === 'ko' || value === 'en';
 
 export function isLocaleScope(pathname: string): boolean {
-  return /^\/player\/?$/.test(pathname) || /^\/tools(?:\/|$)/.test(pathname);
+  return pathname === '/' || /^\/player\/?$/.test(pathname) || /^\/tools(?:\/|$)/.test(pathname);
 }
 
 export function getLocale(): Locale {

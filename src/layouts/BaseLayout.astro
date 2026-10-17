@@ -15,6 +15,7 @@ const NAVER_SITE_VERIFICATION = '677b72e7ed9aaf15d462add07287e5daece3d72b';
 interface Props {
   title?: string;
   fullTitle?: string;
+  fullTitleEn?: string;
   titleEn?: string;
   descriptionEn?: string;
   description?: string;
@@ -28,6 +29,7 @@ interface Props {
 const {
   title,
   fullTitle,
+  fullTitleEn,
   titleEn,
   descriptionEn,
   description = SITE_DESCRIPTION,
@@ -37,7 +39,7 @@ const {
 } = Astro.props;
 
 const localeScope = isLocaleScope(Astro.url.pathname);
-const englishTitle = titleEn ? `${titleEn} | Kingshot Guide` : undefined;
+const englishTitle = fullTitleEn ?? (titleEn ? `${titleEn} | Kingshot Guide` : undefined);
 const pageTitle = fullTitle ?? (title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} — 킹샷 한국어 공략`);
 const site = Astro.site ?? new URL('https://example.com');
 const canonical = new URL(Astro.url.pathname, site).href;
