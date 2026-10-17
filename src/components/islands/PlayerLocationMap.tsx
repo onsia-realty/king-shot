@@ -1,4 +1,5 @@
 import { useLocale } from '../../lib/locale';
+import { readApiJson, RateLimitError } from '../../lib/api-response';
 import { playerText, playerNumberLocale, playerError } from '../../lib/player-localization';
 import { useEffect, useId, useMemo, useState } from 'react';
 import KingdomMapCanvas, { type MapAlliance, type MapCity, type MapFocus } from './KingdomMapCanvas';
@@ -50,15 +51,15 @@ function LocationSnapshot({ kid, x, y, uid, onLookup }: { kid: number; x: number
     void (async () => {
       try {
         const response = await fetch(`/api/map/?kid=${kid}`, { signal: controller.signal, headers: { Accept: 'application/json' } });
-        const result = await response.json();
+        const result = await readApiJson(response);
         if (!active || controller.signal.aborted) return;
         if (!response.ok || !result?.ok || Number(result.kid) !== kid || !Array.isArray(result.cities) || !Array.isArray(result.alliances)) throw new Error('Invalid map');
         const cities: MapCity[] = result.cities.filter((city: MapCity) => city && coordinate(city.x) && coordinate(city.y));
         setData({ cities, alliances: result.alliances, updated_at: result.updated_at });
         // Never substitute nickname, nearby coordinates, or governor ID for the UID.
         setSelected(uid == null || String(uid).trim() === '' ? null : cities.find(city => String(city.uid) === String(uid)) ?? null);
-      } catch {
-        if (active && !controller.signal.aborted) setError('지도를 불러오지 못했습니다. 닫은 뒤 다시 열어 주세요.');
+      } catch (error) {
+        if (active && !controller.signal.aborted) setError(error instanceof RateLimitError ? error.message : '지도를 불러오지 못했습니다. 닫은 뒤 다시 열어 주세요.');
       } finally { window.clearTimeout(timer); }
     })();
     return () => { active = false; controller.abort(); window.clearTimeout(timer); };

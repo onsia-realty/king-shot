@@ -66,6 +66,8 @@ const database = [
 <BaseLayout fullTitle="킹샷 공략 — 영주 장비·왕국 지도·순금 계산기" description={SITE_DESCRIPTION} jsonLd={jsonLd}>
   {/* 1. 히어로 */}
   <section class="mx-auto max-w-6xl px-4 pt-14 pb-12 sm:pt-20">
+    <div class="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-10">
+    <div class="min-w-0">
     <p class="mb-3 text-sm font-bold tracking-widest text-accent uppercase">Kingshot</p>
     <h1 class="text-4xl leading-tight font-extrabold sm:text-5xl">
       킹샷 공략, <span class="text-accent">한국어로 한 곳에서</span>
@@ -97,6 +99,27 @@ const database = [
     </div>
 
     <VisitCounter />
+    </div>
+    <a
+      href={KAKAO_OPENCHAT.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="킹샷 카카오톡 오픈채팅 참여하기 (새 창 열림)"
+      class="group flex flex-col rounded-2xl bg-kakao p-7 text-kakao-ink no-underline transition-shadow hover:text-kakao-ink hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-kakao lg:min-h-72"
+    >
+      <div class="flex items-center gap-2 text-sm font-bold">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 3C6.477 3 2 6.477 2 10.8c0 2.77 1.86 5.2 4.66 6.57-.2.72-.74 2.68-.85 3.1-.13.52.19.51.4.37.17-.11 2.6-1.77 3.65-2.49.69.1 1.4.15 2.14.15 5.523 0 10-3.477 10-7.7S17.523 3 12 3Z" />
+        </svg>
+        카카오톡 오픈채팅
+      </div>
+      <h2 class="mt-5 text-2xl leading-snug font-extrabold">킹샷, 함께하면<br />더 쉬워집니다</h2>
+      <p class="mt-3 text-sm leading-relaxed">{KAKAO_OPENCHAT.blurb}<br />궁금한 건 묻고, 공략은 함께 나눠요.</p>
+      <span class="mt-6 flex items-center justify-between rounded-lg bg-kakao-ink px-4 py-3 text-sm font-bold text-kakao">
+        오픈채팅 참여하기 <span aria-hidden="true">↗</span>
+      </span>
+    </a>
+    </div>
 
     {/* 인트로 영상 */}
     <figure class="mt-10" data-intro>

@@ -1,4 +1,5 @@
 import { useLocale } from '../../lib/locale';
+import { readApiJson, RateLimitError } from '../../lib/api-response';
 import { playerText, playerText as tr, playerNumberLocale, playerError, playerLabel, playerStatValue } from '../../lib/player-localization';
 import { useEffect, useRef, useState, type SubmitEvent, type ReactNode } from 'react';
 
@@ -114,7 +115,7 @@ export default function PlayerLookup({ heroes: catalog }: { heroes: HeroCatalog 
     setResult(null);
     try {
       const response = await fetch(`/api/player/?id=${encodeURIComponent(fid)}${idType === 'uid' ? '&id_type=uid' : ''}`, { signal: controller.signal, headers: { Accept: 'application/json' } });
-      const data: LookupResult = await response.json();
+      const data: LookupResult = await readApiJson(response);
       if (controller.signal.aborted || request.current !== controller) return;
       if (!response.ok || !data.ok) {
         setError(data.message || '영주 정보를 불러오지 못했습니다. ID를 확인하고 다시 조회해 주세요.');
@@ -134,9 +135,9 @@ export default function PlayerLookup({ heroes: catalog }: { heroes: HeroCatalog 
       else url.searchParams.delete('id');
       url.searchParams.delete('id_type');
       window.history.replaceState(null, '', url);
-    } catch {
+    } catch (error) {
       if (request.current === controller && (!controller.signal.aborted || timedOut)) {
-        setError(timedOut ? '조회 시간이 초과되었습니다. 잠시 후 다시 조회해 주세요.' : '조회 연결에 문제가 생겼습니다. 잠시 후 다시 시도해 주세요.');
+        setError(error instanceof RateLimitError ? error.message : timedOut ? '조회 시간이 초과되었습니다. 잠시 후 다시 조회해 주세요.' : '조회 연결에 문제가 생겼습니다. 잠시 후 다시 시도해 주세요.');
       }
     } finally {
       window.clearTimeout(timer);

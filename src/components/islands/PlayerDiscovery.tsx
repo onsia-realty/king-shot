@@ -1,4 +1,5 @@
 import { useLocale } from '../../lib/locale';
+import { readApiJson, RateLimitError } from '../../lib/api-response';
 import { playerText, playerNumberLocale, playerError } from '../../lib/player-localization';
 import { useEffect, useRef, useState, type SubmitEvent } from 'react';
 
@@ -45,7 +46,7 @@ export default function PlayerDiscovery({ onSelect }: { onSelect: SelectPlayer }
       const params = new URLSearchParams({ q });
       if (kid) params.set('kid', kid);
       const response = await fetch(`/api/search/?${params}`, { signal: controller.signal, headers: { Accept: 'application/json' } });
-      const data: SearchResponse = await response.json();
+      const data: SearchResponse = await readApiJson(response);
       if (controller.signal.aborted || request.current !== controller) return;
       if (!response.ok || !data.ok || !Array.isArray(data.results)) {
         setError(data.message || '검색 결과를 불러오지 못했습니다. 잠시 후 다시 검색해 주세요.');
@@ -53,8 +54,8 @@ export default function PlayerDiscovery({ onSelect }: { onSelect: SelectPlayer }
       }
       setResult(data);
       setPage(0);
-    } catch {
-      if (request.current === controller && (!controller.signal.aborted || timedOut)) setError(timedOut ? '검색 시간이 초과되었습니다. 잠시 후 다시 검색해 주세요.' : '검색 연결에 문제가 생겼습니다. 잠시 후 다시 시도해 주세요.');
+    } catch (error) {
+      if (request.current === controller && (!controller.signal.aborted || timedOut)) setError(error instanceof RateLimitError ? error.message : timedOut ? '검색 시간이 초과되었습니다. 잠시 후 다시 검색해 주세요.' : '검색 연결에 문제가 생겼습니다. 잠시 후 다시 시도해 주세요.');
     } finally {
       window.clearTimeout(timer);
       if (request.current === controller) { request.current = null; setLoading(false); }

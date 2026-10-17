@@ -1,4 +1,5 @@
 import { getLocale } from './locale';
+import { rateLimitMessage } from './api-response';
 
 // Presentation only. Never pass player nicknames, alliance names or identity fields here.
 const labels: Record<string, string> = {
@@ -115,6 +116,8 @@ export function playerText(text: string, locale: PlayerLocale = getLocale()): st
 }
 
 export function playerError(message: string, locale: PlayerLocale = getLocale()): string {
+  const limited = rateLimitMessage(message, locale);
+  if (limited) return limited;
   const translated = playerText(message, locale);
   return locale === 'en' && /[가-힣]/.test(translated)
     ? 'Could not load information. Please try again shortly.' : translated;

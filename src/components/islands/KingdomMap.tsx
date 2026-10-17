@@ -1,4 +1,5 @@
 import { useLocale } from '../../lib/locale';
+import { readApiJson, RateLimitError } from '../../lib/api-response';
 import { playerText, playerText as tr, playerNumberLocale, playerError } from '../../lib/player-localization';
 import { useEffect, useMemo, useRef, useState, type SubmitEvent } from 'react';
 import type { SelectPlayer } from './PlayerDiscovery';
@@ -45,14 +46,14 @@ export default function KingdomMap({ playerKingdom, playerLocation, playerAid, o
     setLoading(true);
     try {
       const response = await fetch(`/api/map/?kid=${encodeURIComponent(kid)}`, { signal: controller.signal, headers: { Accept: 'application/json' } });
-      const result: MapData = await response.json();
+      const result: MapData = await readApiJson(response);
       if (controller.signal.aborted || request.current !== controller) return;
       if (!response.ok || !result.ok || !Array.isArray(result.cities) || !Array.isArray(result.alliances) || !result.bounds || !(result.bounds.max > result.bounds.min)) {
         setError(result.message || '왕국 지도를 불러오지 못했습니다. 잠시 후 다시 조회해 주세요.'); return;
       }
       setData(result); setFilter(''); setAlliance(''); setPage(0); setSelected(null); setFocus(null);
-    } catch {
-      if (request.current === controller && (!controller.signal.aborted || timedOut)) setError(timedOut ? '지도 조회 시간이 초과되었습니다. 잠시 후 다시 조회해 주세요.' : '지도 연결에 문제가 생겼습니다. 잠시 후 다시 시도해 주세요.');
+    } catch (error) {
+      if (request.current === controller && (!controller.signal.aborted || timedOut)) setError(error instanceof RateLimitError ? error.message : timedOut ? '지도 조회 시간이 초과되었습니다. 잠시 후 다시 조회해 주세요.' : '지도 연결에 문제가 생겼습니다. 잠시 후 다시 시도해 주세요.');
     } finally {
       window.clearTimeout(timer);
       if (request.current === controller) { request.current = null; setLoading(false); }
