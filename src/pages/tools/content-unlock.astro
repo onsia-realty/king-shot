@@ -69,7 +69,7 @@ const jsonLd = [
 ---
 
 <BaseLayout titleEn={staticEnglish(title)} descriptionEn={`Enter a Kingshot kingdom number to forecast dates and days remaining for ${ruleCount} unlocks, including hero generations, Truegold, War Academy and the first SvS.`} title={title} description={description} jsonLd={jsonLd}>
-  <div class="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
+  <div class="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
     <Breadcrumb
       items={[
         { label: '홈', href: '/' },
@@ -80,9 +80,10 @@ const jsonLd = [
     />
 
     <header class="mb-8">
+      <p class="mb-2 text-xs font-bold tracking-widest text-accent">KINGSHOT · CONTENT ROADMAP</p>
       <h1 class="text-3xl font-extrabold sm:text-4xl"><LocaleText ko={`콘텐츠 해금 예측`} en={`Content Unlock Forecast`} /></h1>
       <p class="mt-3 max-w-2xl text-muted">
-        <LocaleText ko={`왕국 번호를 넣으면 영웅 세대, 순금, 전쟁 아카데미 같은 콘텐츠 ${ruleCount}개가 언제 열리는지 예상 날짜와 남은 일수를 보여 줍니다. 처음엔 예시로 K1200 결과가 나오고, 넣은 번호는 이 브라우저에 기억됩니다.`} en={`Enter a kingdom number to see forecast dates and days remaining for ${ruleCount} unlocks, including hero generations, Truegold and the War Academy. K1200 is shown as an example initially; your kingdom number is saved in this browser.`} />
+        <LocaleText ko={`영웅부터 순금까지, 콘텐츠 ${ruleCount}개의 다음 해금일을 한눈에.`} en={`From heroes to Truegold. See what’s next across ${ruleCount} content unlocks.`} />
       </p>
     </header>
 
@@ -90,16 +91,16 @@ const jsonLd = [
 
     <section class="mt-12">
       <h2 class="text-xl font-bold"><LocaleText ko={`자주 묻는 질문`} en={`Frequently Asked Questions`} /></h2>
-      <dl class="mt-3 space-y-3">
+      <div class="mt-3 space-y-3">
         {
           faq.map((f) => (
-            <div class="rounded-xl border border-border bg-surface px-4 py-3">
-              <dt class="font-bold"><LocaleText ko={f.q} en={f.qEn} /></dt>
-              <dd class="mt-1 text-sm text-muted"><LocaleText ko={f.a} en={f.aEn} /></dd>
-            </div>
+            <details class="rounded-xl border border-border bg-surface px-4 py-3">
+              <summary class="cursor-pointer rounded py-1 font-bold focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"><LocaleText ko={f.q} en={f.qEn} /></summary>
+              <p class="mt-2 text-sm text-muted"><LocaleText ko={f.a} en={f.aEn} /></p>
+            </details>
           ))
         }
-      </dl>
+      </div>
     </section>
 
     <section class="mt-12">

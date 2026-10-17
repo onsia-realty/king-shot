@@ -3,6 +3,8 @@ import { readApiJson, RateLimitError } from '../../lib/api-response';
 import { playerText, playerText as tr, playerNumberLocale, playerError } from '../../lib/player-localization';
 import { useEffect, useMemo, useRef, useState, type SubmitEvent } from 'react';
 import type { SelectPlayer } from './PlayerDiscovery';
+import MapRefresh from './MapRefresh';
+import { selectedCity } from '../../lib/map-refresh';
 import KingdomMapCanvas, { allianceColor, cityLevel, clusterFocus, type MapCity, type MapAlliance, type MapFocus } from './KingdomMapCanvas';
 
 interface MapData {
@@ -106,6 +108,11 @@ export default function KingdomMap({ playerKingdom, playerLocation, playerAid, o
     <p role="status" className="text-sm text-muted">{loading ? tr("저장된 왕국 지도 데이터를 불러오고 있습니다.") : !data ? tr("왕국 번호를 입력하면 저장된 도시 위치를 확인할 수 있습니다.") : `${tr("왕국 ")}${data.kid}${tr(" · 도시 ")}${data.cities.length.toLocaleString(playerNumberLocale())}${tr("개 · 필터 결과 ")}${cities.length.toLocaleString(playerNumberLocale())}${tr("개")}`}</p>
     {error && <p role="alert" className="text-sm text-danger">{playerError(error, locale)}</p>}
     {data && <>
+      <MapRefresh key={data.kid} kid={data.kid} baseline={data.updated_at} disabled={loading} onSnapshot={snapshot => {
+        const city = selectedCity(snapshot.cities, selected?.uid);
+        setData(snapshot); setSelected(city); setPage(0);
+        if (city) setFocus({ x: city.x, y: city.y, scale: focus?.scale ?? 20 });
+      }} />
       <div className="text-xs text-muted"><p>{validTime ? <>{tr("위치 데이터 갱신 시간 ")}<time dateTime={updated.toISOString()}>{updated.toLocaleString(playerNumberLocale(), { timeZone: 'Asia/Seoul' })}</time>{tr(" (한국 시간)")}</> : tr("위치 데이터 갱신 시간 정보 없음")}</p><p className="mt-1">{tr("저장된 지도입니다. 현재 위치·보호막·연소 상태와 다를 수 있습니다.")}</p></div>
       <div className="grid gap-3 sm:grid-cols-2">
         <div><label htmlFor="city-filter" className="block text-sm font-bold">{tr("도시 이름 또는 연맹 약칭")}</label><div className="mt-2 flex gap-2"><input id="city-filter" className={field} value={filter} onChange={(e) => { setFilter(e.target.value); setPage(0); }} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); jumpResults(); } }} placeholder={tr("닉네임 또는 연맹 약칭을 입력하세요")} /><button type="button" disabled={!cities.length} className={`${control} shrink-0`} onClick={jumpResults}>{tr("이동")}</button></div></div>

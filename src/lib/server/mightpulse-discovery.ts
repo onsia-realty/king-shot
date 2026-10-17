@@ -67,6 +67,7 @@ export function discoveryHandler<P, D>(options: {
   url: (params: P) => string;
   normalize: (data: unknown, params: P) => D;
   present?: (data: D, params: P) => D;
+  fresh?: (params: URLSearchParams) => boolean;
 }) {
   const cache = new Map<string, { data: D; storedAt: number }>();
   const pending = new Map<string, Promise<D>>();
@@ -77,19 +78,29 @@ export function discoveryHandler<P, D>(options: {
       return sendError(res, 'invalid_method');
     }
     try {
-      const params = options.parse(new URL(req.url ?? '', 'http://localhost').searchParams);
-      const key = options.key(params);
+      const query = new URL(req.url ?? '', 'http://localhost').searchParams;
+      const params = options.parse(query);
+      const fresh = options.fresh?.(query) ?? false;
+      const baseKey = options.key(params);
+      const key = fresh ? `${baseKey}:fresh` : baseKey;
+      const ttl = fresh ? 5_000 : options.ttl;
       const now = Date.now();
       for (const [key, entry] of cache) if (now - entry.storedAt >= options.ttl) cache.delete(key);
       let entry = cache.get(key);
+      if (entry && now - entry.storedAt >= ttl) { cache.delete(key); entry = undefined; }
       if (!entry) {
         let work = pending.get(key);
         if (!work) {
           if (pending.size >= options.limit) return sendError(res, 'rate_limited');
+          const startedAt = Date.now();
           work = fetchData(options.url(params)).then(raw => {
+            // An older ordinary fetch must not overwrite a refresh that finished meanwhile.
+            const refreshed = !fresh && options.fresh ? cache.get(`${baseKey}:fresh`) : undefined;
+            if (refreshed && (refreshed.storedAt >= startedAt || Date.now() - refreshed.storedAt < 5_000)) return refreshed.data;
             const data = options.normalize(raw, params);
             if (cache.size >= options.limit) cache.delete(cache.keys().next().value!);
             cache.set(key, { data, storedAt: Date.now() });
+            if (fresh) cache.delete(baseKey);
             return data;
           }).finally(() => { pending.delete(key); });
           pending.set(key, work);
@@ -99,7 +110,7 @@ export function discoveryHandler<P, D>(options: {
       }
       const secondsLeft = Math.max(0, Math.floor((options.ttl - Math.max(0, Date.now() - entry.storedAt)) / 1000));
       res.statusCode = 200;
-      res.setHeader('Cache-Control', `public, max-age=0, s-maxage=${secondsLeft}`);
+      res.setHeader('Cache-Control', fresh ? 'no-store' : `public, max-age=0, s-maxage=${secondsLeft}`);
       res.end(JSON.stringify(options.present ? options.present(entry.data, params) : entry.data));
     } catch (error) {
       sendError(res, error instanceof DiscoveryError ? error.code : 'upstream_error');

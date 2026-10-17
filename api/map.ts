@@ -3,6 +3,7 @@ import { discoveryHandler, DiscoveryError, id, kingdom, number, object, text } f
 export default discoveryHandler({
   ttl: 10 * 60 * 1000,
   limit: 10,
+  fresh: params => params.get('fresh') === '1',
   parse: params => ({ kid: kingdom(params)! }),
   key: ({ kid }) => String(kid),
   url: ({ kid }) => `https://mightpulse.com/api/map?kid=${kid}&layers=cities&limit=50000`,

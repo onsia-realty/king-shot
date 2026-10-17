@@ -11,17 +11,19 @@ function playerApi() {
     name: 'mightpulse-player-api',
     apply: 'serve',
     configureServer(server) {
-      // Load only server-side MightPulse variables; never expose a PUBLIC_ key.
-      const env = loadEnv(server.config.mode, server.config.root, 'MIGHTPULSE_');
+      // Load only server-side API variables; never expose a PUBLIC_ key.
+      const env = loadEnv(server.config.mode, server.config.root, ['MIGHTPULSE_', 'DATABASE_URL', 'POSTGRES_URL', 'VISITS_']);
       for (const [name, value] of Object.entries(env)) {
         if (process.env[name] === undefined) process.env[name] = value;
       }
       server.middlewares.use(async (req, res, next) => {
         const path = req.url?.split('?')[0];
         const routes = {
+          '/api/visits': '/api/visits.ts', '/api/visits/': '/api/visits.ts',
           '/api/player': '/api/player.ts', '/api/player/': '/api/player.ts',
           '/api/search': '/api/search.ts', '/api/search/': '/api/search.ts',
           '/api/map': '/api/map.ts', '/api/map/': '/api/map.ts',
+          '/api/map-refresh': '/api/map-refresh.ts', '/api/map-refresh/': '/api/map-refresh.ts',
         };
         const modulePath = routes[/** @type {keyof typeof routes} */ (path)];
         if (!modulePath) return next();
