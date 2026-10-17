@@ -11,10 +11,9 @@ import {
  * 영웅 목록 필터.
  *
  * 카드 자체는 Astro가 서버에서 전부 그려두고, 이 아일랜드는 DOM 표시만 토글한다.
- * 그래서 JS가 꺼져 있어도 34명 전원이 그대로 보인다(검색엔진 대응).
+ * 그래서 JS가 꺼져 있어도 등록된 영웅 전원이 그대로 보인다(검색엔진 대응).
  */
 
-const GENERATIONS = [1, 2, 3, 4, 5, 6, 7] as const;
 const RARITIES = RARITY_ORDER;
 const CLASSES = TROOP_CLASSES;
 
@@ -30,6 +29,7 @@ interface Props {
   /** 카드 그리드 컨테이너의 id */
   targetId: string;
   total: number;
+  generations: number[];
 }
 
 interface CardMeta {
@@ -66,7 +66,7 @@ function toggle<T>(list: T[], value: T): T[] {
   return list.includes(value) ? list.filter((v) => v !== value) : [...list, value];
 }
 
-export default function HeroFilter({ targetId, total }: Props) {
+export default function HeroFilter({ targetId, total, generations }: Props) {
   const [gens, setGens] = useState<number[]>([]);
   const [rarities, setRarities] = useState<string[]>([]);
   const [classes, setClasses] = useState<string[]>([]);
@@ -80,7 +80,7 @@ export default function HeroFilter({ targetId, total }: Props) {
     const p = new URLSearchParams(window.location.search);
     const g = parseList(p.get('gen'))
       .map(Number)
-      .filter((n) => GENERATIONS.includes(n as (typeof GENERATIONS)[number]));
+      .filter((n) => generations.includes(n));
     const r = parseList(p.get('rarity')).filter((v) =>
       (RARITIES as readonly string[]).includes(v),
     );
@@ -198,7 +198,7 @@ export default function HeroFilter({ targetId, total }: Props) {
         <fieldset className="flex flex-wrap items-center gap-2">
           <legend className="sr-only">세대</legend>
           <span className="mr-1 text-sm font-semibold text-muted">세대</span>
-          {GENERATIONS.map((g) => (
+          {generations.map((g) => (
             <button
               key={g}
               type="button"

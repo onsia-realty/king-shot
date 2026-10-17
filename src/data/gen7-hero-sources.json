@@ -1,0 +1,169 @@
+{
+  "checkedAt": "2026-10-17",
+  "method": "Manual verification; official Korean wiki values take precedence. No automatic sync.",
+  "crossCheck": "https://kingshotdata.com/heroes/generation-7-heroes/",
+  "heroes": [
+    {
+      "slug": "charles",
+      "official": "https://kingshotwiki.com/ko/heroes/kingshot_wiki_hero_name_50032_kingshot_end-2/",
+      "community": "https://kingshot.net/heroes/charles",
+      "exploration": [
+        5466,
+        7126,
+        106892
+      ],
+      "gearExploration": [
+        1107,
+        1444,
+        21667
+      ],
+      "discrepancy": "찰스의 토벌 방어력 7,126·HP 106,892는 공식 값입니다. Kingshot.net의 7,125·106,872와 다릅니다. 장비 스킬도 공식 단계값을 적용했습니다. 수리 전문가의 회복 7/14/21/28/35%, 방어력 6/12/18/24/30% 및 번뜩이는 등장 3/6/9/12/15%는 Kingshot Database의 단계값과 다릅니다.",
+      "assets": [
+        {
+          "local": "src/assets/skills/gen7-charles-1.png",
+          "source": "https://got-global-wiki.s3.us-west-1.amazonaws.com/wp-content/uploads/2026/05/hero_skill_icon_500321.png"
+        },
+        {
+          "local": "src/assets/skills/gen7-charles-2.png",
+          "source": "https://got-global-wiki.s3.us-west-1.amazonaws.com/wp-content/uploads/2026/05/hero_skill_icon_500322.png"
+        },
+        {
+          "local": "src/assets/skills/gen7-charles-3.png",
+          "source": "https://got-global-wiki.s3.us-west-1.amazonaws.com/wp-content/uploads/2026/05/hero_skill_icon_500323.png"
+        },
+        {
+          "local": "src/assets/skills/gen7-charles-4.png",
+          "source": "https://got-global-wiki.s3.us-west-1.amazonaws.com/wp-content/uploads/2026/05/hero_skill_icon_500324.png"
+        },
+        {
+          "local": "src/assets/skills/gen7-charles-5.png",
+          "source": "https://got-global-wiki.s3.us-west-1.amazonaws.com/wp-content/uploads/2026/05/hero_skill_icon_500325.png"
+        },
+        {
+          "local": "src/assets/skills/gen7-charles-6.png",
+          "source": "https://got-global-wiki.s3.us-west-1.amazonaws.com/wp-content/uploads/2026/05/hero_skill_icon_500326.png"
+        },
+        {
+          "local": "src/assets/skills/gen7-charles-7.png",
+          "source": "https://got-global-wiki.s3.us-west-1.amazonaws.com/wp-content/uploads/2026/05/hero_skill_icon_500327.png"
+        },
+        {
+          "local": "src/assets/skills/gen7-charles-8.png",
+          "source": "https://got-global-wiki.s3.us-west-1.amazonaws.com/wp-content/uploads/2026/05/hero_skill_icon_500328.png"
+        },
+        {
+          "local": "src/assets/gear/gen7-charles-gear.png",
+          "source": "https://got-global-wiki.s3.us-west-1.amazonaws.com/wp-content/uploads/2026/05/equipment_icon_1050032.png"
+        }
+      ]
+    },
+    {
+      "slug": "ava",
+      "official": "https://kingshotwiki.com/ko/heroes/kingshot_wiki_hero_name_50015_kingshot_end-2/",
+      "community": "https://kingshot.net/heroes/ava",
+      "exploration": [
+        7126,
+        7126,
+        71262
+      ],
+      "gearExploration": [
+        1444,
+        1444,
+        14445
+      ],
+      "discrepancy": "절대 색감은 공식 한국어 위키대로 피해 증가 25% 고정, 대상 공격력 감소 5/10/15/20/25%로 기록했습니다. 커뮤니티 자료는 피해 증가 5/10/15/20/25%·공격력 감소 15%로 안내하므로 서로 다릅니다. 게임 내 설명이 다르면 게임을 우선 확인하세요.",
+      "assets": [
+        {
+          "local": "src/assets/skills/gen7-ava-1.png",
+          "source": "https://got-global-wiki.s3.us-west-1.amazonaws.com/wp-content/uploads/2026/05/hero_skill_icon_500151.png"
+        },
+        {
+          "local": "src/assets/skills/gen7-ava-2.png",
+          "source": "https://got-global-wiki.s3.us-west-1.amazonaws.com/wp-content/uploads/2026/05/hero_skill_icon_500152.png"
+        },
+        {
+          "local": "src/assets/skills/gen7-ava-3.png",
+          "source": "https://got-global-wiki.s3.us-west-1.amazonaws.com/wp-content/uploads/2026/05/hero_skill_icon_500153.png"
+        },
+        {
+          "local": "src/assets/skills/gen7-ava-4.png",
+          "source": "https://got-global-wiki.s3.us-west-1.amazonaws.com/wp-content/uploads/2026/05/hero_skill_icon_500154.png"
+        },
+        {
+          "local": "src/assets/skills/gen7-ava-5.png",
+          "source": "https://got-global-wiki.s3.us-west-1.amazonaws.com/wp-content/uploads/2026/05/hero_skill_icon_500155.png"
+        },
+        {
+          "local": "src/assets/skills/gen7-ava-6.png",
+          "source": "https://got-global-wiki.s3.us-west-1.amazonaws.com/wp-content/uploads/2026/05/hero_skill_icon_500156.png"
+        },
+        {
+          "local": "src/assets/skills/gen7-ava-7.png",
+          "source": "https://got-global-wiki.s3.us-west-1.amazonaws.com/wp-content/uploads/2026/05/hero_skill_icon_500157.png"
+        },
+        {
+          "local": "src/assets/skills/gen7-ava-8.png",
+          "source": "https://got-global-wiki.s3.us-west-1.amazonaws.com/wp-content/uploads/2026/05/hero_skill_icon_500158.png"
+        },
+        {
+          "local": "src/assets/gear/gen7-ava-gear.png",
+          "source": "https://got-global-wiki.s3.us-west-1.amazonaws.com/wp-content/uploads/2026/05/equipment_icon_1050015.png"
+        }
+      ]
+    },
+    {
+      "slug": "wee-and-woo",
+      "official": "https://kingshotwiki.com/ko/heroes/kingshot_wiki_hero_name_50033_kingshot_end/",
+      "community": "https://kingshot.net/heroes/wee-woo",
+      "exploration": [
+        8656,
+        7126,
+        53446
+      ],
+      "gearExploration": [
+        1752,
+        1444,
+        10833
+      ],
+      "discrepancy": "토벌 공격력 8,656·방어력 7,126·HP 53,446은 공식 값입니다. Kingshot.net의 8,658·7,125·53,435와 다릅니다. 공식 스킬명 ‘저 녀석을 버려’를 그대로 유지했습니다. 무정한 포수는 공개 설명에 없는 발동 조건을 추가하지 않았습니다.",
+      "assets": [
+        {
+          "local": "src/assets/skills/gen7-wee-and-woo-1.png",
+          "source": "https://got-global-wiki.s3.us-west-1.amazonaws.com/wp-content/uploads/2026/05/hero_skill_icon_500331.png"
+        },
+        {
+          "local": "src/assets/skills/gen7-wee-and-woo-2.png",
+          "source": "https://got-global-wiki.s3.us-west-1.amazonaws.com/wp-content/uploads/2026/05/hero_skill_icon_500332.png"
+        },
+        {
+          "local": "src/assets/skills/gen7-wee-and-woo-3.png",
+          "source": "https://got-global-wiki.s3.us-west-1.amazonaws.com/wp-content/uploads/2026/05/hero_skill_icon_500333.png"
+        },
+        {
+          "local": "src/assets/skills/gen7-wee-and-woo-4.png",
+          "source": "https://got-global-wiki.s3.us-west-1.amazonaws.com/wp-content/uploads/2026/05/hero_skill_icon_500334.png"
+        },
+        {
+          "local": "src/assets/skills/gen7-wee-and-woo-5.png",
+          "source": "https://got-global-wiki.s3.us-west-1.amazonaws.com/wp-content/uploads/2026/05/hero_skill_icon_500335.png"
+        },
+        {
+          "local": "src/assets/skills/gen7-wee-and-woo-6.png",
+          "source": "https://got-global-wiki.s3.us-west-1.amazonaws.com/wp-content/uploads/2026/05/hero_skill_icon_500336.png"
+        },
+        {
+          "local": "src/assets/skills/gen7-wee-and-woo-7.png",
+          "source": "https://got-global-wiki.s3.us-west-1.amazonaws.com/wp-content/uploads/2026/05/hero_skill_icon_500337.png"
+        },
+        {
+          "local": "src/assets/skills/gen7-wee-and-woo-8.png",
+          "source": "https://got-global-wiki.s3.us-west-1.amazonaws.com/wp-content/uploads/2026/05/hero_skill_icon_500338.png"
+        },
+        {
+          "local": "src/assets/gear/gen7-wee-and-woo-gear.png",
+          "source": "https://got-global-wiki.s3.us-west-1.amazonaws.com/wp-content/uploads/2026/05/equipment_icon_1050033.png"
+        }
+      ]
+    }
+  ]
+}
