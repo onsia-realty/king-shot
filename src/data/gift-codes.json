@@ -1,5 +1,5 @@
 {
-  "lastChecked": "2026-10-17",
+  "lastChecked": "2026-10-18",
   "codes": [
     {
       "code": "KS0909",
@@ -916,6 +916,20 @@
       "rewards": "",
       "expiresAt": "2026-10-15",
       "addedAt": "2026-10-12",
+      "note": "출처: kingshot.net/gift-codes"
+    },
+    {
+      "code": "VIP1017",
+      "rewards": "",
+      "expiresAt": "2026-10-19",
+      "addedAt": "2026-10-17",
+      "note": "출처: kingshot.net/gift-codes"
+    },
+    {
+      "code": "KS1017",
+      "rewards": "",
+      "expiresAt": "2026-10-19",
+      "addedAt": "2026-10-17",
       "note": "출처: kingshot.net/gift-codes"
     }
   ]
