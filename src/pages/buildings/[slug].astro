@@ -1,6 +1,6 @@
 ---
 import { getCollection, render, type CollectionEntry } from 'astro:content';
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Breadcrumb from '@/components/Breadcrumb.astro';
 import Disclaimer from '@/components/Disclaimer.astro';
@@ -23,9 +23,14 @@ const others = all.filter((b) => b.id !== building.id).slice(0, 6);
 
 const title = `${d.name} (${d.nameEn})`;
 const description = `킹샷 ${d.name}(${d.nameEn}) — ${d.summary}`;
+
+/** 네이버는 페이지마다 다른 og:image만 썸네일로 쓴다 */
+const ogImage = d.icon
+  ? (await getImage({ src: d.icon, width: 256, height: 256, format: 'png' })).src
+  : undefined;
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} image={ogImage}>
   <div class="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
     <Breadcrumb
       items={[{ label: '홈', href: '/' }, { label: '건물', href: '/buildings/' }, { label: d.name }]}
