@@ -8,7 +8,7 @@
   "redirects": [
     {
       "source": "/:path*",
-      "has": [{ "type": "host", "value": "^king-shot-(three|realtors77-7871s-projects|git-main-realtors77-7871s-projects)\\.vercel\\.app$" }],
+      "has": [{ "type": "host", "value": "king-shot-three.vercel.app" }],
       "destination": "https://xn--ob0bx7rdoh9mq.xyz/:path*",
       "statusCode": 301
     }
