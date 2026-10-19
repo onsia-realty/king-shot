@@ -43,15 +43,13 @@ function playerApi() {
 
 /**
  * canonical / OG / sitemap 에 쓰이는 사이트 주소.
- * 1) SITE_URL 환경변수가 있으면 그걸 쓴다 (커스텀 도메인 붙일 때 여기에 넣으면 된다)
- * 2) Vercel 빌드에서는 프로덕션 도메인이 자동으로 들어온다
+ * 1) SITE_URL 환경변수가 있으면 그걸 쓴다
+ * 2) Vercel 빌드(미리보기 포함)는 대표 도메인 킹샷공략.xyz(퓨니코드 표기)로 고정한다
  * 3) 로컬 빌드는 localhost 로 떨어진다
  */
 const SITE =
   process.env.SITE_URL ??
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : 'http://localhost:4321');
+  (process.env.VERCEL ? 'https://xn--ob0bx7rdoh9mq.xyz' : 'http://localhost:4321');
 
 export default defineConfig({
   site: SITE,

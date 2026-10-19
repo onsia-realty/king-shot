@@ -5,6 +5,14 @@
   "installCommand": "npm ci",
   "outputDirectory": "dist",
   "trailingSlash": true,
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "^king-shot-(three|realtors77-7871s-projects|git-main-realtors77-7871s-projects)\\.vercel\\.app$" }],
+      "destination": "https://xn--ob0bx7rdoh9mq.xyz/:path*",
+      "statusCode": 301
+    }
+  ],
   "functions": {
     "api/player.ts": { "maxDuration": 120 },
     "api/search.ts": { "maxDuration": 60 },
