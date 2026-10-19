@@ -7,9 +7,9 @@
   "trailingSlash": true,
   "redirects": [
     {
-      "source": "/:path*",
+      "source": "/:path(.*)",
       "has": [{ "type": "host", "value": "king-shot-three.vercel.app" }],
-      "destination": "https://xn--ob0bx7rdoh9mq.xyz/:path*",
+      "destination": "https://xn--ob0bx7rdoh9mq.xyz/:path",
       "statusCode": 301
     }
   ],
