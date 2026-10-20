@@ -33,9 +33,10 @@ export function supportedRange(building: ConstructionBuilding) {
   return { min: Math.max(1, Math.min(...levels) - 1), max: Math.max(...levels) };
 }
 
-export function adjustedTime(seconds: number, bonus: number, doubleTime = false): number {
+export function adjustedTime(seconds: number, bonus: number, doubleTime = false, petBonus = 0): number {
   if (!Number.isFinite(bonus) || bonus < 0) throw new Error('건설 속도는 0 이상의 유한한 숫자로 입력해 주세요.');
-  return seconds / (1 + bonus / 100) * (doubleTime ? 0.8 : 1);
+  if (!Number.isFinite(petBonus) || petBonus < 0 || petBonus > 15) throw new Error('Pet construction speed bonus must be between 0 and 15%.');
+  return seconds / (1 + (bonus + petBonus) / 100) * (doubleTime ? 0.8 : 1);
 }
 
 /** Close prerequisites to a fixed point, then topologically order individual upgrades. */
