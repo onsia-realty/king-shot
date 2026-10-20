@@ -1,0 +1,109 @@
+---
+import { Image as AstroImage } from 'astro:assets';
+import LocaleText from '@/components/LocaleText.astro';
+import crucible from '@/assets/buildings/truegold-crucible.webp';
+import { CONSTRUCTION_BUILDINGS } from '@/data/construction-costs';
+
+const town = CONSTRUCTION_BUILDINGS.find((building) => building.id === 'town-center')!;
+const tiers = [5, 6, 7, 8, 9].map((from) => {
+  const to = from + 1;
+  const steps = town.steps.filter((step) => step.level > 30 + from * 5 && step.level <= 30 + to * 5);
+  return {
+    from,
+    to,
+    tg: steps.reduce((sum, step) => sum + step.truegold, 0).toLocaleString('en-US'),
+    tempered: steps.reduce((sum, step) => sum + step.temperedTruegold, 0),
+  };
+});
+const refinement = [
+  { range: '1–20', cost: 20, yield: '1–3' },
+  { range: '21–40', cost: 50, yield: '2–3' },
+  { range: '41–60', cost: 100, yield: '3–6' },
+  { range: '61–80', cost: 130, yield: '3–9' },
+  { range: '81–100', cost: 160, yield: '3–12' },
+];
+---
+
+<section aria-labelledby="tempered-guide-title" class="mt-8 rounded-2xl border border-amber-400/20 bg-surface p-4 sm:p-6">
+  <div class="flex items-center gap-4">
+    <AstroImage src={crucible} alt="" width={80} height={80} loading="lazy" class="h-16 w-16 shrink-0 object-contain sm:h-20 sm:w-20" />
+    <div>
+      <h2 id="tempered-guide-title" class="text-lg font-extrabold sm:text-2xl">
+        <LocaleText ko="담금질 순금, 언제 얼마나 필요할까?" en="Tempered Truegold: when and how much?" />
+      </h2>
+      <p class="mt-2 text-sm text-muted">
+        <LocaleText ko="도시센터 TG5 → TG6부터 순금과 담금질 순금을 함께 준비하세요." en="From Town Center TG5 → TG6, you need both Truegold and Tempered Truegold." />
+      </p>
+    </div>
+  </div>
+
+  <div class="mt-5 grid gap-3 sm:grid-cols-2">
+    <div class="rounded-xl border border-border p-4">
+      <h3 class="font-bold"><LocaleText ko="① 건설에 넣는 재료" en="① Materials for construction" /></h3>
+      <p class="mt-1 text-sm text-muted"><LocaleText ko="아래 카드는 도시센터 한 등급을 올리는 재료입니다. 위 계산기에서 남은 단계만 계산하세요." en="Each card covers one full Town Center tier. Use the calculator above for only your remaining steps." /></p>
+    </div>
+    <div class="rounded-xl border border-amber-400/20 bg-amber-400/5 p-4">
+      <h3 class="font-bold text-amber-300"><LocaleText ko="② 정련에 쓰는 순금은 별도" en="② Refinement uses extra Truegold" /></h3>
+      <p class="mt-1 text-sm text-muted"><LocaleText ko="담금질 순금을 만드는 데에도 순금이 듭니다. 건설용 순금을 먼저 남겨두고 정련에 쓸 양을 정하세요." en="Making Tempered Truegold also consumes Truegold. Reserve your construction supply before deciding how much to refine." /></p>
+    </div>
+  </div>
+
+  <p class="mb-3 mt-5 text-xs text-muted">
+    <LocaleText ko="도시센터 · 각 카드 = 5개 하위 단계 합계 · 선행 건물·정련 비용 제외" en="Town Center · Each card totals all 5 substeps · Excludes prerequisites and refinement costs" />
+  </p>
+  <ul class="grid grid-cols-1 gap-2 min-[400px]:grid-cols-2 lg:grid-cols-5">
+    {tiers.map((tier) => (
+      <li class="rounded-xl border border-border bg-bg/50 p-3">
+        <h3 class="mb-3 text-sm font-bold">TG{tier.from} <span class="text-muted">→</span> TG{tier.to}</h3>
+        <dl class="space-y-2">
+          <div class="flex items-center justify-between gap-2">
+            <dt class="flex items-center gap-1 text-xs text-muted">
+              <svg aria-hidden="true" viewBox="0 0 24 24" class="h-4 w-4 shrink-0 text-amber-300" fill="currentColor"><path d="M6 7h12l4 11H2L6 7Z" /></svg>
+              <LocaleText ko="순금" en="Truegold" />
+            </dt>
+            <dd class="font-bold tabular-nums text-amber-200">{tier.tg}</dd>
+          </div>
+          <div class="flex items-center justify-between gap-2 rounded-lg bg-amber-400/10 px-2 py-2">
+            <dt class="flex items-center gap-1 text-xs text-amber-200">
+              <svg aria-hidden="true" viewBox="0 0 24 24" class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m12 2 8 7-3 12H7L4 9l8-7Z M4 9h16M12 2l-3 7 3 12 3-12-3-7Z" /></svg>
+              <LocaleText ko="담금질 순금" en="Tempered" />
+            </dt>
+            <dd class="font-extrabold tabular-nums text-amber-300">{tier.tempered}</dd>
+          </div>
+        </dl>
+      </li>
+    ))}
+  </ul>
+
+  <details class="mt-4 rounded-xl border border-border px-4 py-3">
+    <summary class="cursor-pointer text-sm font-semibold">
+      <LocaleText ko="순금 용광로 · 정련 비용표 펼치기" en="Truegold Crucible · Refinement costs" />
+    </summary>
+    <p class="mt-3 text-sm text-muted">
+      <LocaleText ko="정련 횟수가 쌓이면 1회 비용도 올라갑니다. 획득량은 무작위 범위이며, 확정 수량이나 평균이 아닙니다." en="The cost per refinement rises with your weekly count. Output is a random range, not a guaranteed amount or an average." />
+    </p>
+    <div class="mt-3 overflow-x-auto">
+      <table class="w-full text-left text-sm tabular-nums">
+        <caption class="sr-only"><LocaleText ko="정련 1회당 순금 비용과 담금질 순금 획득 범위" en="Truegold cost and Tempered Truegold output per refinement" /></caption>
+        <thead class="text-xs text-muted">
+          <tr>
+            <th scope="col" class="py-2 pr-3"><LocaleText ko="주간 회차" en="Weekly attempt" /></th>
+            <th scope="col" class="py-2 pr-3"><LocaleText ko="순금 / 회" en="Truegold / attempt" /></th>
+            <th scope="col" class="py-2"><LocaleText ko="담금질 순금 / 회" en="Tempered / attempt" /></th>
+          </tr>
+        </thead>
+        <tbody>
+          {refinement.map((row) => (
+            <tr class="border-t border-border">
+              <th scope="row" class="py-2 pr-3 font-normal">{row.range}</th>
+              <td class="py-2 pr-3">{row.cost}</td>
+              <td class="py-2 text-amber-300">{row.yield}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="mt-3 text-xs text-muted"><LocaleText ko="표는 할인 전 비용입니다. 매일 첫 정련은 순금 비용 50% 할인으로 안내됩니다. 실제 적용 조건은 게임에서 확인하세요." en="Costs shown are before discounts. The first daily refinement is listed at 50% off Truegold cost; check the current conditions in-game." /></p>
+    <a href="/buildings/truegold-crucible/" class="mt-3 inline-block text-sm text-link hover:text-link-hover"><LocaleText ko="순금 용광로 알아보기 →" en="About the Truegold Crucible →" /></a>
+  </details>
+</section>

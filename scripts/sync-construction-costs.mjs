@@ -1,7 +1,8 @@
 // Public data only. Parse literal AST nodes; never execute the downloaded bundle.
 import ts from 'typescript';
 import { createHash } from 'node:crypto';
-import { writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
+import { mergeConstructionSupplement } from './construction-supplement.mjs';
 
 const pageUrl = 'https://kshot-lab.com/tools/construction';
 async function fetchText(url) {
@@ -72,6 +73,10 @@ for (const b of normalized) {
   for (const [id,level] of Object.entries(s.requirements)) if (!normalized.find(b => b.id === id)?.steps.some(s => s.level === level)) throw new Error(`Missing prerequisite ${id}/${level}`);
   }
 }
+// Validate upstream prerequisites before appending TC-only rows. Supplemental requirements
+// retain source levels even when other buildings' cost data does not yet cover them.
+const supplement = JSON.parse(await readFile(new URL('../src/data/construction-supplement.json', import.meta.url), 'utf8'));
+const merged = mergeConstructionSupplement(normalized, supplement);
 const provenance = {
   pageUrl,bundleUrl,retrievedAt:new Date().toISOString(),sha256:createHash('sha256').update(bundle).digest('hex'),
   referenceUiMinLevel:25, referenceSupportBuildingIds:['academy','embassy','barracks','range','stable','commandcenter'],
@@ -88,10 +93,12 @@ const provenance = {
     'Known discrepancy: TC11 stone is 20000 in reference versus 260000 in simplegameguide and old local table. Retained reference value, not silently corrected.',
   ],
   corroborationUrl:'https://simplegameguide.com/kingshot-building-requirements/',
+  supplementFile:'construction-supplement.json',
 };
 const source = {provenance,buildings};
 const header = `/**\n * Generated from public kshot-lab construction data by scripts/sync-construction-costs.mjs.\n * Source, raw labels, incomplete text prerequisites and provenance: construction-source.json.\n * No extrapolation: supported levels differ by building; inspect steps, not a universal cap.\n * Level 1..30 = normal; 31..35 = progress to TG1; ... 66..70 = progress to TG8.\n * Source powerGain is preserved, NOT guaranteed to be an incremental power gain.\n */\nexport interface ConstructionStep {\n  level: number;\n  bread: number;\n  wood: number;\n  stone: number;\n  iron: number;\n  truegold: number;\n  temperedTruegold: number;\n  seconds: number;\n  power?: number;\n  requirements: Record<string, number>;\n}\nexport interface ConstructionBuilding {\n  id: string;\n  name: string;\n  steps: ConstructionStep[];\n}\n/** Reference UI lower bound; source contains earlier levels with incomplete prerequisites. */\nexport const CONSTRUCTION_REFERENCE_MIN_LEVEL = 25;\nexport const CONSTRUCTION_REFERENCE_SUPPORT_IDS = ${JSON.stringify(provenance.referenceSupportBuildingIds)} as const;\nexport const CONSTRUCTION_BUILDINGS: ConstructionBuilding[] = `;
 await writeFile(new URL('../src/data/construction-source.json', import.meta.url), JSON.stringify(source,null,2)+'\n');
-const typedHeader = header.replace('  level: number;', '  level: number;\n  /** Explicit atomic source transition; academy TG1 goes directly from 30 to 35. Otherwise level - 1. */\n  fromLevel?: number;');
-await writeFile(new URL('../src/data/construction-costs.ts', import.meta.url),typedHeader + JSON.stringify(normalized,null,2)+';\n');
-console.log(`Wrote ${normalized.length} buildings, ${normalized.reduce((n,b)=>n+b.steps.length,0)} steps`);
+const typedHeader = header.replace('  level: number;', '  level: number;\n  /** Explicit atomic source transition; academy TG1 goes directly from 30 to 35. Otherwise level - 1. */\n  fromLevel?: number;')
+  .replace(' * No extrapolation:', ' * Town Center 71..80: construction-supplement.json (public sources checked 2026-10-21).\n * No extrapolation:');
+await writeFile(new URL('../src/data/construction-costs.ts', import.meta.url),typedHeader + JSON.stringify(merged,null,2)+';\n');
+console.log(`Wrote ${merged.length} buildings, ${merged.reduce((n,b)=>n+b.steps.length,0)} steps`);

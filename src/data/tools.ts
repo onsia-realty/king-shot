@@ -15,7 +15,7 @@ export const TOOLS: readonly ToolItem[] = [
     label: '순금·건설 비용 계산기',
     href: '/tools/building-calculator/',
     summary:
-      '도시센터 목표와 선행 건물 계획, 순금·담금질 순금 비용을 함께 계산합니다. 건설 속도와 건설 법령도 반영합니다.',
+      '도시센터의 단계별 순금·담금질 순금과 건설 시간을 계산합니다. 건설 속도·펫 버프·건설 법령을 반영합니다.',
   },
   {
     label: '영웅 승급 파편 계산기',

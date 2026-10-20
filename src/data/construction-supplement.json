@@ -1,0 +1,175 @@
+{
+  "version": 1,
+  "provenance": {
+    "verifiedOn": "2026-10-21",
+    "sources": [
+      "https://kingshotdata.kr/ko/buildings/town-center.html",
+      "https://kingshotguide.org/buildings/town-center",
+      "https://kingshotdata.kr/ko/guides/truegold.html"
+    ],
+    "notes": [
+      "Public fan-site rows cross-checked; not independently verified in game.",
+      "Source TG8-1..4 (TG 8.1..4) map to canonical 71..74; TG9 to 75; TG9-1..4 to 76..79; TG10 to 80.",
+      "Resource M abbreviations are expanded by 1,000,000; days by 86,400 seconds. Power is source total power, not upgrade gain.",
+      "TG9 tier totals: 1260 Truegold, 180 Tempered Truegold. TG10: 1575 and 420.",
+      "Only Town Center is extended. Requirements are retained as source facts; Embassy/Range level75 cost rows are not supplied or inferred. Full prerequisite planning beyond available data must still fail."
+    ]
+  },
+  "buildings": [
+    {
+      "id": "town-center",
+      "steps": [
+        {
+          "level": 71,
+          "bread": 140000000,
+          "wood": 140000000,
+          "stone": 29000000,
+          "iron": 7200000,
+          "truegold": 280,
+          "temperedTruegold": 30,
+          "seconds": 1123200,
+          "power": 4102900,
+          "requirements": {
+            "embassy": 70,
+            "barracks": 70
+          }
+        },
+        {
+          "level": 72,
+          "bread": 140000000,
+          "wood": 140000000,
+          "stone": 29000000,
+          "iron": 7200000,
+          "truegold": 280,
+          "temperedTruegold": 30,
+          "seconds": 1123200,
+          "power": 4175300,
+          "requirements": {
+            "embassy": 70,
+            "barracks": 70
+          }
+        },
+        {
+          "level": 73,
+          "bread": 140000000,
+          "wood": 140000000,
+          "stone": 29000000,
+          "iron": 7200000,
+          "truegold": 280,
+          "temperedTruegold": 30,
+          "seconds": 1123200,
+          "power": 4247700,
+          "requirements": {
+            "embassy": 70,
+            "barracks": 70
+          }
+        },
+        {
+          "level": 74,
+          "bread": 140000000,
+          "wood": 140000000,
+          "stone": 29000000,
+          "iron": 7200000,
+          "truegold": 280,
+          "temperedTruegold": 30,
+          "seconds": 1123200,
+          "power": 4320100,
+          "requirements": {
+            "embassy": 70,
+            "barracks": 70
+          }
+        },
+        {
+          "level": 75,
+          "bread": 140000000,
+          "wood": 140000000,
+          "stone": 29000000,
+          "iron": 7200000,
+          "truegold": 140,
+          "temperedTruegold": 60,
+          "seconds": 1123200,
+          "power": 4392500,
+          "requirements": {
+            "embassy": 70,
+            "barracks": 70
+          }
+        },
+        {
+          "level": 76,
+          "bread": 160000000,
+          "wood": 160000000,
+          "stone": 33000000,
+          "iron": 8400000,
+          "truegold": 350,
+          "temperedTruegold": 70,
+          "seconds": 1728000,
+          "power": 4464900,
+          "requirements": {
+            "embassy": 75,
+            "range": 75
+          }
+        },
+        {
+          "level": 77,
+          "bread": 160000000,
+          "wood": 160000000,
+          "stone": 33000000,
+          "iron": 8400000,
+          "truegold": 350,
+          "temperedTruegold": 70,
+          "seconds": 1728000,
+          "power": 4537300,
+          "requirements": {
+            "embassy": 75,
+            "range": 75
+          }
+        },
+        {
+          "level": 78,
+          "bread": 160000000,
+          "wood": 160000000,
+          "stone": 33000000,
+          "iron": 8400000,
+          "truegold": 350,
+          "temperedTruegold": 70,
+          "seconds": 1728000,
+          "power": 4609700,
+          "requirements": {
+            "embassy": 75,
+            "range": 75
+          }
+        },
+        {
+          "level": 79,
+          "bread": 160000000,
+          "wood": 160000000,
+          "stone": 33000000,
+          "iron": 8400000,
+          "truegold": 350,
+          "temperedTruegold": 70,
+          "seconds": 1728000,
+          "power": 4682100,
+          "requirements": {
+            "embassy": 75,
+            "range": 75
+          }
+        },
+        {
+          "level": 80,
+          "bread": 160000000,
+          "wood": 160000000,
+          "stone": 33000000,
+          "iron": 8400000,
+          "truegold": 175,
+          "temperedTruegold": 140,
+          "seconds": 1728000,
+          "power": 4754500,
+          "requirements": {
+            "embassy": 75,
+            "range": 75
+          }
+        }
+      ]
+    }
+  ]
+}

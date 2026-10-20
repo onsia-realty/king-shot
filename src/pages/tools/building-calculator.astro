@@ -5,13 +5,14 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import Breadcrumb from '@/components/Breadcrumb.astro';
 import Disclaimer from '@/components/Disclaimer.astro';
 import BuildingCalculator from '@/components/islands/BuildingCalculator';
+import TemperedTruegoldGuide from '@/components/TemperedTruegoldGuide.astro';
 import { TOOLS } from '@/data/tools';
 
 const otherTools = TOOLS.filter((t) => t.href !== '/tools/building-calculator/');
 
 const title = '순금·건설 비용 계산기';
 const description =
-  '현재 단계와 목표 단계를 선택하면 필요한 순금과 건설 시간을 계산합니다. 선행 건물 비용까지 확인하고 성장 계획을 세워보세요.';
+  '도시센터의 현재 단계와 목표 단계를 선택하면 단계별 순금·담금질 순금과 건설 시간을 계산합니다.';
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -29,7 +30,7 @@ const jsonLd = {
 };
 ---
 
-<BaseLayout titleEn={staticEnglish(title)} descriptionEn={`Plan Town Center and prerequisite building upgrades in Kingshot. Calculate bread, wood, stone, iron, Truegold, Tempered Truegold and construction time, with TG stages, speed bonuses and the construction decree.`} fullTitle="킹샷 순금 계산기 — 업그레이드 재료·건설 시간 계산" description={description} jsonLd={jsonLd}>
+<BaseLayout titleEn={staticEnglish(title)} descriptionEn={`Calculate Town Center upgrade costs and time for each selected step in Kingshot, including Truegold, Tempered Truegold, construction speed, pet buffs and the construction decree.`} fullTitle="킹샷 순금 계산기 — 업그레이드 재료·건설 시간 계산" description={description} jsonLd={jsonLd}>
   <div class="mx-auto w-full max-w-6xl px-4 py-5 sm:px-6 sm:py-10">
     <Breadcrumb
       items={[
@@ -43,35 +44,13 @@ const jsonLd = {
     <header class="mb-5">
       <h1 class="text-2xl font-extrabold sm:text-4xl"><LocaleText ko={`순금·건설 비용 계산기`} en={`Truegold & Building Calculator`} /></h1>
       <p class="mt-2 max-w-2xl text-sm text-muted sm:text-base">
-        <LocaleText ko={`어디까지 올릴까요? 현재 레벨과 목표를 고르면 필요한 순금과 건설 시간을 바로 확인할 수 있어요.`} en={`How far will you upgrade? Select your current and target levels to see the required Truegold and construction time.`} />
+        <LocaleText ko={`도시센터를 어디까지 올릴까요? 현재 레벨과 목표를 고르면 단계별 순금과 건설 시간을 바로 확인할 수 있어요.`} en={`How far will you upgrade your Town Center? Select current and target levels to see Truegold costs and construction time for each step.`} />
       </p>
     </header>
 
     <BuildingCalculator client:load />
 
-    <details class="mt-6 rounded-xl border border-border bg-surface px-4 py-3">
-      <summary class="cursor-pointer text-sm font-semibold text-muted"><LocaleText ko={`계산 기준 · 데이터 출처`} en={`Calculation Rules · Data Sources`} /></summary>
-      <ul class="mt-3 space-y-2 text-sm text-muted">
-        <li>
-          <LocaleText ko={`건설 계획은 현재 25레벨부터 시작합니다. 도시센터는 TG8까지, 다른 건물은 원자료에 있는 단계까지 선택할 수 있습니다. TG의 중간 단계는 1/5~4/5로 표시합니다.`} en={`Construction plans currently start at level 25. Town Center targets go up to TG8; other buildings use the stages available in the source data. Intermediate TG stages are shown as 1/5–4/5.`} />
-        </li>
-        <li>
-          <LocaleText ko={`같은 선행 건물은 필요한 최고 레벨까지만 한 번 합산합니다. 건물별 현재 레벨은 상세 설정을 접어도 반영됩니다. 자료가 없는 구간은 오류로 표시합니다.`} en={`Shared prerequisites are counted once, up to the highest required level. Each building’s current level remains effective when advanced settings are collapsed. Ranges with missing data are reported as errors.`} />
-        </li>
-        <li>
-          <LocaleText ko={`전투력은 원자료 값으로 표시하며 상승량으로 합산하지 않습니다. 미확인 값은 —로 표시합니다. 원자료의 반올림과 게임 업데이트에 따라 게임 내 수치와 차이가 있을 수 있습니다.`} en={`Power is shown as recorded in the source, not summed as a gain. Unconfirmed values appear as —. Source rounding and game updates may cause differences from in-game values.`} />
-        </li>
-        <li>
-          <LocaleText ko={`출처:`} en={`Source:`} />
-          <a
-            href="https://kshot-lab.com/tools/construction"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-link hover:text-link-hover"><LocaleText ko={`KShot Lab 건설 계산기`} en={`KShot Lab Construction Calculator`} /></a
-          >
-        </li>
-      </ul>
-    </details>
+    <TemperedTruegoldGuide />
 
     <section class="mt-12">
       <h2 class="text-xl font-bold"><LocaleText ko={`다른 계산기`} en={`Related Tools`} /></h2>

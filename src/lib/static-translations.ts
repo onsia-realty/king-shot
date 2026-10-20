@@ -54,7 +54,7 @@ const labels: Record<string, string> = {
   "데이터 범위와 한계": "Data Coverage and Limitations",
   "출처:": "Source:",
   "공개 데이터 (2026-10-09 수집)": "Public data (collected October 9, 2026)",
-  "도시센터 목표와 선행 건물 계획, 순금·담금질 순금 비용을 함께 계산합니다. 건설 속도와 건설 법령도 반영합니다.": "Plan Town Center and prerequisite upgrades, including Truegold and Tempered Truegold costs, construction speed and the construction decree.",
+  "도시센터의 단계별 순금·담금질 순금과 건설 시간을 계산합니다. 건설 속도·펫 버프·건설 법령을 반영합니다.": "Calculate Town Center Truegold, Tempered Truegold and construction time per step, with construction speed, pet buffs and the construction decree.",
   "현재 등급과 성급에서 목표까지 필요한 파편 수를 단계별로 계산합니다. 보유량을 넣으면 부족분까지 나옵니다.": "Calculate shards needed at each step from your current tier and star level to your target. Enter owned shards to see the shortfall.",
   "영웅 두 명의 토벌·원정 스탯과 스킬, 전용 장비를 나란히 놓고 비교합니다. 어느 쪽이 높은지 바로 보입니다.": "Compare two heroes side by side: exploration and expedition stats, skills and exclusive gear, with differences highlighted.",
   "영웅 장비·영주 장비·영주 보석 강화에 드는 재료와 예상 비용, 1%당 비용을 계산합니다.": "Estimate materials, total costs and cost per 1% gain for hero gear, governor gear and charms.",

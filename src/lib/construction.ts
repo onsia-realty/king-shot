@@ -39,6 +39,33 @@ export function adjustedTime(seconds: number, bonus: number, doubleTime = false,
   return seconds / (1 + (bonus + petBonus) / 100) * (doubleTime ? 0.8 : 1);
 }
 
+/** Costs for the selected building alone; prerequisites are not traversed. */
+export function planBuildingSteps(building: ConstructionBuilding, current: number, target: number) {
+  const range = supportedRange(building);
+  if (!Number.isInteger(current) || !Number.isInteger(target) || current < range.min || target > range.max) {
+    throw new Error(`${building.name}: ${levelLabel(current)} → ${levelLabel(target)} 구간 데이터가 없습니다.`);
+  }
+  if (target < current) throw new Error(`${building.name}: 목표 레벨은 현재 레벨 이상이어야 합니다.`);
+  const byLevel = new Map(building.steps.map(step => [step.level, step]));
+  if (!byLevel.has(current) && current !== range.min) throw new Error(`${building.name} ${levelLabel(current)} 데이터가 없습니다.`);
+  const rows: ConstructionStep[] = [];
+  let level = target;
+  while (level > current) {
+    const step = byLevel.get(level);
+    if (!step) throw new Error(`${building.name} ${levelLabel(level)} 데이터가 없습니다.`);
+    for (const key of [...RESOURCE_KEYS, 'seconds'] as const) {
+      if (!Number.isFinite(step[key]) || step[key] < 0) throw new Error(`${building.name} ${levelLabel(level)}: ${key} 데이터가 없습니다.`);
+    }
+    const from = step.fromLevel ?? level - 1;
+    if (!Number.isInteger(from) || from >= level || from < current) throw new Error(`${building.name} ${levelLabel(level)}: 현재 레벨에서 연결되는 단계 데이터가 없습니다.`);
+    rows.unshift(step);
+    level = from;
+  }
+  const totals = { bread: 0, wood: 0, stone: 0, iron: 0, truegold: 0, temperedTruegold: 0, seconds: 0 };
+  for (const row of rows) for (const key of [...RESOURCE_KEYS, 'seconds'] as const) totals[key] += row[key];
+  return { rows, totals };
+}
+
 /** Close prerequisites to a fixed point, then topologically order individual upgrades. */
 export function planConstruction(
   buildings: readonly ConstructionBuilding[],

@@ -1,6 +1,7 @@
 /**
  * Generated from public kshot-lab construction data by scripts/sync-construction-costs.mjs.
  * Source, raw labels, incomplete text prerequisites and provenance: construction-source.json.
+ * Town Center 71..80: construction-supplement.json (public sources checked 2026-10-21).
  * No extrapolation: supported levels differ by building; inspect steps, not a universal cap.
  * Level 1..30 = normal; 31..35 = progress to TG1; ... 66..70 = progress to TG8.
  * Source powerGain is preserved, NOT guaranteed to be an incremental power gain.
@@ -1057,6 +1058,156 @@ export const CONSTRUCTION_BUILDINGS: ConstructionBuilding[] = [
         "requirements": {
           "embassy": 65,
           "stable": 65
+        }
+      },
+      {
+        "level": 71,
+        "bread": 140000000,
+        "wood": 140000000,
+        "stone": 29000000,
+        "iron": 7200000,
+        "truegold": 280,
+        "temperedTruegold": 30,
+        "seconds": 1123200,
+        "power": 4102900,
+        "requirements": {
+          "embassy": 70,
+          "barracks": 70
+        }
+      },
+      {
+        "level": 72,
+        "bread": 140000000,
+        "wood": 140000000,
+        "stone": 29000000,
+        "iron": 7200000,
+        "truegold": 280,
+        "temperedTruegold": 30,
+        "seconds": 1123200,
+        "power": 4175300,
+        "requirements": {
+          "embassy": 70,
+          "barracks": 70
+        }
+      },
+      {
+        "level": 73,
+        "bread": 140000000,
+        "wood": 140000000,
+        "stone": 29000000,
+        "iron": 7200000,
+        "truegold": 280,
+        "temperedTruegold": 30,
+        "seconds": 1123200,
+        "power": 4247700,
+        "requirements": {
+          "embassy": 70,
+          "barracks": 70
+        }
+      },
+      {
+        "level": 74,
+        "bread": 140000000,
+        "wood": 140000000,
+        "stone": 29000000,
+        "iron": 7200000,
+        "truegold": 280,
+        "temperedTruegold": 30,
+        "seconds": 1123200,
+        "power": 4320100,
+        "requirements": {
+          "embassy": 70,
+          "barracks": 70
+        }
+      },
+      {
+        "level": 75,
+        "bread": 140000000,
+        "wood": 140000000,
+        "stone": 29000000,
+        "iron": 7200000,
+        "truegold": 140,
+        "temperedTruegold": 60,
+        "seconds": 1123200,
+        "power": 4392500,
+        "requirements": {
+          "embassy": 70,
+          "barracks": 70
+        }
+      },
+      {
+        "level": 76,
+        "bread": 160000000,
+        "wood": 160000000,
+        "stone": 33000000,
+        "iron": 8400000,
+        "truegold": 350,
+        "temperedTruegold": 70,
+        "seconds": 1728000,
+        "power": 4464900,
+        "requirements": {
+          "embassy": 75,
+          "range": 75
+        }
+      },
+      {
+        "level": 77,
+        "bread": 160000000,
+        "wood": 160000000,
+        "stone": 33000000,
+        "iron": 8400000,
+        "truegold": 350,
+        "temperedTruegold": 70,
+        "seconds": 1728000,
+        "power": 4537300,
+        "requirements": {
+          "embassy": 75,
+          "range": 75
+        }
+      },
+      {
+        "level": 78,
+        "bread": 160000000,
+        "wood": 160000000,
+        "stone": 33000000,
+        "iron": 8400000,
+        "truegold": 350,
+        "temperedTruegold": 70,
+        "seconds": 1728000,
+        "power": 4609700,
+        "requirements": {
+          "embassy": 75,
+          "range": 75
+        }
+      },
+      {
+        "level": 79,
+        "bread": 160000000,
+        "wood": 160000000,
+        "stone": 33000000,
+        "iron": 8400000,
+        "truegold": 350,
+        "temperedTruegold": 70,
+        "seconds": 1728000,
+        "power": 4682100,
+        "requirements": {
+          "embassy": 75,
+          "range": 75
+        }
+      },
+      {
+        "level": 80,
+        "bread": 160000000,
+        "wood": 160000000,
+        "stone": 33000000,
+        "iron": 8400000,
+        "truegold": 175,
+        "temperedTruegold": 140,
+        "seconds": 1728000,
+        "power": 4754500,
+        "requirements": {
+          "embassy": 75,
+          "range": 75
         }
       }
     ]
