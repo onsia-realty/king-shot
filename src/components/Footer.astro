@@ -3,7 +3,7 @@ import LocaleText from '@/components/LocaleText.astro';
 import { staticEnglish } from '@/lib/static-translations';
 import Disclaimer from '@/components/Disclaimer.astro';
 import KakaoButton from '@/components/KakaoButton.astro';
-import { mainNav, footerNav, SITE_NAME, KAKAO_OPENCHAT } from '@/data/nav';
+import { mainNav, footerNav, KAKAO_OPENCHAT } from '@/data/nav';
 
 const year = new Date().getFullYear();
 ---
@@ -52,7 +52,7 @@ const year = new Date().getFullYear();
     <div class="mt-8 border-t border-border pt-6">
       <Disclaimer />
       <p class="mt-4 text-xs text-muted">
-        © {year} <LocaleText ko={SITE_NAME} en={staticEnglish(SITE_NAME)} />. <LocaleText ko="비공식 팬 사이트." en="Unofficial fan site." />
+        © {year} 킹샷공략.xyz · <LocaleText ko="비공식 팬 사이트 · 무단 복제·재배포 금지" en="Unofficial fan site · No unauthorized copying or redistribution" />
       </p>
     </div>
   </div>

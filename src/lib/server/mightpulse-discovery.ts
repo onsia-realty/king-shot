@@ -1,4 +1,5 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
+import { allowRequest } from './same-site.js';
 
 const errors = {
   invalid_method: [405, 'GET 요청만 지원합니다.'],
@@ -72,6 +73,7 @@ export function discoveryHandler<P, D>(options: {
   const cache = new Map<string, { data: D; storedAt: number }>();
   const pending = new Map<string, Promise<D>>();
   return async (req: IncomingMessage, res: ServerResponse) => {
+    if (!allowRequest(req, res)) return;
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     if (req.method !== 'GET') {
       res.setHeader('Allow', 'GET');

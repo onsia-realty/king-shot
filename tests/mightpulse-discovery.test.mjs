@@ -8,6 +8,7 @@ const compile = source => ts.transpileModule(source, {
   compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext },
 }).outputText;
 const shared = compile(await readFile(new URL('../src/lib/server/mightpulse-discovery.ts', import.meta.url), 'utf8'));
+const guard = compile(await readFile(new URL('../src/lib/server/same-site.ts', import.meta.url), 'utf8'));
 const rawSources = Object.fromEntries(await Promise.all(['search', 'map'].map(async name => [name,
   await readFile(new URL(`../api/${name}.ts`, import.meta.url), 'utf8')])));
 const sources = Object.fromEntries(Object.entries(rawSources).map(([name, source]) => [name, compile(source)]));
@@ -23,7 +24,9 @@ test('search and map use explicit .js shared imports for Node ESM deployment', (
 });
 let serial = 0;
 async function handler(name) {
-  const sharedURL = `data:text/javascript;base64,${Buffer.from(shared).toString('base64')}#${serial++}`;
+  // 핸들러마다 새 같은 사이트 검사 모듈을 물려 요청 수 제한 카운터가 테스트끼리 섞이지 않게 한다.
+  const guardURL = `data:text/javascript;base64,${Buffer.from(guard).toString('base64')}#${serial++}`;
+  const sharedURL = `data:text/javascript;base64,${Buffer.from(shared.replace('./same-site.js', guardURL)).toString('base64')}#${serial++}`;
   const source = sources[name].replace(/(['"])\.\.\/src\/lib\/server\/mightpulse-discovery\.js\1/, (_, quote) => `${quote}${sharedURL}${quote}`);
   return (await import(`data:text/javascript;base64,${Buffer.from(source).toString('base64')}#${serial++}`)).default;
 }
@@ -32,7 +35,7 @@ async function request(handler, url, method = 'GET') {
   let body;
   const res = { statusCode: 200, setHeader(name, value) { headers[name] = value; },
     end(value) { body = JSON.parse(value); } };
-  await handler({ url, method }, res);
+  await handler({ url, method, headers: { 'sec-fetch-site': 'same-origin' } }, res);
   return { status: res.statusCode, headers, body };
 }
 function error(result, status, code) {
@@ -328,7 +331,7 @@ test('dev middleware serves search/map on both slash variants', async t => {
   const fetch = t.mock.method(globalThis, 'fetch', async url => Response.json(url.includes('/search?') ? searchData : mapData));
   for (const url of ['/api/search?q=Zeras', '/api/search/?q=Zeras', '/api/map?kid=1622', '/api/map/?kid=1622']) {
     const result = await new Promise((resolve, reject) => {
-      get(`http://127.0.0.1:${address.port}${url}`, res => {
+      get(`http://127.0.0.1:${address.port}${url}`, { headers: { 'sec-fetch-site': 'same-origin' } }, res => {
         let body = '';
         res.setEncoding('utf8');
         res.on('data', chunk => { body += chunk; });

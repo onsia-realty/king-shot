@@ -104,7 +104,10 @@ const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
     </div>
     <script>
       import { startVisitCounter } from '@/lib/visits';
+      import { startShield } from '@/lib/shield';
       startVisitCounter();
+      // astro build 결과에만 적용한다 (astro dev 에서는 개발자 도구·콘솔을 막지 않음).
+      if (import.meta.env.PROD) startShield();
     </script>
   </body>
 </html>

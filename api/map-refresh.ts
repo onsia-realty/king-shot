@@ -1,5 +1,6 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { DiscoveryError, kingdom, number, object } from '../src/lib/server/mightpulse-discovery.js';
+import { allowRequest } from '../src/lib/server/same-site.js';
 
 const tokenPattern = /^[a-zA-Z0-9_-]{1,160}$/;
 const numericFields = ['kid', 'cooldown_remaining_sec', 'cooldown_total_sec', 'last_finished_at',
@@ -16,6 +17,7 @@ function job(data: Record<string, unknown>) {
 }
 let active = 0;
 export default async function handler(req: IncomingMessage, res: ServerResponse) {
+  if (!allowRequest(req, res)) return;
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
   res.setHeader('Cache-Control', 'no-store');
   const send = (status: number, data: unknown) => { res.statusCode = status; res.end(JSON.stringify(data)); };

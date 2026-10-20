@@ -8,6 +8,9 @@ const source = await readFile(new URL('../api/player.ts', import.meta.url), 'utf
 const compiled = ts.transpileModule(source, {
   compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext },
 }).outputText;
+const guard = ts.transpileModule(await readFile(new URL('../src/lib/server/same-site.ts', import.meta.url), 'utf8'), {
+  compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext },
+}).outputText;
 let serial = 0;
 const fixture = {
   ok: true, uid: 60611017, governor_id: 241496933,
@@ -25,7 +28,10 @@ async function setup(t) {
     if (previous === undefined) delete process.env.MIGHTPULSE_API_KEY;
     else process.env.MIGHTPULSE_API_KEY = previous;
   });
-  return (await import(`data:text/javascript;base64,${Buffer.from(compiled).toString('base64')}#${serial++}`)).default;
+  // 핸들러마다 새 같은 사이트 검사 모듈을 물려 요청 수 제한 카운터가 테스트끼리 섞이지 않게 한다.
+  const guardURL = `data:text/javascript;base64,${Buffer.from(guard).toString('base64')}#${serial++}`;
+  const source = compiled.replace('../src/lib/server/same-site.js', guardURL);
+  return (await import(`data:text/javascript;base64,${Buffer.from(source).toString('base64')}#${serial++}`)).default;
 }
 async function request(handler, url = '/api/player/?id=241496933', method = 'GET') {
   const headers = {};
@@ -35,7 +41,7 @@ async function request(handler, url = '/api/player/?id=241496933', method = 'GET
     setHeader(name, value) { headers[name] = value; },
     end(value) { body = JSON.parse(value); this.finished = true; },
   };
-  await handler({ url, method }, res);
+  await handler({ url, method, headers: { 'sec-fetch-site': 'same-origin' } }, res);
   return { status: res.statusCode, headers, body };
 }
 function error(result, status, code) {
@@ -234,7 +240,7 @@ test('Vite dev middleware uses the Node handler for both slash variants', async 
   const fetch = t.mock.method(globalThis, 'fetch', async () => Response.json(fixture));
   for (const url of ['/api/player?id=241496933', '/api/player/?id=241496933']) {
     const result = await new Promise((resolve, reject) => {
-      get(`http://127.0.0.1:${address.port}${url}`, res => {
+      get(`http://127.0.0.1:${address.port}${url}`, { headers: { 'sec-fetch-site': 'same-origin' } }, res => {
         let body = '';
         res.setEncoding('utf8');
         res.on('data', chunk => { body += chunk; });

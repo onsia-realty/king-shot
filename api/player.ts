@@ -1,4 +1,5 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
+import { allowRequest } from '../src/lib/server/same-site.js';
 
 const TTL = 5 * 60 * 1000;
 const LIMIT = 100;
@@ -86,6 +87,7 @@ async function lookup(id: string, key: string, idType: 'uid' | 'governor_id'): P
 }
 
 export default async function handler(req: IncomingMessage, res: ServerResponse) {
+  if (!allowRequest(req, res)) return;
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
   if (req.method !== 'GET') {
     res.setHeader('Allow', 'GET');

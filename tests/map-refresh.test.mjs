@@ -11,14 +11,17 @@ const moduleURL = source => `data:text/javascript;base64,${Buffer.from(source).t
 const responseURL = moduleURL(await compile('../src/lib/api-response.ts'));
 const client = await import(moduleURL((await compile('../src/lib/map-refresh.ts')).replace('./api-response', responseURL)));
 async function api(name) {
-  const shared = moduleURL(await compile('../src/lib/server/mightpulse-discovery.ts'));
-  return (await import(moduleURL((await compile(`../api/${name}.ts`)).replace('../src/lib/server/mightpulse-discovery.js', shared)))).default;
+  // 핸들러마다 새 같은 사이트 검사 모듈을 물려 요청 수 제한 카운터가 테스트끼리 섞이지 않게 한다.
+  const guard = moduleURL(await compile('../src/lib/server/same-site.ts'));
+  const shared = moduleURL((await compile('../src/lib/server/mightpulse-discovery.ts')).replace('./same-site.js', guard));
+  return (await import(moduleURL((await compile(`../api/${name}.ts`)).replace('../src/lib/server/mightpulse-discovery.js', shared)
+    .replace('../src/lib/server/same-site.js', guard)))).default;
 }
 async function request(handler, url, method = 'GET') {
   const headers = {};
   let body;
   const res = { statusCode: 200, setHeader(k, v) { headers[k] = v; }, end(data) { body = JSON.parse(data); } };
-  await handler({ method, url, headers: { authorization: 'secret', cookie: 'secret', 'x-forwarded-for': 'spoof' } }, res);
+  await handler({ method, url, headers: { 'sec-fetch-site': 'same-origin', authorization: 'secret', cookie: 'secret', 'x-forwarded-for': 'spoof' } }, res);
   return { status: res.statusCode, headers, body };
 }
 const fixture = time => ({ ok: true, kid: 1622, bounds: { min: 0, max: 1200 }, cities: [{ uid: 60646302, x: time > 100 ? 840 : 740, y: time > 100 ? 123 : 549 }], alliances: [], updated_at: time });
@@ -204,7 +207,7 @@ test('dev routing supports status and start on both slash variants', async t => 
   t.mock.method(globalThis, 'fetch', async (_, options) => { methods.push(options.method); return Response.json(status()); });
   for (const slash of ['', '/']) for (const method of ['GET', 'POST']) {
     const result = await new Promise((resolve, reject) => {
-      const req = httpRequest(`http://127.0.0.1:${server.httpServer.address().port}/api/map-refresh${slash}?kid=1622&token=t_stable`, { method }, res => {
+      const req = httpRequest(`http://127.0.0.1:${server.httpServer.address().port}/api/map-refresh${slash}?kid=1622&token=t_stable`, { method, headers: { 'sec-fetch-site': 'same-origin' } }, res => {
         let body = ''; res.on('data', chunk => { body += chunk; }); res.on('end', () => resolve({ status: res.statusCode, body: JSON.parse(body) }));
       }); req.on('error', reject); req.end();
     });
