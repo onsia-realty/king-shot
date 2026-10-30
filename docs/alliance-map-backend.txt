@@ -1,0 +1,85 @@
+Official alliance map backend — 2026-10-30
+
+Owned implementation
+- api/alliance-map.ts
+- src/lib/server/official-map.ts
+- src/lib/alliance-map.ts (plain shared DTOs; no React/runtime imports)
+- One dev route entry in astro.config.mjs, accepting both slash variants.
+- api/alliance-map.ts maxDuration=120 in vercel.json.
+- tests/alliance-map.test.mjs
+
+API
+GET /api/alliance-map/?kid=1622
+  kind=alliances; official alliance_power ranking board, maximum 100 alliances.
+GET /api/alliance-map/?kid=1622&tag=ROK&offset=0
+  kind=positions; official roster followed by at most five official UID profiles.
+  offset defaults to zero. Use next_offset until null. processed and all three
+  counters are batch-local. Missing roster UIDs count as failed without a request.
+  roster_count is the number of returned roster entries, not a guessed total.
+  processed = cities.length + failed + unlocated + outside_kingdom.
+
+Only https://api.mightpulse.com/v1/ is called. Bearer credentials come from
+server-side MIGHTPULSE_API_KEY. No browser cookies, redirects, website endpoints,
+scraping, database, or iframe are involved in this endpoint. Existing same-site
+guard remains mandatory. Raw upstream errors, responses and credentials are not
+logged or exposed. API responses use Cache-Control: no-store; caching is internal.
+
+Data semantics
+- Both top-level UID and player.uid must match the roster UID. governor_id is never
+  substituted. Profiles cache by normalized real UID, independent of alliance tag.
+- player.kid must match the requested kingdom. A different valid kingdom increments
+  outside_kingdom; missing/invalid kingdom or mismatched UID increments failed.
+- Coordinates must be finite JSON numbers in [0,1200]. Missing/invalid coordinates
+  increment unlocated. Genuine x=0/y=0 remain valid; missing values are never zero.
+- tc is unmodified town_center_level. shield_active/burn_active are null; map_kid,
+  stove_lv, and city skins are absent because official base profiles do not establish
+  them. A profile may show a changed alliance; roster membership can be stale.
+- profile_cached_at is provider cached_at parsed as ISO-with-timezone or Unix seconds,
+  including fractional seconds. Missing/unparseable values remain null. It is a
+  profile cache timestamp, not the time a position was observed. Never Date.now().
+
+Transient cache and abuse limits
+- Process-local bounded caches: 100 rank lists, 200 rosters, 5000 profiles.
+- Rank/roster TTL is one hour. Profile TTL defaults to one hour; a known nonnegative
+  provider age_seconds shortens it to max(30 seconds, one hour - age_seconds).
+- All caches deduplicate in-flight work. Failed requests, including auth failures,
+  are not negatively cached. Valid profiles without positions can be cached.
+- At most three distinct active endpoint requests. Identical requests share work.
+  At most 40 upstream starts in a rolling minute, including rank and roster calls.
+- Provider HTTP 429 and Retry-After stop new upstream starts. X-RateLimit-Remaining /
+  RateLimit-Remaining and X-RateLimit-Reset / RateLimit-Reset are respected when
+  present. Cached data remains usable while new upstream starts are blocked.
+- Gates return 429 immediately with Retry-After and retryAfter seconds; no long
+  server-side waiting or automatic upstream retry. The caller should respect the
+  delay, then retry the same offset. Already completed profiles remain cached, even
+  if a batch hit quota before returning. A 429 has no successful batch payload.
+- Auth failures (401/403 upstream) and a missing server key return safe HTTP 503.
+  They are never converted into a successful batch containing five failed players.
+- Other profile errors/timeouts increment failed and the batch advances. To retry
+  those failures, explicitly repeat their batch offset; successes use cache.
+- Every upstream request, including reading its body, times out at 15 seconds.
+  Profiles are sequential; the entire endpoint request has a 95-second deadline.
+  Vercel maxDuration is 120 seconds, leaving headroom beyond the deadline.
+
+MVP limitations
+These caches and quotas are transient, not persistent or globally shared. Cold
+starts, restarts and eviction lose cached entries. Different instances and other
+endpoints can consume the same provider account quota independently. A future
+persistent store/distributed quota coordinator would be needed to change this.
+No new database, migration or collection workflow is part of this implementation.
+Coverage is alliance_profiles, not a complete kingdom snapshot or live positions.
+Multi-batch collection is not an atomic roster snapshot across cache expiry or
+instance changes. Member departures/transfers can make profiles differ from roster.
+
+Verification performed by backend worker (no live API or secret reads)
+- node --test tests/alliance-map.test.mjs: 19 passed.
+- Focused tsc --noEmit --strict check of the handler, server module and DTOs: passed.
+- Tests use injected fake keys and mock official responses only. Middleware route
+  dispatch is exercised without loading env files, starting Vite or touching caches.
+- No build, commit or deployment. Shared README, existing APIs, UI, collection and
+  database work by other workers was not modified by this worker.
+
+Parent-reported live verification (not independently called by backend worker)
+GET kid=1622, tag=ROK, offset=0 returned HTTP 200 after approximately 41 seconds:
+roster_count=90, processed=5, cities=5, failed=0, unlocated=0, next_offset=5.
+First city: UID 60651031, Hailey, x=436, y=645, tc=55; provider cache time preserved.

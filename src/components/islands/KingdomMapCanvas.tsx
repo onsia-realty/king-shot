@@ -1,6 +1,7 @@
 import { useLocale } from '../../lib/locale';
 import { playerText, playerText as tr, playerNumberLocale } from '../../lib/player-localization';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import townCenterIcon from '../../assets/buildings/town-center.webp';
 import { groundRadii, pickCities, placeCityLabel, citySpriteRect, citySpriteSize, compactCityLevel, overlaps, MAX_CITY_SCALE, type CityHit, type Rect } from './mapHitGeometry';
 
 export interface MapCity {
@@ -18,6 +19,8 @@ interface Camera extends MapFocus { scale: number }
 interface Props {
   cities: MapCity[]; allCities: MapCity[]; alliances: MapAlliance[]; bounds: { min: number; max: number };
   initialFocus?: MapFocus; focus?: MapFocus | null; selected?: MapCity | null;
+  coverageLabel?: string; preserveCameraOnUpdate?: boolean;
+  fitAllCities?: boolean;
   onSelect: (city: MapCity) => void;
   onClose: () => void; onLookup: (city: MapCity) => void;
 }
@@ -61,6 +64,21 @@ function unproject(x: number, y: number, camera: Camera, width: number, height: 
   const v = -(y - height / 2) / (camera.scale / 2);
   return { x: (u + v) / 2 + camera.x, y: (v - u) / 2 + camera.y };
 }
+// Fit projected extrema, including outliers and the tallest supported portrait sprite.
+// Symmetric padding also covers the ground marker at low zoom and the sprite's +4px anchor.
+export function fitCities(cities: Pick<MapCity, 'x' | 'y'>[], width: number, height: number): Camera | undefined {
+  if (!cities.length || !Number.isFinite(width) || !Number.isFinite(height) || width <= 80 || height <= 80) return;
+  let left = Infinity, right = -Infinity, top = Infinity, bottom = -Infinity;
+  for (const city of cities) {
+    if (!Number.isFinite(city.x) || !Number.isFinite(city.y)) continue;
+    const u = (city.x - city.y) / 2, v = -(city.x + city.y) / 2;
+    left = Math.min(left, u); right = Math.max(right, u);
+    top = Math.min(top, v); bottom = Math.max(bottom, v);
+  }
+  if (!Number.isFinite(left)) return;
+  const u = (left + right) / 2, v = (top + bottom) / 2;
+  return { x: u - v, y: -u - v, scale: Math.min(30, (width - 80) / (right - left + 2.5), (height - 80) / (bottom - top + 7.5)) };
+}
 const control = 'rounded-lg border border-border bg-raised px-3 py-2 text-sm disabled:opacity-40';
 
 export default function KingdomMapCanvas(props: Props) {
@@ -77,6 +95,7 @@ export default function KingdomMapCanvas(props: Props) {
   const model = useRef(props);
   model.current = props;
   const camera = useRef<Camera>({ x: 600, y: 600, scale: 14 });
+  const cameraInitialized = useRef(false);
   const dimensions = useRef({ width: 600, height: 560 });
   const redraw = useRef<() => void>(() => {});
   const closePopup = useRef<() => void>(() => {});
@@ -152,14 +171,26 @@ export default function KingdomMapCanvas(props: Props) {
 
   function limits() {
     const { min, max } = model.current.bounds;
-    return { min, max, minScale: Math.max(0.15, Math.min(dimensions.current.width, dimensions.current.height) * 0.9 / (max - min)) };
+    const { width, height } = dimensions.current;
+    const areaScale = Math.max(0.15, Math.min(width, height) * 0.9 / (max - min));
+    const fit = model.current.fitAllCities ? fitCities(model.current.allCities, width, height) : undefined;
+    return { min, max, minScale: fit ? Math.min(areaScale, fit.scale) : areaScale };
   }
-  function update(next: Camera) {
+  function update(next: Camera, fitting = false) {
     hideHover.current();
     const { min, max, minScale } = limits();
-    camera.current = { x: Math.max(min, Math.min(max, next.x)), y: Math.max(min, Math.min(max, next.y)), scale: Math.max(minScale, Math.min(MAX_CITY_SCALE, next.scale)) };
+    camera.current = { x: fitting ? next.x : Math.max(min, Math.min(max, next.x)), y: fitting ? next.y : Math.max(min, Math.min(max, next.y)), scale: Math.max(minScale, Math.min(MAX_CITY_SCALE, next.scale)) };
     setCandidates((old) => old.length ? [] : old);
     setScale(camera.current.scale); redraw.current();
+  }
+  function fitVisibleCities() {
+    const rect = canvas.current?.getBoundingClientRect();
+    if (!rect) return;
+    const next = fitCities(model.current.cities, rect.width, rect.height);
+    if (next) {
+      dimensions.current = { width: rect.width, height: rect.height };
+      update(next, true); cameraInitialized.current = true;
+    }
   }
   function zoom(factor: number, point = { x: dimensions.current.width / 2, y: dimensions.current.height / 2 }) {
     const { width, height } = dimensions.current;
@@ -170,10 +201,16 @@ export default function KingdomMapCanvas(props: Props) {
   }
 
   useEffect(() => {
+    if (props.fitAllCities) {
+      if (!cameraInitialized.current) fitVisibleCities();
+      return;
+    }
     const largest = [...props.alliances].sort((a, b) => (b.city_count ?? 0) - (a.city_count ?? 0))[0];
+    if (props.preserveCameraOnUpdate && cameraInitialized.current) return;
     const members = largest ? props.allCities.filter((c) => String(c.aid) === String(largest.aid)) : props.allCities;
-    const initial = props.initialFocus ?? clusterFocus(members) ?? { x: 600, y: 600 };
+    const initial = props.initialFocus ?? clusterFocus(members) ?? (props.preserveCameraOnUpdate ? clusterFocus(props.allCities) : undefined) ?? { x: 600, y: 600 };
     update({ ...initial, scale: initial.scale ?? 14 });
+    cameraInitialized.current = props.allCities.length > 0 || !!props.initialFocus;
     // Profile changes do not reset a map the visitor is exploring.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.allCities, props.bounds]);
@@ -257,8 +294,8 @@ export default function KingdomMapCanvas(props: Props) {
     const schedule = () => { if (!disposed && !frame) frame = window.requestAnimationFrame(draw); };
     redraw.current = schedule;
     function image(path?: string | null) {
-      const url = cityImage(path);
-      if (!url) return undefined;
+      // Official profiles omit skins; use our common city icon without a remote dependency.
+      const url = cityImage(path) ?? townCenterIcon.src;
       let img = images.get(url);
       if (!img) {
         img = new Image(); images.set(url, img);
@@ -398,6 +435,7 @@ export default function KingdomMapCanvas(props: Props) {
       const rect = element.getBoundingClientRect();
       if (!rect.width || !rect.height) return;
       dimensions.current = { width: rect.width, height: rect.height };
+      if (model.current.fitAllCities && !cameraInitialized.current) fitVisibleCities();
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       element.width = Math.round(rect.width * dpr); element.height = Math.round(rect.height * dpr); schedule();
     };
@@ -477,7 +515,7 @@ export default function KingdomMapCanvas(props: Props) {
     <div className="mb-3 flex flex-wrap items-center gap-2">
       <button type="button" className={control} aria-label={tr("지도 확대")} disabled={scale >= MAX_CITY_SCALE} onClick={() => zoom(1.5)}>{tr("확대 ＋")}</button>
       <button type="button" className={control} aria-label={tr("지도 축소")} disabled={scale <= limits().minScale} onClick={() => zoom(1 / 1.5)}>{tr("축소 −")}</button>
-      <button type="button" className={control} onClick={() => update({ x: (props.bounds.min + props.bounds.max) / 2, y: (props.bounds.min + props.bounds.max) / 2, scale: limits().minScale })}>{tr("전체 왕국")}</button>
+      <button type="button" className={control} disabled={props.fitAllCities && !props.cities.length} onClick={() => props.fitAllCities ? fitVisibleCities() : update({ x: (props.bounds.min + props.bounds.max) / 2, y: (props.bounds.min + props.bounds.max) / 2, scale: limits().minScale })}>{props.fitAllCities ? (locale === 'en' ? 'Fit all cities' : '전체 도시 보기') : props.coverageLabel ?? tr("전체 왕국")}</button>
       <button type="button" className={control} onClick={() => update({ x: 600, y: 600, scale: 4 })}>{tr("왕성")}</button>
       <button type="button" className={control} aria-pressed={expanded} onClick={() => setExpanded(!expanded)}>{expanded ? tr("확장 닫기") : tr("화면 확장")}</button>
     </div>

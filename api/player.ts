@@ -55,7 +55,9 @@ async function lookup(id: string, key: string, idType: 'uid' | 'governor_id'): P
     return await Promise.race([expired, (async (): Promise<PublicPlayer> => {
       const response = await fetch(
         `https://api.mightpulse.com/v1/players/${id}?include=base,heroes,ranks,gov_gear${idType === 'uid' ? '&id_type=uid' : ''}`,
-        { headers: { Authorization: `Bearer ${key}` }, signal: controller.signal, redirect: 'error' },
+        // Cloudflare answers anonymous library user agents with 403 (code 1010); this UA is verified to pass.
+        { headers: { Authorization: `Bearer ${key}`, 'User-Agent': 'kingshot-gongryak-site/1.0 (+https://xn--ob0bx7rdoh9mq.xyz)', Accept: 'application/json' },
+          signal: controller.signal, redirect: 'error' },
       );
       if (!response.ok) {
         // Never parse, forward or log provider error bodies.

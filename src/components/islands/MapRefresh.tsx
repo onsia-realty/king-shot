@@ -59,7 +59,7 @@ export default function MapRefresh({ kid, baseline, disabled = false, onSnapshot
     ? (en ? `Queued${state?.queue_position != null ? ` · position ${state.queue_position}` : ''}` : `대기 중${state?.queue_position != null ? ` · 순서 ${state.queue_position}` : ''}`)
     : job?.status === 'running' ? (en ? 'Scanning map…' : '지도 재수집 중…') : (en ? 'Requesting / loading map…' : '요청 / 지도 불러오는 중…')
     : outcome === 'done' ? (en ? 'Scan completed. Latest saved coordinates loaded.' : '재수집 완료. 최신 저장 좌표를 불러왔습니다.')
-    : outcome === 'saved' ? (en ? 'Latest saved map loaded; no new scan completed.' : '최신 저장 지도를 불러왔습니다. 새 재수집이 완료된 것은 아닙니다.')
+    : outcome === 'saved' ? (en ? 'Refresh requested. The collector updates kingdoms periodically; the latest saved map is shown.' : '재수집을 요청했습니다. 수집기가 주기적으로 갱신하며, 지금은 최신 저장 지도를 표시합니다.')
     : outcome === 'cancelled' ? (en ? 'Stopped waiting. The upstream scan may continue.' : '대기를 중지했습니다. 제공처의 재수집은 계속될 수 있습니다.')
     : outcome === 'timeout' ? (en ? 'Stopped waiting after 5 minutes. The scan may still be queued or running.' : '5분이 지나 대기를 중지했습니다. 재수집이 대기 중이거나 진행 중일 수 있습니다.')
     : outcome ? rateLimitMessage(outcome, locale) ?? (en ? 'Could not refresh the map. Try again later.' : '지도를 새로고침하지 못했습니다. 잠시 후 다시 시도해 주세요.') : '';

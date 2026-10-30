@@ -15,6 +15,7 @@
   ],
   "functions": {
     "api/player.ts": { "maxDuration": 120 },
+    "api/alliance-map.ts": { "maxDuration": 120 },
     "api/search.ts": { "maxDuration": 60 },
     "api/map.ts": { "maxDuration": 60 },
     "api/map-refresh.ts": { "maxDuration": 60 }

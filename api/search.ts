@@ -1,40 +1,66 @@
-import { discoveryHandler, DiscoveryError, id, kingdom, number, object, text } from '../src/lib/server/mightpulse-discovery.js';
+import { DiscoveryError, fetchData, id, kingdom, number, object, publicSnapshot, storeHandler, text } from '../src/lib/server/mightpulse-discovery.js';
+import { search } from '../src/lib/server/kingdom-store.js';
+import { coordinate, getMap, imageURL, validKingdom } from '../src/lib/server/mightpulse-map.js';
 
-export default discoveryHandler({
-  ttl: 5 * 60 * 1000,
-  limit: 100,
-  parse(params) {
-    const query = (params.get('q') ?? '').trim();
-    if (params.getAll('q').length !== 1 || query.length < 2 || query.length > 80
-      || /[\u0000-\u001f\u007f]/.test(query)) throw new DiscoveryError('invalid_query');
-    return { query, kid: kingdom(params, true) };
-  },
-  key: ({ query, kid }) => kid === null ? `search:${query}` : `kingdom:${kid}`,
-  url: ({ query, kid }) => kid === null
-    ? `https://mightpulse.com/api/search?q=${encodeURIComponent(query)}&live=0`
-    : `https://mightpulse.com/api/map?kid=${kid}&layers=cities&limit=50000`,
-  normalize(data, { kid }) {
-    if (!object(data) || data.ok === false) throw new DiscoveryError('upstream_error');
-    const rows = kid === null ? data.results : data.cities;
-    if (!Array.isArray(rows)) throw new DiscoveryError('upstream_error');
-    // A broken snapshot must not masquerade as a successful empty search.
-    if (kid !== null && ((data.kid !== undefined && data.kid !== kid)
-      || rows.some(row => !object(row) || id(row.uid) === null || typeof row.nick_name !== 'string'))) {
-      throw new DiscoveryError('upstream_error');
-    }
-    const results = (kid === null ? rows.slice(0, 100) : rows).filter(object)
-      .filter(row => id(row.uid) !== null || id(row.fid) !== null).map(row => ({
-        uid: id(row.uid), fid: id(row.fid), nick_name: text(row.nick_name),
-        kid: number(row.kid) ?? kid, power: number(row.power),
-        town_center_level: number(kid === null ? row.town_center_level : row.tc),
-        x: number(row.x), y: number(row.y), alliance_abbr: text(row.alliance_abbr),
-        alliance_name: text(row.alliance_name), avatar_url: text(row.avatar_url),
-      }));
-    return { ok: true as const, query: '', results, total: results.length };
-  },
-  present(data, { query, kid }) {
-    const results = (kid === null ? data.results : data.results.filter(row =>
-      row.nick_name?.toLowerCase().includes(query.toLowerCase()))).slice(0, 100);
-    return { ...data, query, results, total: results.length };
-  },
+function normalizeResults(rows: unknown) {
+  if (!Array.isArray(rows)) throw new DiscoveryError('upstream_error');
+  const results = rows.slice(0, 100).filter(object).filter(row => id(row.uid) !== null || id(row.fid) !== null).map(row => ({
+    uid: id(row.uid), fid: id(row.fid), nick_name: text(row.nick_name), kid: validKingdom(row.kid),
+    power: number(row.power), town_center_level: number(row.town_center_level),
+    x: coordinate(row.x), y: coordinate(row.y), alliance_abbr: text(row.alliance_abbr),
+    alliance_name: text(row.alliance_name), avatar_url: imageURL(row.avatar_url),
+  }));
+  if (rows.length && !results.length) throw new DiscoveryError('upstream_error');
+  return results;
+}
+const upstreamSearch = publicSnapshot(100, async (query: string) => {
+  const data = await fetchData(`https://mightpulse.com/api/search?q=${encodeURIComponent(query)}&live=0`);
+  if (!object(data) || data.ok === false) throw new DiscoveryError('upstream_error');
+  const results = normalizeResults(data.results);
+  return { results, partial: data.partial === true || (Array.isArray(data.results) && results.length < data.results.length), stale: data.stale === true };
+});
+type Results = ReturnType<typeof normalizeResults>;
+const storedCache = new Map<string, { results: Results; storedAt: number }>();
+const storedPending = new Map<string, Promise<Results>>();
+async function storedSearch(query: string) {
+  const cached = storedCache.get(query);
+  if (cached && Date.now() - cached.storedAt < 30_000) return cached.results;
+  let work = storedPending.get(query);
+  if (!work) {
+    work = search(query, null).then(rows => {
+      const results = normalizeResults(rows);
+      storedCache.delete(query);
+      if (storedCache.size >= 100) storedCache.delete(storedCache.keys().next().value!);
+      storedCache.set(query, { results, storedAt: Date.now() });
+      return results;
+    }).finally(() => { storedPending.delete(query); });
+    storedPending.set(query, work);
+  }
+  return work;
+}
+
+export default storeHandler(100, async params => {
+  const query = (params.get('q') ?? '').trim();
+  if (params.getAll('q').length !== 1 || query.length < 2 || query.length > 80
+    || /[\u0000-\u001f\u007f]/.test(query)) throw new DiscoveryError('invalid_query');
+  const kid = kingdom(params, true);
+  if (kid !== null) {
+    const { data, seconds } = await getMap(kid, params.get('fresh') === '1');
+    if (!data.ok) return [202, data];
+    const alliances = new Map(data.alliances.map(row => [String(row.aid), row.name]));
+    const results = data.cities.filter(row => row.nick_name?.toLowerCase().includes(query.toLowerCase())).slice(0, 100).map(row => ({
+      uid: row.uid, fid: null, nick_name: row.nick_name, kid: row.kid, map_kid: row.map_kid,
+      power: row.power, town_center_level: row.tc, x: row.x, y: row.y, alliance_abbr: row.alliance_abbr,
+      alliance_name: alliances.get(String(row.aid)) ?? null, avatar_url: null,
+    }));
+    return [200, { ok: true, query, results, total: results.length, source: data.source, partial: data.partial, stale: data.stale }, seconds];
+  }
+  const hit = await upstreamSearch(query);
+  if (hit) {
+    const { results, partial } = hit.data;
+    const stale = hit.stale || hit.data.stale;
+    return [200, { ok: true, query, results, total: results.length, source: 'mightpulse', partial, stale }, stale ? 0 : hit.seconds];
+  }
+  const results = await storedSearch(query);
+  return [200, { ok: true, query, results, total: results.length, source: 'official_profiles', partial: true, stale: true }];
 });

@@ -1,0 +1,101 @@
+킹샷 수집기 ↔ 웹 연결 검증서 (2026-10-30)
+
+상태: 웹 코드/응답 대조 완료. 게임 직접 수집 성공 아님. 아래 새 계약은 설계안이며
+게임 프로토콜이나 MightPulse의 실제 백엔드 구현이라고 주장하지 않는다.
+APK 분석은 Claude 담당. 이 파일은 공유용이며 다른 채팅으로 자동 발송하지 않았다.
+
+1. 증거와 역할
+- 원본 웹 관찰: docs/mightpulse-web-analysis-2026-10-30.txt
+- 우리 웹은 KingdomMapCanvas.tsx의 cities/alliances/bounds와 PlayerLookup.tsx의
+  player/heroes/gov_gear를 받아 표시한다. 지도 렌더러 전체 재작성은 불필요하다.
+- 수집기는 게임에서 허용된 조회로 얻은 결과를 전달하고, 어댑터가 웹 형식으로 변환한다.
+- MightPulse uid는 API가 내부 ID라고 부르지만 게임 ID와 동일하다는 증거는 없다.
+  game entity ID, 화면의 governor ID, MightPulse uid를 동일시하지 않는다.
+
+2. Claude가 첫 검증에서 반환할 자료
+- 게임 앱 버전, 조회 대상 왕국, 조회 구역 범위, 관측 시각(UTC)
+- 인증정보를 제거한 응답 샘플과 필드 설명
+- 요청/응답 메시지 식별 근거(확인된 이름 또는 번호; 추측이면 명시)
+- 최소 한 도시의 게임 entity ID, governor ID(얻을 수 있으면), 이름, X/Y
+- 동일 도시의 게임 화면 좌표와의 비교
+- 한 번 더 조회한 결과, 실패/제한 여부, 응답 시간
+- 지도 구역의 전체 응답인지 일부인지, 결과 제한/페이지 처리 여부
+- 세션 재접속 및 계정 로그인 상태에 의존하는 조건
+토큰, 쿠키, 비밀번호, 세션키는 공유 문서나 Git에 넣지 않는다.
+개별 프로필에서 비공개 장비는 비공개로 유지한다.
+
+3. 수집기 중립 출력 제안
+IDs: string으로 보관. 누락 ID를 임의 생성해 원본 ID처럼 표시하지 않는다.
+Times: UTC ISO8601. 웹 변환 시 Unix seconds로 변환(밀리초 혼동 금지).
+지도 배치:
+  source: game_direct | mightpulse_api | fixture
+  app_version, observed_at, home/map kingdom 구분 가능 여부
+  map_kingdom_id, bounds, coverage: partial | complete
+  scanned_region, scan_id, cities[]
+도시:
+  entity_id, governor_id(nullable), name(nullable)
+  home_kingdom_id(nullable), map_kingdom_id, x, y
+  power(nullable), town_level_raw(nullable), truegold_level(nullable)
+  alliance_id(nullable), alliance_tag(nullable)
+  shield: active | inactive | unknown
+  burning: active | inactive | unknown
+  skin_id(nullable), location_observed_at
+누락값을 0/false로 치환하지 않는다. x=0, y=0은 범위 내 유효 좌표일 수 있다.
+좌표 원점/도시 중심/타일 기준은 게임 화면과 대조 후 고정한다. +1/-1 임의 보정 금지.
+
+4. 기존 웹 어댑터 연결 위치
+api/map.ts:
+  {ok:true,kid,bounds:{min,max},cities:[],alliances:[],updated_at}
+  cities에는 uid,x,y가 필수. 다른 MapCity 필드는 선택적이다.
+  현재 uid 기반 클릭이 /api/player?id=...&id_type=uid로 연결된다.
+  game entity ID를 이 경로에 그대로 넣으면 잘못된 영주를 조회할 수 있다.
+  자체 ID 라우팅 또는 검증된 governor ID 매핑을 먼저 구현해야 한다.
+api/search.ts:
+  왕국 지정 검색은 지도 도시 목록의 이름으로 필터링한다.
+  자체 저장소가 생기면 같은 스냅샷을 공유하되 partial 범위를 표시해야 한다.
+api/player.ts:
+  현재 공식 MightPulse v1 의존. 독립 장비 수집 전에는 의존성이 남는 혼합 구성이다.
+  응답 wrapper: ok,uid,governor_id,player,heroes,ranks,gov_gear,
+                fresh,cached_at,age_seconds.
+  기존 검증기는 player/ranks/gov_gear 객체와 heroes 배열을 요구한다.
+  수집 불가를 '장비 없음'으로 꾸며 빈 배열로 반환하지 않는다. unknown 상태 처리가 필요하다.
+KingdomMapCanvas.tsx:
+  투영/역투영, 화면 밖 제외, requestAnimationFrame이 이미 있다.
+  cityImage()는 현재 mightpulse.com 호스트만 허용한다.
+  독립 운영 시 직접 사용할 수 있는 로컬 이미지와 명시적 매핑으로 교체해야 한다.
+  cityLevel()에 TG8 상한이 남아 있다. 새 데이터 TG를 raw tc 추정만으로 처리하지 않는다.
+
+5. 장비 검증 단계 (지도 검증 후)
+- 영주 장비 6칸과 아레나 영웅 장비를 구분한다.
+- 영주 장비: 슬롯, 원본 장비 ID, 등급, 티어, 별, 보석, 공개/비공개/조회불가.
+- 영웅 장비: 영웅 ID, 편성 위치, 레벨/별, 슬롯, 강화/제련, 전용 장비.
+- 원본 장비 ID만 있어도 전달 가능. 이름/이미지/색상은 검증된 카탈로그로 웹에서 매핑.
+- sample마다 detail_observed_at,arena_observed_at을 위치 시각과 별도로 기록한다.
+
+6. 갱신 연결 기준 (우리 시스템 설계)
+- POST는 수집 작업을 한 번 요청. GET은 상태만 조회.
+- 왕국별 진행 중 작업은 중복 생성하지 않고 기존 작업 ID 반환.
+- proposed states: queued → running → publishing → done / failed.
+- done은 새 스냅샷이 조회 가능한 상태로 저장된 뒤에만 반환한다.
+- 조회 시각, 게임 데이터 관측 시각, DB 저장 시각, 작업 완료 시각은 서로 다르다.
+- 새 관측 결과가 이전과 같아도 성공일 수 있다. 좌표 변경 자체는 성공 조건이 아니다.
+- 부분 수집 결과를 전체 왕국 스냅샷으로 덮어쓰지 않는다.
+- 한 구역에서 사라진 도시를 왕국 전체에서 사라졌다고 단정하지 않는다.
+- 실패/지연 시 마지막 성공 스냅샷과 시각을 유지하고 실시간으로 표시하지 않는다.
+- 현재 src/lib/map-refresh.ts는 작업 완료와 updated_at 증가를 함께 확인한다.
+  자체 시스템에서는 scan_id/snapshot_version을 함께 비교하는 것이 더 명확하다.
+
+7. 통과/보류 기준
+A: 실제 응답에서 도시 ID/좌표가 확인되고 화면 대조 및 반복 조회 통과.
+   → 한 구역을 자체 지도에 연결할 수 있음. 전체 서버 수집 가능 확정은 아님.
+B: 구역 분할, 결과 누락/중복 처리, 세션 유지, 요청 제한까지 검증.
+   → 단일 왕국 수집 운영 가능성 평가 가능.
+C: 공개 영주 상세/장비 응답과 ID 대응 검증.
+   → 장비 조회도 자체화 검토 가능.
+현재 A/B/C 모두 미통과. 웹 구현 계약 정리만 완료.
+
+8. 다음 인계
+Claude는 2번의 최소 샘플과 근거를 이 문서 옆 파일로 제공하면 된다.
+Codex는 그 샘플의 ID/좌표/타임스탬프를 검증한 뒤 기존 웹 어댑터를 작성한다.
+증거 없는 요청 주소/메시지 번호/서명 계산법을 만들어 넣지 않는다.
+수집 성공 전 운영 사이트 연결이나 '지도 복구 완료' 표시를 하지 않는다.

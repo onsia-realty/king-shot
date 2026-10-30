@@ -10,12 +10,26 @@ const compile = async path => ts.transpileModule(await readFile(new URL(path, im
 const moduleURL = source => `data:text/javascript;base64,${Buffer.from(source).toString('base64')}#${serial++}`;
 const responseURL = moduleURL(await compile('../src/lib/api-response.ts'));
 const client = await import(moduleURL((await compile('../src/lib/map-refresh.ts')).replace('./api-response', responseURL)));
-async function api(name) {
+const driver = moduleURL('export const neon = url => ({ query: (...args) => globalThis.kingdomQuery(url, ...args) });');
+const storeSource = (await compile('../src/lib/server/kingdom-store.ts')).replace('@neondatabase/serverless', driver);
+async function api() {
   // 핸들러마다 새 같은 사이트 검사 모듈을 물려 요청 수 제한 카운터가 테스트끼리 섞이지 않게 한다.
   const guard = moduleURL(await compile('../src/lib/server/same-site.ts'));
   const shared = moduleURL((await compile('../src/lib/server/mightpulse-discovery.ts')).replace('./same-site.js', guard));
-  return (await import(moduleURL((await compile(`../api/${name}.ts`)).replace('../src/lib/server/mightpulse-discovery.js', shared)
-    .replace('../src/lib/server/same-site.js', guard)))).default;
+  const store = moduleURL(storeSource.replace('./mightpulse-discovery.js', shared));
+  return (await import(moduleURL((await compile('../api/map-refresh.ts')).replace('../src/lib/server/mightpulse-discovery.js', shared)
+    .replace('../src/lib/server/kingdom-store.js', store)))).default;
+}
+function db(t, rows) {
+  const previous = process.env.DATABASE_URL;
+  process.env.DATABASE_URL = 'postgresql://test:secret@db.example/db';
+  t.after(() => { if (previous === undefined) delete process.env.DATABASE_URL; else process.env.DATABASE_URL = previous; delete globalThis.kingdomQuery; });
+  const calls = [];
+  globalThis.kingdomQuery = async (_, sql, params) => {
+    calls.push([/request_count/.test(sql) ? 'request' : 'status', params]);
+    return typeof rows === 'function' ? rows() : rows;
+  };
+  return calls;
 }
 async function request(handler, url, method = 'GET') {
   const headers = {};
@@ -24,79 +38,81 @@ async function request(handler, url, method = 'GET') {
   await handler({ method, url, headers: { 'sec-fetch-site': 'same-origin', authorization: 'secret', cookie: 'secret', 'x-forwarded-for': 'spoof' } }, res);
   return { status: res.statusCode, headers, body };
 }
+const row = (over = {}) => ({ located: 0, total: 0, collected_at: null, queue_position: '2', roster: false, secret: 'row', ...over });
 const fixture = time => ({ ok: true, kid: 1622, bounds: { min: 0, max: 1200 }, cities: [{ uid: 60646302, x: time > 100 ? 840 : 740, y: time > 100 ? 123 : 549 }], alliances: [], updated_at: time });
-const upstream = time => ({ ...fixture(time), stats: { location_updated_at: time }, cached_at: '2099-01-01' });
 const status = (job = null, time = 100) => ({ ok: true, job, last_finished_at: time });
 const tick = () => new Promise(resolve => setImmediate(resolve));
 
-test('proxy validates kid/token/method before fetch and never forwards credentials', async t => {
-  const handler = await api('map-refresh');
-  const fetch = t.mock.method(globalThis, 'fetch', async (url, options) => {
-    assert.equal(url, 'https://mightpulse.com/api/map/update?kid=1622&token=t_stable');
-    assert.equal(options.method, 'POST'); assert.equal(options.headers, undefined); assert.equal(options.redirect, 'error');
-    return Response.json({ ...status({ status: 'queued', job_id: 'j1', secret: 'secret' }), request_token: 'server-token', secret: 'secret' });
-  });
+test('status validates kid and method before any query; the legacy token is optional and ignored', async t => {
+  const calls = db(t, [row()]);
+  const handler = await api();
   for (const kid of ['0', '10001', '1&kid=2', '1e3', '']) assert.equal((await request(handler, `/api/map-refresh?kid=${kid}&token=t_stable`, 'POST')).status, 400);
-  for (const token of ['', 'a&token=b', '%0Asecret']) assert.equal((await request(handler, `/api/map-refresh?kid=1622&token=${token}`, 'POST')).status, 400);
-  assert.equal((await request(handler, '/api/map-refresh?kid=1622&token=t_stable', 'PUT')).status, 405);
-  assert.equal(fetch.mock.callCount(), 0);
-  const result = await request(handler, '/api/map-refresh?kid=1622&token=t_stable', 'POST');
-  assert.equal(result.body.job.status, 'queued'); assert.equal(result.body.request_token, 'server-token');
-  assert.doesNotMatch(JSON.stringify(result.body), /secret/); assert.equal(result.headers['Cache-Control'], 'no-store');
+  const method = await request(handler, '/api/map-refresh?kid=1622&token=t_stable', 'PUT');
+  assert.equal(method.status, 405); assert.equal(method.headers.Allow, 'GET, POST');
+  assert.deepEqual(calls, []);
+  for (const url of ['/api/map-refresh?kid=1622', '/api/map-refresh?kid=01622&token=t_stable', '/api/map-refresh?kid=1622&token=%0Asecret']) {
+    const result = await request(handler, url);
+    assert.equal(result.status, 200); assert.equal(result.body.status, 'queued'); assert.equal(result.body.kid, 1622);
+  }
+  assert.deepEqual(calls, [['status', [1622]], ['status', [1622]], ['status', [1622]]]);
 });
 
-test('proxy status is GET, retains business cooldown and HTTP429 retry headers, sanitizes errors', async t => {
-  const handler = await api('map-refresh');
-  t.mock.method(globalThis, 'fetch', async (url, options) => {
-    assert.match(url, /\/update\/status\?/); assert.equal(options.method, 'GET');
-    return Response.json({ ok: false, error: 'ip_cooldown', cooldown_remaining_sec: 475, ip_cooldown_remaining_sec: 447, message: 'secret', request_token: 'uuid-123' }, { status: 429, headers: { 'Retry-After': '447' } });
-  });
-  const result = await request(handler, '/api/map-refresh?kid=1622&token=t_stable');
-  assert.equal(result.status, 429); assert.equal(result.body.error, 'ip_cooldown');
-  assert.equal(result.body.cooldown_remaining_sec, 475); assert.equal(result.headers['Retry-After'], '447');
-  assert.doesNotMatch(JSON.stringify(result.body), /secret/);
+test('GET reports queued or partial without claiming a completed whole-kingdom scan', async t => {
+  const handler = await api();
+  const expected = { ok: true, kid: 1622, job: null, request_token: null, mighty: false, updates_paused: false, update_available: false };
+  for (const [rows, state] of [
+    [row(), { status: 'queued', last_finished_at: null, queue_position: 2, coverage: { located: 0, total: 0, collected_at: null } }],
+    [row({ roster: true }), { status: 'partial', last_finished_at: null, queue_position: 2, coverage: { located: 0, total: 0, collected_at: null } }],
+    [row({ located: 40, total: 100, queue_position: 1 }), { status: 'partial', last_finished_at: null, queue_position: 1, coverage: { located: 40, total: 100, collected_at: null } }],
+    [row({ located: 100, total: 100, collected_at: '1700000000', queue_position: null }), { status: 'partial', last_finished_at: 1_700_000_000, queue_position: null, coverage: { located: 100, total: 100, collected_at: 1_700_000_000 } }],
+  ]) {
+    db(t, [rows]);
+    const result = await request(handler, '/api/map-refresh?kid=1622');
+    assert.equal(result.status, 200); assert.equal(result.headers['Cache-Control'], 'no-store');
+    assert.deepEqual(result.body, { ...expected, ...state });
+    assert.doesNotMatch(JSON.stringify(result.body), /secret|roster/);
+  }
 });
 
-test('fresh snapshot bypasses ten-minute cache, coalesces requests, expires after5s and uses collected time', async t => {
-  const handler = await api('map');
-  t.mock.timers.enable({ apis: ['Date'], now: 100000 });
-  let time = 100;
-  const fetch = t.mock.method(globalThis, 'fetch', async () => Response.json(upstream(time)));
-  const url = '/api/map?kid=1622';
-  assert.equal((await request(handler, url)).body.updated_at, 100);
-  time = 200;
-  const result = await request(handler, `${url}&fresh=1`);
-  assert.equal(result.body.updated_at, 200); assert.equal(result.headers['Cache-Control'], 'no-store');
-  await request(handler, `${url}&fresh=1`); assert.equal(fetch.mock.callCount(), 2);
-  assert.equal((await request(handler, url)).body.cities[0].x, 840);
-  t.mock.timers.tick(5000); time = 300;
-  assert.equal((await request(handler, `${url}&fresh=1`)).body.updated_at, 300);
+test('POST records the request and answers a one-hour cooldown so the client reloads the saved map once', async t => {
+  const calls = db(t, [row({ located: 100, total: 100, collected_at: 1_700_000_000, queue_position: null })]);
+  const result = await request(await api(), '/api/map-refresh?kid=1622&token=t_stable', 'POST');
+  assert.equal(result.status, 200); assert.equal(result.headers['Cache-Control'], 'no-store');
+  assert.deepEqual(result.body, { ok: false, error: 'cooldown', kid: 1622, status: 'queued', last_finished_at: 1_700_000_000, queue_position: null,
+    coverage: { located: 100, total: 100, collected_at: 1_700_000_000 }, job: null, request_token: null, mighty: false, updates_paused: false,
+    update_available: false, cooldown_remaining_sec: 3600, cooldown_total_sec: 3600 });
+  assert.deepEqual(calls, [['request', [1622]]]);
 });
 
-test('older ordinary in-flight snapshot cannot overwrite a completed fresh fetch', async t => {
-  const handler = await api('map');
-  let release;
-  let calls = 0;
-  t.mock.method(globalThis, 'fetch', async () => ++calls === 1 ? new Promise(resolve => { release = resolve; }) : Response.json(upstream(200)));
-  const old = request(handler, '/api/map?kid=1622');
-  await request(handler, '/api/map?kid=1622&fresh=1');
-  release(Response.json(upstream(100)));
-  assert.equal((await old).body.updated_at, 200);
-  assert.equal((await request(handler, '/api/map?kid=1622')).body.updated_at, 200);
+test('database failures and a missing connection string answer 503 without leaking', async t => {
+  const handler = await api();
+  db(t, () => { throw new Error('secret failure'); });
+  const failed = await request(handler, '/api/map-refresh?kid=1622', 'POST');
+  assert.equal(failed.status, 503); assert.equal(failed.body.error, 'storage_unavailable'); assert.doesNotMatch(JSON.stringify(failed.body), /secret/);
+  db(t, []);
+  assert.equal((await request(handler, '/api/map-refresh?kid=1622')).body.error, 'storage_unavailable');
+  process.env.DATABASE_URL = '';
+  globalThis.kingdomQuery = () => assert.fail('unexpected query');
+  assert.equal((await request(handler, '/api/map-refresh?kid=1622')).status, 503);
 });
 
-test('cooldown refreshes saved coordinates without claiming scan completion and keeps replacement token', async t => {
+test('client refresh against the new POST answer: one POST, cooldown reported, fresh snapshot loaded, not claimed complete', async t => {
   const calls = [];
+  const reported = [];
+  const before = client.scanToken();
   t.mock.method(globalThis, 'fetch', async (url, options) => {
-    calls.push([url, options.method]);
+    calls.push([url, options.method ?? 'GET']);
     if (url.startsWith('/api/map/?')) return Response.json(fixture(200));
-    if (options.method === 'GET') return Response.json(status());
-    return Response.json({ ok: false, error: 'cooldown', cooldown_remaining_sec: 475, request_token: 'replacement-token' });
+    const state = { ok: true, kid: 1622, status: 'done', last_finished_at: 100, queue_position: null, coverage: { located: 1, total: 1, collected_at: 100 },
+      job: null, request_token: null, mighty: false, updates_paused: false, update_available: false };
+    return Response.json(options.method === 'GET' ? state
+      : { ...state, ok: false, error: 'cooldown', status: 'queued', cooldown_remaining_sec: 3600, cooldown_total_sec: 3600 });
   });
-  const result = await client.refreshMap(1622, new AbortController().signal, () => {}, 100);
+  const result = await client.refreshMap(1622, new AbortController().signal, state => reported.push(state), 100);
   assert.equal(result.completed, false); assert.equal(result.snapshot.cities[0].x, 840);
-  assert.equal(calls.filter(([, method]) => method === 'POST').length, 1);
-  assert.match(calls.at(-1)[0], /fresh=1/); assert.equal(client.scanToken(), 'replacement-token');
+  assert.deepEqual(calls.map(([, method]) => method), ['GET', 'POST', 'GET']);
+  assert.match(calls.at(-1)[0], /fresh=1/); assert.equal(client.scanToken(), before);
+  assert.equal(reported.at(-1).cooldown_remaining_sec, 3600);
   assert.equal(client.selectedCity(result.snapshot.cities, '60646302').y, 123);
   assert.equal(client.selectedCity([], 60646302), null);
 });
@@ -186,32 +202,20 @@ test('Retry-After reaches the client cooldown state without retrying a mutation'
   assert.equal(calls, 1); assert.equal(reported.cooldown_remaining_sec, 90);
 });
 
-test('proxy timeout covers a stalled response body and aborts its request', async t => {
-  const handler = await api('map-refresh');
-  t.mock.timers.enable({ apis: ['setTimeout'] });
-  let signal;
-  t.mock.method(globalThis, 'fetch', async (_, options) => { signal = options.signal; return { headers: new Headers(), ok: true, json: () => new Promise(() => {}) }; });
-  const work = request(handler, '/api/map-refresh?kid=1622&token=t_stable', 'POST');
-  await tick(); t.mock.timers.tick(30000);
-  assert.equal((await work).status, 504); assert.equal(signal.aborted, true);
-});
-
-test('dev routing supports status and start on both slash variants', async t => {
+test('dev routing reaches the handler for status and start on both slash variants', async t => {
   const { createServer } = await import('vite');
   const { request: httpRequest } = await import('node:http');
   const { default: config } = await import('../astro.config.mjs');
   const plugin = config.vite.plugins.find(item => item.name === 'mightpulse-player-api');
   const server = await createServer({ configFile: false, plugins: [plugin], server: { port: 0, host: '127.0.0.1' }, appType: 'custom' });
   t.after(() => server.close()); await server.listen();
-  const methods = [];
-  t.mock.method(globalThis, 'fetch', async (_, options) => { methods.push(options.method); return Response.json(status()); });
+  // Validation answers before any database access, so routing is provable without a connection string.
   for (const slash of ['', '/']) for (const method of ['GET', 'POST']) {
     const result = await new Promise((resolve, reject) => {
-      const req = httpRequest(`http://127.0.0.1:${server.httpServer.address().port}/api/map-refresh${slash}?kid=1622&token=t_stable`, { method, headers: { 'sec-fetch-site': 'same-origin' } }, res => {
+      const req = httpRequest(`http://127.0.0.1:${server.httpServer.address().port}/api/map-refresh${slash}?kid=0`, { method, headers: { 'sec-fetch-site': 'same-origin' } }, res => {
         let body = ''; res.on('data', chunk => { body += chunk; }); res.on('end', () => resolve({ status: res.statusCode, body: JSON.parse(body) }));
       }); req.on('error', reject); req.end();
     });
-    assert.equal(result.status, 200); assert.equal(result.body.ok, true);
+    assert.equal(result.status, 400); assert.equal(result.body.error, 'invalid_kid');
   }
-  assert.deepEqual(methods, ['GET', 'POST', 'GET', 'POST']);
 });

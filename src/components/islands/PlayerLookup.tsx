@@ -188,7 +188,7 @@ export default function PlayerLookup({ heroes: catalog }: { heroes: HeroCatalog 
         }} className={`min-w-0 rounded-lg border px-2 py-3 text-sm font-bold ${tab === key ? 'border-accent bg-accent text-on-accent' : 'border-border bg-bg text-muted hover:text-text'}`}>{label}</button>)}
       </div>
       <div id="lookup-panel-search" role="tabpanel" aria-labelledby="lookup-tab-search" hidden={tab !== 'search'}><PlayerDiscovery onSelect={(value, type) => { void lookup(value, type); }} /></div>
-      <div id="lookup-panel-map" role="tabpanel" aria-labelledby="lookup-tab-map" hidden={tab !== 'map'}><KingdomMap playerKingdom={hasValue(player?.kid) ? String(player?.kid) : undefined} playerLocation={numeric(player?.x) !== undefined && numeric(player?.y) !== undefined ? { x: numeric(player?.x)!, y: numeric(player?.y)! } : undefined} playerAid={hasValue(player?.alliance?.aid) ? String(player?.alliance?.aid) : undefined} onSelect={(value, type) => { void lookup(value, type, true); }} /></div>
+      <div id="lookup-panel-map" role="tabpanel" aria-labelledby="lookup-tab-map" hidden={tab !== 'map'}><KingdomMap playerKingdom={hasValue(player?.kid) ? String(player?.kid) : undefined} onSelect={(value, type) => { void lookup(value, type, true); }} /></div>
       <div id="lookup-panel-id" role="tabpanel" aria-labelledby="lookup-tab-id" hidden={tab !== 'id'}>
     <form onSubmit={submit} aria-busy={loading} noValidate>
       <label htmlFor="governor-id" className="block font-bold">{tr("영주 ID (게임 프로필의 ID)")}</label>
@@ -213,7 +213,7 @@ export default function PlayerLookup({ heroes: catalog }: { heroes: HeroCatalog 
           <Stat label={tr("왕국")}>{format(player.kid)}</Stat><Stat label={tr("전투력")}>{format(player.power)}</Stat><Stat label={tr("도시 센터")}>{townLevel(player.town_center_level)}</Stat>
           <Stat label={tr("VIP 레벨")}>{format(player.vip)}</Stat><Stat label={tr("처치 수")}>{format(player.kills)}</Stat>
         </dl>
-        <PlayerLocationMap key={JSON.stringify([result.uid, queriedId, player.kid, player.x, player.y])} kid={player.kid} x={player.x} y={player.y} uid={result.uid} onLookup={(value) => { void lookup(value, 'uid', true); }} />
+        <PlayerLocationMap key={JSON.stringify([result.uid, queriedId, player.kid, player.x, player.y])} kid={player.kid} x={player.x} y={player.y} uid={result.uid} name={player.nick_name} townLevel={player.town_center_level} power={player.power} tag={alliance?.abbr} aid={alliance?.aid} profileCachedAt={updated ? updated.getTime() / 1000 : null} onLookup={(value) => { void lookup(value, 'uid', true); }} />
         <div className="mt-6 border-t border-border pt-4 text-sm text-muted">
           {updated ? <p>{tr("갱신 시간 ")}<time dateTime={updated.toISOString()}>{updated.toLocaleString(playerNumberLocale(), { timeZone: 'Asia/Seoul' })}</time>{tr(" (한국 시간)")}</p> : <p>{tr("갱신 시간 정보 없음")}</p>}
           {age !== undefined && age >= 0 && <p className="mt-1">{age < 60 ? tr("1분 이내 갱신") : `${format(Math.floor(age / 60))}${tr("분 전 갱신")}`}</p>}

@@ -10,7 +10,7 @@ interface SearchPlayer {
   kid?: number; power?: number; town_center_level?: number; x?: number; y?: number;
   alliance_abbr?: string; alliance_name?: string; avatar_url?: string;
 }
-interface SearchResponse { ok: boolean; query?: string; results?: SearchPlayer[]; total?: number; message?: string }
+interface SearchResponse { ok: boolean; query?: string; results?: SearchPlayer[]; total?: number; message?: string; stale?: boolean; partial?: boolean }
 const field = 'min-w-0 w-full rounded-lg border border-border bg-bg px-4 py-3';
 const button = 'rounded-lg bg-accent px-5 py-3 font-bold text-on-accent disabled:opacity-60';
 
@@ -71,6 +71,7 @@ export default function PlayerDiscovery({ onSelect }: { onSelect: SelectPlayer }
     </form>
     <p role="status" className="text-sm text-muted">{loading ? tr("닉네임을 검색하고 있습니다.") : result ? `${tr("검색 결과 ")}${(result.total ?? rows.length).toLocaleString(playerNumberLocale())}${tr("명 · 표시 가능한 결과 ")}${rows.length.toLocaleString(playerNumberLocale())}${tr("명")}` : tr("검색어를 입력하면 영주 목록이 표시됩니다.")}</p>
     {error && <p role="alert" className="text-sm text-danger">{playerError(error, locale)}</p>}
+    {(result?.stale || result?.partial) && <p role="status" className="rounded-lg bg-raised p-3 text-sm text-muted">{locale === 'en' ? 'Showing saved search data because the latest lookup was unavailable. Recent moves, name changes, or uncaptured players may be missing.' : '현재 조회에 연결하지 못해 저장된 검색 결과를 표시합니다. 최근 이동·닉네임 변경이나 미수집 영주는 반영되지 않을 수 있습니다.'}</p>}
     {result && rows.length === 0 && <p className="rounded-lg bg-raised p-4 text-muted">{tr("검색된 영주가 없습니다. 검색어를 줄이거나 왕국 번호를 비워 다시 검색해 주세요.")}</p>}
     <ul className="space-y-2">{rows.slice(page * 30, (page + 1) * 30).map((player) => <li key={`${player.uid}-${player.kid}`}><button type="button" onClick={() => {
       const fid = String(player.fid ?? '');

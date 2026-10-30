@@ -10,13 +10,20 @@ const compile = async path => ts.transpileModule(await readFile(new URL(path, im
 const moduleURL = source => `data:text/javascript;base64,${Buffer.from(source).toString('base64')}#${serial++}`;
 const guardSource = await compile('../src/lib/server/same-site.ts');
 const discoverySource = await compile('../src/lib/server/mightpulse-discovery.ts');
+// 저장소 드라이버는 절대 호출되지 않아야 한다: 가드와 입력 검증이 먼저 응답한다.
+const driver = moduleURL('export const neon = () => ({ query() { throw new Error("unexpected database query"); } });');
+const storeSource = (await compile('../src/lib/server/kingdom-store.ts')).replace('@neondatabase/serverless', driver);
 // 호출마다 새 모듈 그래프를 만들어 요청 수 제한 카운터를 테스트끼리 분리한다.
 const freshGuard = async () => (await import(moduleURL(guardSource))).allowRequest;
 async function freshHandler(name) {
   const guard = moduleURL(guardSource);
   const discovery = moduleURL(discoverySource.replace('./same-site.js', guard));
+  const store = moduleURL(storeSource.replace('./mightpulse-discovery.js', discovery));
+  const map = moduleURL((await compile('../src/lib/server/mightpulse-map.ts')).replace('./mightpulse-discovery.js', discovery)
+    .replace('./kingdom-store.js', store));
   const source = (await compile(`../api/${name}.ts`))
-    .replace('../src/lib/server/mightpulse-discovery.js', discovery).replace('../src/lib/server/same-site.js', guard);
+    .replace('../src/lib/server/mightpulse-discovery.js', discovery).replace('../src/lib/server/same-site.js', guard)
+    .replace('../src/lib/server/kingdom-store.js', store).replace('../src/lib/server/mightpulse-map.js', map);
   return (await import(moduleURL(source))).default;
 }
 function res(out) {

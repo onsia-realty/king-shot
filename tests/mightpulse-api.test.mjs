@@ -76,7 +76,8 @@ test('fixed URL, bearer header, top-level allowlist and hidden gear', async t =>
   t.mock.timers.enable({ apis: ['Date'], now: 1_000_000 });
   const fetch = t.mock.method(globalThis, 'fetch', async (url, options) => {
     assert.equal(url, 'https://api.mightpulse.com/v1/players/241496933?include=base,heroes,ranks,gov_gear');
-    assert.deepEqual(options.headers, { Authorization: 'Bearer mock-key-only' });
+    assert.deepEqual(options.headers, { Authorization: 'Bearer mock-key-only',
+      'User-Agent': 'kingshot-gongryak-site/1.0 (+https://xn--ob0bx7rdoh9mq.xyz)', Accept: 'application/json' });
     assert.equal(options.redirect, 'error');
     assert.ok(options.signal instanceof AbortSignal);
     return Response.json(fixture);

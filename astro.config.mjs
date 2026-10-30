@@ -23,6 +23,7 @@ function playerApi() {
           '/api/player': '/api/player.ts', '/api/player/': '/api/player.ts',
           '/api/search': '/api/search.ts', '/api/search/': '/api/search.ts',
           '/api/map': '/api/map.ts', '/api/map/': '/api/map.ts',
+          '/api/alliance-map': '/api/alliance-map.ts', '/api/alliance-map/': '/api/alliance-map.ts',
           '/api/map-refresh': '/api/map-refresh.ts', '/api/map-refresh/': '/api/map-refresh.ts',
         };
         const modulePath = routes[/** @type {keyof typeof routes} */ (path)];

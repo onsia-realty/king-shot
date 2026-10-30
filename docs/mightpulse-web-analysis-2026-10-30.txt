@@ -1,0 +1,63 @@
+MightPulse web analysis — 2026-10-30
+
+Scope: web map and player UI only. APK work is assigned to Claude.
+Method: normal in-app browser UI and scoped Chrome DevTools Protocol observations.
+REA analyze-web-bundle CLI requirements were inspected, but that command was NOT
+run against the page: it requires a loopback CDP endpoint and target ID. The browser
+tool's own CDP capability supplied the observations below. No challenge bypass,
+cookie export, authentication changes, paid-feature access or refresh-button POST
+was manually performed. Opening a profile triggered its normal automatic refresh.
+
+Observed source assets:
+- /static/map.js?v=20261026badlands (119833 JS string characters)
+- /static/app.js?v=20261023cmp3 (202058 JS string characters)
+
+Observed normal page requests, HTTP 200:
+- GET /api/map?kid=1622&layers=cities&limit=50000
+- /api/map/update/status?kid=1622&token=[omitted]
+- /api/me and /auth/patreon/me
+- /api/players/59286492
+- /api/players/59286492/refresh/status
+- /api/players/59286492/refresh?force=0 (page-initiated; method not recorded here)
+
+Map response: kid, bounds, cities, objects, alliances, focus, stats, layers, mighty.
+Sample: 1332 cities, 250 alliances; bounds min=0 max=1200.
+City fields include uid,nick_name,power,stove_lv,tc,kid,map_kid,aid,alliance_abbr,
+x,y,alliance_rank,shield_active,shield_endtime,shield_remaining,shield_label,
+burn_active,burn_endtime,burn_remaining,burn_label,city_skin_id,city_skin_icon,tg.
+stats has separate location_updated_at and shield_updated_at.
+objects_by_kind reported camp:12; this does not establish access to camp data.
+
+Map implementation observations:
+- Canvas 2D renderer, camera-based rotated coordinates and inverse transform.
+- requestAnimationFrame coalesces redraws; viewport filtering avoids drawing all cities.
+- hitTest converts pointer coordinates to world coordinates, selects nearby city
+  centers and adjusts the hit threshold with zoom; filters apply to hit testing.
+- renderSearchResults filters already-loaded arrays, with bounded result lists.
+- Tested Player search DiKaDo: result TC54,440,641 and no additional /api request
+  during the search observation window.
+- Selecting result opens a map popup. Open profile links to /?uid=59286492.
+
+Player implementation observations:
+- Profile calls MightPulse's own /api/players/{uid} and refresh/status endpoints.
+- Response supplies heroes, lords_gear, lords_gear_privacy and lords_gear_message,
+  plus raw-style fields arena_heroes_json and lords_equipments_json.
+- Separate map_updated_at,stats_updated_at,detail_updated_at,arena_updated_at.
+- Tested profile displayed governor gear privacy active, while arena hero gear
+  remained visible. No private gear was accessed.
+- app.js also references /api/search and /api/search/alliances.
+
+Comparison:
+Our api/map.ts already requests the same map URL and normalizes cities/alliances.
+Our api/search.ts uses this map snapshot for kingdom-scoped nickname filtering.
+The map failure is not explained by a newly changed map URL. Earlier server-side
+requests received Cloudflare HTTP403 challenge while normal browser requests work.
+Our official v1 player API path differs intentionally from the site's internal path.
+
+Conclusions and limits:
+Map UI behavior can be independently implemented from these observed mechanics.
+The page retrieves map and equipment data from MightPulse, not directly from a
+Kingshot homepage in the observed flow. MightPulse's upstream server-side collector
+and its original data source are NOT revealed by these frontend requests.
+Reading frontend source does not restore our server's blocked data access.
+No website source changes, deployment, or independent live data collector completed.

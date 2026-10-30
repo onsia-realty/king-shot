@@ -1,0 +1,84 @@
+Task: Connect all collected alliances/cities of a kingdom on one native map.
+
+2026-10-31 correction (supersedes RUNNING / REMAINING below):
+- The old local collector and queued continuation are no longer running. Their exec
+  sessions are gone, so the exact reason for the historical exit is not established.
+  Do not describe initial collection as still active.
+- Current 1622 DB: 2,997 roster entries; 452 checked profiles; 128 positions; 324
+  checked profiles without coordinates; 2,544 never attempted and one unfinished attempt.
+  A fresh sample of a missing-position profile returned HTTP 200 with x=null,y=null;
+  an unattempted profile returned HTTP 200 with valid XY. The API key works.
+- Public GitHub default branch main has no collect-kingdoms.yml (HTTP 404).
+  The collector workflow is still an untracked local file, not a running cloud job.
+- Found/fixed a workflow activation bug: Actions passes KIDS='' for scheduled/default
+  runs, but config rejected it. Empty/whitespace now means use the existing queue.
+- Added sanitized progress counts every 25 calls. All 12 collector tests passed,
+  including the scheduled empty-input case and checkpoint continuation behavior.
+- Revised README: located count is not a pre-known list of UIDs. Initial profile calls
+  must cover discovered roster entries, not just the eventual located subset. The
+  earlier 8-hour claim and strict FIFO description were inaccurate.
+- No new PC collector, commit, secret upload, production deployment or cloud workflow
+  activation was performed. Follow the user's cloud-only constraint going forward.
+
+Implemented locally:
+- KingdomMap defaults to StoredKingdomMap and GET /api/map; all alliances selected.
+- Name/tag filtering, per-alliance selection, restored full selection, actual plotted counts.
+- Canvas fits all filtered positions and sprite margins; additional data preserves camera.
+- Native city popup opens our own player lookup. No iframe or external map website.
+- Collector enumerates official alliance rankings, checkpoints bulk rosters, collects base
+  profiles, validates matching UIDs/home kingdom and coordinates, and preserves source time.
+- Partial stored cities are returned before the known roster is fully collected.
+- Interactive /api/alliance-map batches also persist through save-alliance-map.ts.
+  Older cached profiles cannot replace newer cached positions. Storage failures preserve
+  the live lookup and show a warning for nonempty unsaved batches.
+
+Verified:
+- 113 focused tests passed (collector, stored map, positions persistence, existing API,
+  same-site guard, refresh compatibility, coordinate geometry).
+- Astro check: 138 files, 0 errors / 0 warnings (74 hints).
+- Production build: 96 pages.
+- Public build audit passed with both actual API and DB credentials checked for leakage.
+- Existing Neon login is confirmed. The old email-verification tab was stale;
+  navigating to the console opened the authenticated dashboard.
+- DATABASE_URL safely added to .env.local; existing MIGHTPULSE_API_KEY preserved.
+  .env.local, .env.kingdom-readonly.local and .env.kingdom-validation.local are
+  Git-ignored. Never print their values. The validation env targets ONLY the test branch.
+- Neon project red-frost-31209783 remains on Free. Validation branch
+  codex-kingdom-map-20261030 (br-raspy-bar-b7q75y0n) was cloned from main,
+  with automatic expiry on 2026-10-31 13:43:10 KST.
+- Actual branch verification: all 7 DDL statements applied twice; bulk roster/profile
+  upserts and interactive SAVE_POSITIONS_SQL succeeded; two alliances coexisted;
+  older source snapshots did not replace newer coordinates; wrong-kingdom positioned
+  rows failed CHECK constraint 23514; visits_total row count was preserved.
+- The same migration was applied successfully to production/main after those checks.
+  public.alliances, players and kingdom_requests now exist alongside unchanged visits
+  tables. Synthetic validation fixtures were used only on the expiring test branch.
+- Collector target selection now prioritizes less-covered alliances. A real branch SQL
+  test selected a low-power member of an unlocated alliance ahead of a high-power
+  member of an already mapped alliance. All 11 collector tests passed again.
+- Interactive GET /api/alliance-map/?kid=1622&tag=ROK&offset=0 returned HTTP 200,
+  5 positions, stored=true and failed=0 against the actual local server/production DB.
+- Browser: ROK, CHL, FTM and other alliances coexist on the native canvas. RVL filter
+  displayed its 2 cities, and full selection restored every stored city. City list ->
+  popup -> gear lookup displayed Hailey's own-page profile and arena equipment.
+  Governor gear was correctly reported private by the upstream response.
+- Reloaded the browser, re-entered 1622, and recovered the stored map successfully.
+  The 14:02 KST UI snapshot showed 99 cities across 57 alliances, with 2,997 known
+  roster entries; counts continue growing. Ranked alliance discovery returned 100.
+- Saved proof: C:/Users/Dae/AppData/Local/Temp/kingshot-stored-kingdom-map-20261030.png
+- Local Astro development server restarted at http://127.0.0.1:4322 (pid 60380).
+
+RUNNING / REMAINING:
+- Initial data collection is active locally, not blocked by login. Current bounded
+  collector: node PID 51128, exec session 58324, MAX_CALLS=300, TOP_ALLIANCES=100.
+- A serialized one-off continuation is queued in exec session 68704: it waits for
+  PID 51128 to exit, verifies that no other collector is running, then continues with
+  MAX_CALLS=4000 for the remaining known profiles. Daily usage is checked before
+  starting and at least 200 calls are reserved. It stops earlier if work is exhausted.
+  This is initial collection on the current PC, NOT a recurring automation.
+  Check process/session state before starting any new collector; never overlap them.
+- Git diff --check passed. No commit or deployment was performed in this turn.
+- The hourly GitHub workflow is only an existing untracked file; NOT an active scheduler.
+  Deployment and scheduler activation remain separate work.
+- Official rankings discover at most 100 alliances; a combined stored map is NOT a
+  complete/realtime world scan and cannot promise unaffiliated or uncollected players.

@@ -1,0 +1,45 @@
+name: 왕국 데이터 수집
+
+# MightPulse 공식 API 에서 큐(kingdom_requests)에 있는 왕국의 연맹·플레이어·좌표를 받아
+# Neon 에 쌓는다. 파일을 바꾸지 않으므로 커밋은 없다.
+# 보조 수집기로 수동 실행만 허용한다. 한 번에 MAX_CALLS(180)회까지만 쓴다.
+# 지도 복원 경로와 API 한도를 공유하므로 자동 예약 실행은 기본으로 켜지 않는다.
+
+on:
+  workflow_dispatch:
+    inputs:
+      kids:
+        description: '큐에 넣을 왕국 번호(쉼표 구분, 예 1622). 비우면 큐만 처리'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+# 수동 실행이 겹쳐 분당 한도를 넘지 않게 한다.
+concurrency:
+  group: collect-kingdoms
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # 스크립트가 exit 1 이면 여기서 워크플로가 실패한다(키 만료·DB 오류·응답 형식 변경).
+      # 조용히 넘기지 않기 위한 것이므로 continue-on-error 를 붙이지 말 것.
+      - name: 수집
+        env:
+          MIGHTPULSE_API_KEY: ${{ secrets.MIGHTPULSE_API_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          KIDS: ${{ inputs.kids }}
+        run: node scripts/collect-kingdoms.mjs
