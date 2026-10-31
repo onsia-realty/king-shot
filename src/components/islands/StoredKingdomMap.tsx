@@ -1,19 +1,13 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useLocale } from '../../lib/locale';
 import { retryAfterSeconds } from '../../lib/api-response';
+import { locationTimestamp, parseMapSnapshot, type MapSnapshot } from '../../lib/map-refresh';
+import MapRefresh from './MapRefresh';
 import OfficialAllianceMap from './OfficialAllianceMap';
-import KingdomMapCanvas, { allianceColor, cityImage, type MapAlliance, type MapCity, type MapFocus } from './KingdomMapCanvas';
+import KingdomMapCanvas, { allianceColor, type MapAlliance, type MapCity, type MapFocus } from './KingdomMapCanvas';
 
 interface Props { kid: number; initialFocus?: MapFocus; selectedUID?: string; onLookup: (uid: string) => void }
-interface StoredMap {
-  ok: true; kid: number; bounds: { min: number; max: number };
-  cities: MapCity[]; alliances: MapAlliance[];
-  updated_at?: number | string | null;
-  coverage?: { located: number; total: number; collected_at?: number | string | null };
-  partial?: boolean;
-  stale?: boolean;
-  source?: string;
-}
+type StoredMap = MapSnapshot;
 type Issue = 'not_collected' | 'storage' | 'limited' | 'failed';
 export class StoredMapError extends Error {
   constructor(public issue: Issue, public queued = false, public retryAfter = 0) { super(issue); }
@@ -21,12 +15,6 @@ export class StoredMapError extends Error {
 const control = 'rounded-lg border border-border bg-raised px-3 py-2 text-sm disabled:opacity-40';
 const field = 'mt-2 w-full min-w-0 rounded-lg border border-border bg-bg px-3 py-3';
 export const allianceKey = (aid: MapCity['aid']) => aid == null || String(aid) === '0' || aid === '' ? 'none' : String(aid);
-
-// Only the original city's icon namespace is allowed, in addition to the canvas host check.
-function mapCityIcon(path: unknown): string | null {
-  if (typeof path !== 'string' || !/^(?:https:\/\/mightpulse\.com)?\/assets\/icons\/skin_icon_[0-9]+\.png$/.test(path)) return null;
-  return cityImage(path) ?? null;
-}
 
 export async function fetchStoredMap(kid: number, signal: AbortSignal, reload = false): Promise<StoredMap> {
   const response = await fetch(`/api/map/?kid=${kid}${reload ? '&fresh=1' : ''}`, {
@@ -39,18 +27,9 @@ export async function fetchStoredMap(kid: number, signal: AbortSignal, reload = 
   if (response.status === 202 || data?.error === 'not_collected') {
     throw new StoredMapError('not_collected', data?.kid === kid && data?.queued === true);
   }
-  if (!response.ok || !data || data.ok !== true || data.kid !== kid
-    || !Number.isFinite(data.bounds?.min) || !Number.isFinite(data.bounds?.max) || data.bounds.min >= data.bounds.max
-    || !Array.isArray(data.cities) || !Array.isArray(data.alliances)
-    || !data.cities.every((city: MapCity) => city && /^(?:[1-9]\d*)$/.test(String(city.uid))
-      // map_kid is the location; kid/homekid can identify a visitor's home kingdom.
-      && (city.map_kid != null ? city.map_kid === kid : city.kid == null || city.kid === kid)
-      && Number.isFinite(city.x) && Number.isFinite(city.y)
-      && city.x >= data.bounds.min && city.x <= data.bounds.max && city.y >= data.bounds.min && city.y <= data.bounds.max)
-    || !data.alliances.every((alliance: MapAlliance) => alliance && ['string', 'number'].includes(typeof alliance.aid))) {
-    throw new StoredMapError('failed');
-  }
-  return { ...data, cities: data.cities.map((city: MapCity) => ({ ...city, city_skin_icon: mapCityIcon(city.city_skin_icon) })) };
+  if (!response.ok) throw new StoredMapError('failed');
+  try { return parseMapSnapshot(data, kid); }
+  catch { throw new StoredMapError('failed'); }
 }
 
 // Counts come from the plotted cities, never a possibly stale alliance city_count.
@@ -98,11 +77,14 @@ export function StoredMapScope({ kid, initialFocus, selectedUID: profileUID, onL
   const [selectedUID, setSelectedUID] = useState<string | null>(null);
   const [focus, setFocus] = useState<MapFocus | null>(null);
   const [manual, setManual] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const refreshLock = useRef(false);
+  const [profileRefreshed, setProfileRefreshed] = useState(false);
   const request = useRef<AbortController | null>(null);
   const focusedProfile = useRef<string | null>(null);
 
   async function load(reload = false) {
-    if (request.current || Date.now() < retryUntil) return;
+    if (request.current || refreshLock.current || Date.now() < retryUntil) return;
     const controller = new AbortController(); request.current = controller;
     let timedOut = false;
     const timer = window.setTimeout(() => { timedOut = true; controller.abort(); }, 30000);
@@ -135,6 +117,7 @@ export function StoredMapScope({ kid, initialFocus, selectedUID: profileUID, onL
     const target = JSON.stringify([profileUID, initialFocus?.x, initialFocus?.y, initialFocus?.scale]);
     if (focusedProfile.current === target) return;
     focusedProfile.current = target;
+    setProfileRefreshed(false);
     if (!profileUID && !initialFocus) return;
     const city = snapshot.cities.find(city => String(city.uid) === profileUID);
     // Profile coordinates may have a different timestamp: never merge them into the map.
@@ -148,6 +131,8 @@ export function StoredMapScope({ kid, initialFocus, selectedUID: profileUID, onL
   const filtered = useMemo(() => filterStoredCities(snapshot?.cities ?? [], groups, query, activeAid), [snapshot, groups, query, activeAid]);
   const visibleGroups = useMemo(() => storedAllianceGroups(filtered, groups), [filtered, groups]);
   const selected = filtered.find(city => String(city.uid) === selectedUID) ?? null;
+  const targetUID = profileUID ?? selectedUID;
+  const targetCity = snapshot?.cities.find(city => String(city.uid) === targetUID);
   const allianceCount = groups.filter(group => allianceKey(group.aid) !== 'none').length;
   const count = (n: number) => n.toLocaleString(en ? 'en-US' : 'ko-KR');
   const label = (group: MapAlliance) => allianceKey(group.aid) === 'none' ? (en ? 'No alliance / unknown' : '연맹 없음 / 미상')
@@ -165,19 +150,38 @@ export function StoredMapScope({ kid, initialFocus, selectedUID: profileUID, onL
         ? (en ? 'Requests are temporarily limited. Please retry later.' : '요청이 일시적으로 제한되었습니다. 잠시 후 다시 시도해 주세요.')
         : (en ? 'Could not load the map. Please retry.' : '지도를 불러오지 못했습니다. 다시 시도해 주세요.');
   function selectAll() { setAid(''); setQuery(''); setSelectedUID(null); }
+  function receiveSnapshot(data: MapSnapshot) {
+    const next = parseMapSnapshot(data, kid);
+    setSnapshot(next); setIssue(null); setProfileRefreshed(true);
+    const uid = profileUID ?? selectedUID;
+    if (uid) {
+      const city = next.cities.find(city => String(city.uid) === uid);
+      setAid(''); setQuery(''); setSelectedUID(city ? String(city.uid) : null);
+      setFocus(city ? { x: city.x, y: city.y, scale: 20 } : null);
+    }
+  }
 
   return <section className="min-w-0 space-y-4" aria-label={en ? 'Kingdom map' : '왕국 지도'}>
     <div>
       <h3 className="font-bold">{en ? `Kingdom ${kid} · City map` : `왕국 ${kid} · 도시 지도`}</h3>
       <p className="mt-1 text-sm text-muted">{en ? 'Cities are shown from the saved map. Recent moves may not be reflected.' : '저장된 지도 기준으로 도시를 표시합니다. 최근 이동은 반영되지 않을 수 있습니다.'}</p>
     </div>
-    <div className="flex flex-wrap items-center gap-3">
-      <button type="button" className={control} disabled={loading || retryUntil > 0} onClick={() => void load(true)}>{en ? 'Reload map' : '지도 다시 불러오기'}</button>
-    </div>
+    <MapRefresh kid={kid} selectedUID={profileUID} baseline={locationTimestamp(snapshot)} disabled={loading || retryUntil > 0}
+      onBusyChange={busy => {
+        if (busy && (request.current || refreshLock.current || Date.now() < retryUntil)) return false;
+        refreshLock.current = busy; setRefreshing(busy);
+      }} onSnapshot={receiveSnapshot}>
+      <button type="button" className={control} disabled={loading || refreshing || retryUntil > 0} onClick={() => void load(true)}>{en ? 'Reload map' : '지도 다시 불러오기'}</button>
+      {snapshot && <span className="order-last basis-full text-xs text-muted" aria-live="polite" data-testid="map-location-summary">
+        {targetUID && (targetCity
+          ? `${targetCity.nick_name || `UID ${targetUID}`} · X: ${targetCity.x}, Y: ${targetCity.y} · `
+          : (en ? `UID ${targetUID} was not found in this map. Current location is unknown. ` : `이 지도에서 UID ${targetUID}를 찾지 못했습니다. 현재 위치를 알 수 없습니다. `))}
+        {snapshot.source === 'mightpulse' ? (en ? 'Map positions updated at: ' : '지도 위치 갱신 시각: ') : (en ? 'Saved at: ' : '저장 시각: ')}{stamp ?? (en ? 'unknown' : '정보 없음')} (KST)
+      </span>}
+    </MapRefresh>
     {loading && <p role="status" className="text-sm text-muted">{en ? 'Loading map…' : '지도를 불러오는 중…'}{snapshot && (en ? ' The previous map remains visible.' : ' 기존 지도를 계속 표시합니다.')}</p>}
     {issue && <div role="status" className="space-y-1 text-sm text-danger">
       <p>{issueText}</p>
-      {issue.queued && <p>{en ? 'The server reports this kingdom is queued for collection. Reload later.' : '서버에서 이 왕국의 수집 대기열 등록을 확인했습니다. 나중에 다시 불러와 주세요.'}</p>}
       <p>{snapshot ? (en ? 'Keeping the previously loaded map; this attempt did not update it.' : '이전에 불러온 지도를 유지합니다. 이번 요청으로 지도는 갱신되지 않았습니다.') : (en ? 'This does not mean the kingdom has no cities.' : '왕국에 도시가 없다는 뜻은 아닙니다.')}</p>
     </div>}
     {snapshot && <>
@@ -191,7 +195,7 @@ export function StoredMapScope({ kid, initialFocus, selectedUID: profileUID, onL
         {collected && <p className="text-xs text-muted">{en ? `Collection record saved at: ${collected} (KST)` : `수집 기록 저장 시각: ${collected} (한국 시간)`}</p>}
         {hasCoverage && <p className="text-xs text-muted">{en ? `Collection record: ${count(coverage.located)} located / ${count(coverage.total)} known roster entries; not a kingdom-wide total.` : `수집 기록: 확인된 명단 ${count(coverage.total)}명 중 좌표 ${count(coverage.located)}명 · 왕국 전체 인원 아님`}</p>}
       </div>
-      {initialFocus && (!profileUID || !snapshot.cities.some(city => String(city.uid) === profileUID)) && <p className="text-xs text-muted">{en ? 'This profile could not be matched to a city on the map. Centered on profile coordinates only; their timestamp may differ from the map.' : '이 프로필과 일치하는 도시를 지도에서 찾지 못했습니다. 프로필 좌표는 화면 중심으로만 사용하며 지도와 확인 시각이 다를 수 있습니다.'}</p>}
+      {!profileRefreshed && initialFocus && (!profileUID || !snapshot.cities.some(city => String(city.uid) === profileUID)) && <p className="text-xs text-muted">{en ? 'This profile could not be matched to a city on the map. Centered on profile coordinates only; their timestamp may differ from the map.' : '이 프로필과 일치하는 도시를 지도에서 찾지 못했습니다. 프로필 좌표는 화면 중심으로만 사용하며 지도와 확인 시각이 다를 수 있습니다.'}</p>}
       <div className="grid gap-3 sm:grid-cols-2">
         <label htmlFor={`${id}-query`} className="text-sm font-bold">{en ? 'Nickname or alliance tag' : '닉네임 / 연맹 태그 검색'}
           <input id={`${id}-query`} type="search" className={field} value={query} onChange={e => { setQuery(e.target.value); setSelectedUID(null); }} placeholder={en ? 'Search cities' : '도시 검색'} />

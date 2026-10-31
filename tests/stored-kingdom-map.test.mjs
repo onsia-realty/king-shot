@@ -52,9 +52,15 @@ const canvasURL = url(imports(await compile('../src/components/islands/KingdomMa
   '../../lib/player-localization': localization, './mapHitGeometry': geometry,
   '../../assets/buildings/town-center.webp': asset,
 }));
+const refreshClientURL = url(imports(await compile('../src/lib/map-refresh.ts'), { './api-response': response }));
+const refreshURL = url(imports(await compile('../src/components/islands/MapRefresh.tsx'), {
+  react, 'react/jsx-runtime': jsx, '../../lib/locale': locale, '../../lib/api-response': response, '../../lib/map-refresh': refreshClientURL,
+}));
+const { default: MapRefresh, MapRefreshScope } = await import(refreshURL);
 const storedURL = url(imports(await compile('../src/components/islands/StoredKingdomMap.tsx'), {
   react, 'react/jsx-runtime': jsx, '../../lib/locale': locale,
   '../../lib/api-response': response, './OfficialAllianceMap': official, './KingdomMapCanvas': canvasURL,
+  '../../lib/map-refresh': refreshClientURL, './MapRefresh': refreshURL,
 }));
 const { fitCities, default: Canvas } = await import(canvasURL);
 const { citySpriteSize, citySpriteRect } = await import(geometry);
@@ -81,6 +87,8 @@ const text = tree => typeof tree === 'string' || typeof tree === 'number' ? Stri
   : tree ? [tree.props?.children].flat(Infinity).map(text).join(' ') : '';
 const button = (tree, name) => nodes(tree).find(n => n.type === 'button' && text(n) === name);
 const canvas = tree => nodes(tree).find(n => n.type === Canvas)?.props;
+const refreshProps = tree => nodes(tree).find(n => n.type === MapRefresh)?.props;
+const settle = host => { host.render(); host.commit(); return host.render(); };
 const city = (uid, x, y, extra = {}) => ({ uid, x, y, ...extra });
 const cities = [city(1, 0, 0, { aid: 11, nick_name: '달빛', alliance_abbr: 'AAA' }),
   city(2, 1200, 1200, { aid: '22', nick_name: 'Moon', alliance_abbr: 'BBB' }),
@@ -364,4 +372,144 @@ test('editing the kingdom input or receiving a profile kingdom does not submit o
   host.render({ playerKingdom: '1624', onSelect() {} }); host.commit();
   assert.equal(nodes(host.render()).find(n => n.type === Stored).props.kid, 1622);
   host.unmount();
+});
+
+for (const lang of ['ko', 'en']) test(`latest-location cooldown loads moved city without POST, with honest ${lang} copy and formatted countdown`, async t => {
+  const restoreWindow = browserTimers();
+  globalThis.__storedMapLocale = lang;
+  let mapReads = 0;
+  const calls = [];
+  const moved = { ...snapshot(), source: 'mightpulse', updated_at: 1793415207.9350095,
+    cities: [city(60629598, 1187, 1193, { nick_name: 'Opendoor', aid: 22 })] };
+  t.mock.method(globalThis, 'fetch', async (url, options) => {
+    calls.push([url, options.method ?? 'GET']);
+    if (url.startsWith('/api/map-refresh/')) return Response.json({ ok: true, kid: 1622, job: null,
+      update_available: false, cooldown_remaining_sec: 759, ip_cooldown_remaining_sec: 700, last_finished_at: moved.updated_at });
+    return Response.json(++mapReads === 1 ? { ...snapshot(), source: 'official_profiles', updated_at: 9999999999,
+      cities: [city(60629598, 859, 353, { nick_name: 'Opendoor' })] } : moved);
+  });
+  const map = mount(StoredMapScope, { kid: 1622, selectedUID: '60629598', initialFocus: { x: 859, y: 353 }, onLookup() {} });
+  await flush(); let tree = settle(map);
+  assert.equal(refreshProps(tree).baseline, null, 'DB save time must not become a location baseline');
+  const refresh = mount(MapRefreshScope, refreshProps(tree));
+  t.after(() => { refresh.unmount(); map.unmount(); restoreWindow(); delete globalThis.__storedMapLocale; });
+  const label = lang === 'en' ? 'Latest location' : '최신 위치 찾기';
+  button(refresh.render(), label).props.onClick();
+  await flush(); tree = settle(map);
+  refresh.render(refreshProps(tree)); let ui = settle(refresh);
+  assert.deepEqual(canvas(tree).focus, { x: 1187, y: 1193, scale: 20 });
+  assert.equal(canvas(tree).selected.uid, 60629598);
+  assert.ok(calls.every(c => c[1] === 'GET'));
+  assert.equal(calls.length, 3);
+  assert.match(text(ui), lang === 'en' ? /Please wait.*saved map/ : /다음 위치 수집까지 기다려.*저장 지도/);
+  assert.match(text(ui), lang === 'en' ? /12m 39s/ : /12분 39초/);
+  assert.match(text(ui), /Opendoor · X: 1187, Y: 1193/);
+  assert.ok(text(ui).includes(savedTime(moved.updated_at, lang === 'en')));
+  assert.ok(button(ui, label).props.disabled);
+  assert.equal(button(ui, lang === 'en' ? 'Reload map' : '지도 다시 불러오기').props.disabled, false);
+  const summary = nodes(ui).find(n => n.props?.['data-testid'] === 'map-location-summary');
+  assert.match(summary.props.className, /basis-full/);
+  assert.doesNotMatch(text(ui), /MightPulse|수집기가 주기적으로|재수집을 요청했습니다|Scan completed|수집이 완료/);
+});
+
+test('completed refresh clears conflicting filters, moves the selected profile, and reports disappearance without old profile coordinates', async t => {
+  const restoreWindow = browserTimers();
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  let reads = 0, posts = 0, statusGets = 0, disappeared = false;
+  const base = { ...snapshot(), source: 'mightpulse', updated_at: 100 };
+  t.mock.method(globalThis, 'fetch', async (url, options) => {
+    if (url.startsWith('/api/map/?')) return Response.json(++reads === 1 ? base : {
+      ...base, updated_at: disappeared ? 300 : 200,
+      cities: disappeared ? cities.filter(c => c.uid !== 2) : cities.map(c => c.uid === 2 ? { ...c, x: 1187, y: 1193 } : c),
+    });
+    if (options.method === 'POST') { posts++; return Response.json({ ok: true, job: { status: 'running', job_id: `j${posts}` }, cooldown_remaining_sec: 1 }); }
+    return Response.json(++statusGets % 2 === 1 ? { ok: true, update_available: true, last_finished_at: disappeared ? 200 : 100 }
+      : { ok: true, job: null, last_finished_at: disappeared ? 300 : 200, cooldown_remaining_sec: 1 });
+  });
+  const props = { kid: 1622, selectedUID: '2', initialFocus: { x: 50, y: 60 }, onLookup() {} };
+  const map = mount(StoredMapScope, props);
+  await flush(); let tree = settle(map);
+  nodes(tree).find(n => n.type === 'select').props.onChange({ target: { value: '11' } });
+  nodes(tree).find(n => n.type === 'input').props.onChange({ target: { value: 'sun' } });
+  tree = settle(map);
+  const refresh = mount(MapRefreshScope, refreshProps(tree));
+  t.after(() => { refresh.unmount(); map.unmount(); restoreWindow(); });
+  button(refresh.render(), '최신 위치 찾기').props.onClick();
+  await flush(); t.mock.timers.tick(5000); await flush();
+  tree = settle(map); refresh.render(refreshProps(tree)); let ui = settle(refresh);
+  assert.equal(posts, 1); assert.equal(canvas(tree).cities.length, 4);
+  assert.deepEqual(canvas(tree).focus, { x: 1187, y: 1193, scale: 20 });
+  assert.equal(canvas(tree).selected.uid, 2);
+  assert.match(text(ui), /지도 수집이 완료/);
+  assert.match(text(ui), /Moon · X: 1187, Y: 1193/);
+  // A newly scoped explicit request models a later permitted click, without waiting on real cooldown.
+  refresh.unmount(); disappeared = true;
+  const next = mount(MapRefreshScope, refreshProps(tree));
+  t.after(() => next.unmount());
+  button(next.render(), '최신 위치 찾기').props.onClick();
+  await flush(); t.mock.timers.tick(5000); await flush();
+  tree = settle(map); next.render(refreshProps(tree)); ui = settle(next);
+  assert.equal(posts, 2); assert.equal(canvas(tree).selected, null); assert.equal(canvas(tree).focus, null);
+  assert.match(text(ui), /UID 2를 찾지 못했습니다. 현재 위치를 알 수 없습니다/);
+  assert.doesNotMatch(text(tree), /프로필 좌표는 화면 중심으로만 사용/);
+  assert.equal(canvas(tree).cities.some(c => c.uid === 2), false);
+});
+
+test('busy scan blocks reload synchronously; cancellation releases the lock and prevents a late POST', async t => {
+  const restoreWindow = browserTimers(), pending = [], calls = [];
+  t.mock.method(globalThis, 'fetch', async (url, options) => {
+    calls.push([url, options.method ?? 'GET']);
+    if (url.startsWith('/api/map-refresh/')) return new Promise(resolve => pending.push({ resolve, signal: options.signal }));
+    return Response.json(snapshot());
+  });
+  const map = mount(StoredMapScope, { kid: 1622, onLookup() {} });
+  await flush(); const tree = settle(map);
+  const refresh = mount(MapRefreshScope, refreshProps(tree));
+  t.after(() => { refresh.unmount(); map.unmount(); restoreWindow(); });
+  const start = button(refresh.render(), '지도 최신화');
+  start.props.onClick(); start.props.onClick();
+  button(tree, '지도 다시 불러오기').props.onClick();
+  assert.equal(calls.length, 2, 'one preflight; stale reload and duplicate clicks must not fetch');
+  assert.equal(button(map.render(), '지도 다시 불러오기').props.disabled, true);
+  button(refresh.render(), '대기 중지').props.onClick();
+  assert.equal(pending[0].signal.aborted, true);
+  assert.equal(button(map.render(), '지도 다시 불러오기').props.disabled, false);
+  pending[0].resolve(Response.json({ ok: true, update_available: true })); await flush();
+  assert.ok(calls.every(c => c[1] === 'GET'));
+  assert.match(text(refresh.render()), /대기를 중지했습니다/);
+  button(map.render(), '지도 다시 불러오기').props.onClick(); await flush();
+  assert.equal(calls.at(-1)[0], '/api/map/?kid=1622&fresh=1');
+});
+
+test('reload already in flight refuses a stale latest-location click', async t => {
+  const restoreWindow = browserTimers(), pending = [];
+  let calls = 0;
+  t.mock.method(globalThis, 'fetch', async () => ++calls === 1 ? Response.json(snapshot()) : new Promise(resolve => pending.push(resolve)));
+  const map = mount(StoredMapScope, { kid: 1622, selectedUID: '2', onLookup() {} });
+  await flush(); const tree = settle(map);
+  const refresh = mount(MapRefreshScope, refreshProps(tree));
+  t.after(() => { refresh.unmount(); map.unmount(); restoreWindow(); });
+  button(tree, '지도 다시 불러오기').props.onClick();
+  button(refresh.render(), '최신 위치 찾기').props.onClick();
+  assert.equal(calls, 2);
+  assert.equal(button(refresh.render(), '대기 중지'), undefined);
+  pending[0](Response.json(snapshot())); await flush();
+});
+
+test('kid/profile scopes abort old refresh and reset outcome/cooldown without accepting late callbacks', async t => {
+  const restoreWindow = browserTimers(), pending = [], received = [], busy = [];
+  t.mock.method(globalThis, 'fetch', (_, options) => new Promise(resolve => pending.push({ resolve, signal: options.signal })));
+  const props = { kid: 1622, selectedUID: '2', baseline: 100, onSnapshot: value => received.push(value), onBusyChange: value => { busy.push(value); } };
+  const old = mount(MapRefreshScope, props);
+  button(old.render(), '최신 위치 찾기').props.onClick(); old.unmount();
+  assert.equal(pending[0].signal.aborted, true);
+  const nextProps = { ...props, selectedUID: '3' };
+  const current = mount(MapRefreshScope, nextProps);
+  t.after(() => { current.unmount(); restoreWindow(); });
+  assert.notEqual(MapRefresh(props).key, MapRefresh(nextProps).key);
+  assert.notEqual(MapRefresh(props).key, MapRefresh({ ...props, kid: 1623 }).key);
+  assert.equal(button(current.render(), '최신 위치 찾기').props.disabled, false);
+  assert.doesNotMatch(text(current.render()), /완료|다음 요청까지/);
+  pending[0].resolve(Response.json({ ok: true, update_available: true })); await flush();
+  assert.deepEqual(received, []); assert.deepEqual(busy, [true, false]);
 });

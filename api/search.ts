@@ -47,7 +47,7 @@ export default storeHandler(100, async params => {
   if (kid !== null) {
     const { data, seconds } = await getMap(kid, params.get('fresh') === '1');
     if (!data.ok) return [202, data];
-    const alliances = new Map(data.alliances.map(row => [String(row.aid), row.name]));
+    const alliances = new Map(data.alliances.map(row => [String(row.aid), row.name] as const));
     const results = data.cities.filter(row => row.nick_name?.toLowerCase().includes(query.toLowerCase())).slice(0, 100).map(row => ({
       uid: row.uid, fid: null, nick_name: row.nick_name, kid: row.kid, map_kid: row.map_kid,
       power: row.power, town_center_level: row.tc, x: row.x, y: row.y, alliance_abbr: row.alliance_abbr,

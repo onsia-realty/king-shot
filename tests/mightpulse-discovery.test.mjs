@@ -19,9 +19,10 @@ const { SQL } = await import(moduleURL(storeSource.replace('./mightpulse-discove
 test('handlers use explicit .js shared imports for Node ESM deployment', () => {
   for (const [name, source] of Object.entries(rawSources)) {
     const file = ts.createSourceFile(`${name}.ts`, source, ts.ScriptTarget.Latest, true);
-    const imports = file.statements.filter(ts.isImportDeclaration).map(statement => statement.moduleSpecifier.text);
+    const imports = file.statements.filter(ts.isImportDeclaration)
+      .filter(statement => !statement.importClause?.isTypeOnly).map(statement => statement.moduleSpecifier.text);
     assert.ok(imports.every(path => path.startsWith('../src/lib/server/') && path.endsWith('.js')), name);
-    if (name === 'map-refresh') assert.doesNotMatch(source, /mightpulse\.com|fetch\(/);
+    if (name === 'map-refresh') assert.doesNotMatch(source, /kingdom-store|storeHandler/);
   }
 });
 async function handlers() {
