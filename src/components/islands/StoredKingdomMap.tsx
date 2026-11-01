@@ -207,13 +207,16 @@ export function StoredMapScope({ kid, initialFocus, selectedUID: profileUID, onL
           </select>
         </label>
       </div>
-      <div className="flex flex-wrap items-center gap-3">
+      <details className="rounded-lg border border-border p-3">
+        <summary className="cursor-pointer text-sm font-bold">{en ? 'Alliance filters' : '연맹 필터'}</summary>
+      <div className="mt-3 flex flex-wrap items-center gap-3">
         <button type="button" className={control} onClick={selectAll}>{en ? 'Select all' : '전체 선택'}</button>
         <p role="status" className="text-sm text-muted">{en ? `${count(filtered.length)} of ${count(snapshot.cities.length)} cities match the filters` : `도시 ${count(snapshot.cities.length)}개 중 필터에 맞는 ${count(filtered.length)}개 표시`}</p>
       </div>
-      <ul aria-label={en ? 'Alliance colors and filtered city counts' : '연맹 색상과 필터된 도시 수'} className="flex max-h-40 flex-wrap gap-x-4 gap-y-2 overflow-y-auto text-xs">
+      <ul aria-label={en ? 'Alliance colors and filtered city counts' : '연맹 색상과 필터된 도시 수'} className="mt-3 flex max-h-40 flex-wrap gap-x-4 gap-y-2 overflow-y-auto text-xs">
         {visibleGroups.map(group => <li key={group.aid} className="flex min-w-0 items-center gap-2"><span aria-hidden="true" className="h-3 w-3 shrink-0 rounded-full" style={{ background: allianceColor(group.aid) }} /><span className="break-words">{label(group)} · {count(group.city_count)}</span></li>)}
       </ul>
+      </details>
       {!filtered.length && <p className="text-sm text-muted">{snapshot.cities.length ? (en ? 'No cities match these filters. Select all to restore the cities.' : '필터에 맞는 도시가 없습니다. 전체 선택으로 도시를 다시 표시할 수 있습니다.') : (en ? 'This map contains no coordinates. It does not establish that the kingdom is empty.' : '이 지도에 표시할 좌표가 없습니다. 왕국에 도시가 없다는 뜻은 아닙니다.')}</p>}
       <KingdomMapCanvas cities={filtered} allCities={snapshot.cities} alliances={groups} bounds={snapshot.bounds}
         fitAllCities preserveCameraOnUpdate focus={focus} selected={selected}

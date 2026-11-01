@@ -21,6 +21,7 @@ function playerApi() {
         const routes = {
           '/api/visits': '/api/visits.ts', '/api/visits/': '/api/visits.ts',
           '/api/player': '/api/player.ts', '/api/player/': '/api/player.ts',
+          '/api/kingdom-rankings': '/api/kingdom-rankings.ts', '/api/kingdom-rankings/': '/api/kingdom-rankings.ts',
           '/api/search': '/api/search.ts', '/api/search/': '/api/search.ts',
           '/api/map': '/api/map.ts', '/api/map/': '/api/map.ts',
           '/api/alliance-map': '/api/alliance-map.ts', '/api/alliance-map/': '/api/alliance-map.ts',

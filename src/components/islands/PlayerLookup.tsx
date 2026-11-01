@@ -6,6 +6,8 @@ import { useEffect, useRef, useState, type SubmitEvent, type ReactNode } from 'r
 import ArenaHeroes, { type ArenaHero, type HeroCatalog } from './ArenaHeroes';
 import PlayerDiscovery, { type PlayerIdType } from './PlayerDiscovery';
 import KingdomMap from './KingdomMap';
+import KingdomRankings from './KingdomRankings';
+import KingdomComparison from './KingdomComparison';
 import PlayerLocationMap from './PlayerLocationMap';
 export type { HeroCatalog } from './ArenaHeroes';
 type Scalar = string | number | null;
@@ -82,7 +84,7 @@ export default function PlayerLookup({ heroes: catalog }: { heroes: HeroCatalog 
   const { locale } = useLocale();
   const tr = (text: string) => playerText(text, locale);
   const [id, setId] = useState('');
-  const [tab, setTab] = useState<'search' | 'map' | 'id'>('search');
+  const [tab, setTab] = useState<'search' | 'map' | 'id' | 'rankings' | 'comparison'>('search');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState<LookupResult | null>(null);
@@ -176,10 +178,10 @@ export default function PlayerLookup({ heroes: catalog }: { heroes: HeroCatalog 
 
   return <div className="space-y-6">
     <section className={panel} aria-label={tr("영주 찾기")}>
-      <div role="tablist" aria-label={tr("영주 찾는 방법")} className="mb-5 grid grid-cols-3 gap-2">
-        {([['search', tr("닉네임 검색")], ['map', tr("왕국 지도")], ['id', tr("영주 ID")]] as const).map(([key, label], index, tabs) => <button key={key} type="button" id={`lookup-tab-${key}`} role="tab" aria-selected={tab === key} aria-controls={`lookup-panel-${key}`} tabIndex={tab === key ? 0 : -1} onClick={() => setTab(key)} onKeyDown={(event) => {
+      <div role="tablist" aria-label={tr("영주 찾는 방법")} className="mb-5 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
+        {([['search', tr("닉네임 검색")], ['map', tr("왕국 지도")], ['id', tr("영주 ID")], ['rankings', locale === 'en' ? 'Mystic Trial' : '신비한 시련'], ['comparison', locale === 'en' ? 'Kingdom VS' : '왕국 비교']] as const).map(([key, label], index, tabs) => <button key={key} type="button" id={`lookup-tab-${key}`} role="tab" aria-selected={tab === key} aria-controls={`lookup-panel-${key}`} tabIndex={tab === key ? 0 : -1} onClick={() => setTab(key)} onKeyDown={(event) => {
           const offset = event.key === 'ArrowRight' ? 1 : event.key === 'ArrowLeft' ? -1 : 0;
-          const target = event.key === 'Home' ? 0 : event.key === 'End' ? 2 : offset ? (index + offset + tabs.length) % tabs.length : -1;
+          const target = event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : offset ? (index + offset + tabs.length) % tabs.length : -1;
           if (target < 0) return;
           event.preventDefault();
           const nextTab = tabs[target][0];
@@ -199,6 +201,8 @@ export default function PlayerLookup({ heroes: catalog }: { heroes: HeroCatalog 
       <p id="lookup-help" className="mt-3 text-sm text-muted">{tr("게임에서 프로필을 열어 닉네임 아래의 ID를 확인하세요. 숫자 1~15자리를 입력해 주세요.")}</p>
     </form>
       </div>
+      <div id="lookup-panel-rankings" role="tabpanel" aria-labelledby="lookup-tab-rankings" hidden={tab !== 'rankings'}><KingdomRankings playerKingdom={hasValue(player?.kid) ? String(player?.kid) : undefined} onSelect={(value, type) => { void lookup(value, type, true); }} /></div>
+      <div id="lookup-panel-comparison" role="tabpanel" aria-labelledby="lookup-tab-comparison" hidden={tab !== 'comparison'}><KingdomComparison onSelect={(value, type) => { void lookup(value, type, true); }} /></div>
       <p role="status" className="mt-3 text-sm text-accent">{loading ? tr("영주 정보를 불러오고 있습니다. 정보 갱신에 시간이 걸릴 수 있습니다.") : ''}</p>
       {error && <p id="lookup-error" role="alert" className="mt-2 text-sm text-danger">{playerError(error, locale)}</p>}
     </section>
