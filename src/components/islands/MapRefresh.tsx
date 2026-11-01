@@ -43,7 +43,7 @@ export function MapRefreshScope({ kid, selectedUID, baseline, disabled = false, 
     return () => clearInterval(timer);
   }, [until]);
   const remaining = Math.max(0, Math.ceil((until - now) / 1000));
-  const countdown = en
+  const countdown = locale === 'zh-TW' ? `${remaining >= 60 ? `${Math.floor(remaining / 60)} 分 ` : ''}${remaining % 60} 秒` : en
     ? `${remaining >= 60 ? `${Math.floor(remaining / 60)}m ` : ''}${remaining % 60}s`
     : `${remaining >= 60 ? `${Math.floor(remaining / 60)}분 ` : ''}${remaining % 60}초`;
   async function start() {
@@ -83,22 +83,22 @@ export function MapRefreshScope({ kid, selectedUID, baseline, disabled = false, 
   const job = state?.job ?? state;
   const percent = job?.progress_pct ?? (job?.tiles_total && job.tiles_done != null ? job.tiles_done / job.tiles_total * 100 : null);
   const message = busy ? job?.status === 'queued'
-    ? (en ? `Waiting for the map scan${state?.queue_position != null ? ` · position ${state.queue_position}` : ''}` : `지도 수집 대기 중${state?.queue_position != null ? ` · 순서 ${state.queue_position}` : ''}`)
-    : job?.status === 'running' ? (en ? 'Finding current city positions…' : '도시 위치를 수집하는 중…') : (en ? 'Checking availability / loading map…' : '갱신 가능 여부 확인 / 지도 불러오는 중…')
-    : outcome === 'done' ? (en ? 'Scan completed. Updated map positions loaded.' : '지도 수집이 완료되어 갱신된 위치를 불러왔습니다.')
-    : outcome === 'cooldown' ? (en ? 'Please wait before requesting another scan. Showing the available saved map.' : '다음 위치 수집까지 기다려 주세요. 지금은 불러올 수 있는 저장 지도를 표시합니다.')
-    : outcome === 'paused' ? (en ? 'Map updates are paused. Showing the available saved map.' : '지도 갱신이 일시 중지되어 저장 지도를 표시합니다.')
-    : outcome === 'unavailable' ? (en ? 'A new scan is not available yet. Showing the available saved map.' : '아직 새 위치 수집을 요청할 수 없어 저장 지도를 표시합니다.')
-    : outcome === 'unconfirmed' ? (en ? 'A newer complete map could not be confirmed. Showing the available saved map.' : '위치 시각이 갱신된 전체 지도를 확인하지 못했습니다. 지금은 불러올 수 있는 저장 지도를 표시합니다.')
-    : outcome === 'cancelled' ? (en ? 'Stopped waiting. An already started scan may continue.' : '대기를 중지했습니다. 이미 시작된 위치 수집은 계속될 수 있습니다.')
-    : outcome === 'timeout' ? (en ? 'Stopped waiting after 5 minutes. The scan may still be queued or running.' : '5분이 지나 대기를 중지했습니다. 위치 수집이 대기 중이거나 진행 중일 수 있습니다.')
-    : outcome ? rateLimitMessage(outcome, locale) ?? (en ? 'Could not update map positions. Try again later.' : '지도 위치를 갱신하지 못했습니다. 잠시 후 다시 시도해 주세요.') : '';
+    ? (locale === 'zh-TW' ? `正在等待地圖收集${state?.queue_position != null ? ` · 排隊順位 ${state.queue_position}` : ''}` : en ? `Waiting for the map scan${state?.queue_position != null ? ` · position ${state.queue_position}` : ''}` : `지도 수집 대기 중${state?.queue_position != null ? ` · 순서 ${state.queue_position}` : ''}`)
+    : job?.status === 'running' ? (locale === 'zh-TW' ? "正在收集目前城鎮位置…" : en ? 'Finding current city positions…' : '도시 위치를 수집하는 중…') : (locale === 'zh-TW' ? "正在確認是否可更新／載入地圖…" : en ? 'Checking availability / loading map…' : '갱신 가능 여부 확인 / 지도 불러오는 중…')
+    : outcome === 'done' ? (locale === 'zh-TW' ? "地圖收集完成，已載入更新後的位置。" : en ? 'Scan completed. Updated map positions loaded.' : '지도 수집이 완료되어 갱신된 위치를 불러왔습니다.')
+    : outcome === 'cooldown' ? (locale === 'zh-TW' ? "請稍候再要求收集位置，目前顯示可用的已儲存地圖。" : en ? 'Please wait before requesting another scan. Showing the available saved map.' : '다음 위치 수집까지 기다려 주세요. 지금은 불러올 수 있는 저장 지도를 표시합니다.')
+    : outcome === 'paused' ? (locale === 'zh-TW' ? "地圖更新已暫停，目前顯示可用的已儲存地圖。" : en ? 'Map updates are paused. Showing the available saved map.' : '지도 갱신이 일시 중지되어 저장 지도를 표시합니다.')
+    : outcome === 'unavailable' ? (locale === 'zh-TW' ? "目前無法要求收集新位置，顯示可用的已儲存地圖。" : en ? 'A new scan is not available yet. Showing the available saved map.' : '아직 새 위치 수집을 요청할 수 없어 저장 지도를 표시합니다.')
+    : outcome === 'unconfirmed' ? (locale === 'zh-TW' ? "無法確認較新的完整地圖，目前顯示可用的已儲存地圖。" : en ? 'A newer complete map could not be confirmed. Showing the available saved map.' : '위치 시각이 갱신된 전체 지도를 확인하지 못했습니다. 지금은 불러올 수 있는 저장 지도를 표시합니다.')
+    : outcome === 'cancelled' ? (locale === 'zh-TW' ? "已停止等待，已開始的位置收集可能仍會繼續。" : en ? 'Stopped waiting. An already started scan may continue.' : '대기를 중지했습니다. 이미 시작된 위치 수집은 계속될 수 있습니다.')
+    : outcome === 'timeout' ? (locale === 'zh-TW' ? "已等待 5 分鐘並停止等待，位置收集可能仍在排隊或進行中。" : en ? 'Stopped waiting after 5 minutes. The scan may still be queued or running.' : '5분이 지나 대기를 중지했습니다. 위치 수집이 대기 중이거나 진행 중일 수 있습니다.')
+    : outcome ? rateLimitMessage(outcome, locale) ?? (locale === 'zh-TW' ? "無法更新地圖位置，請稍後重試。" : en ? 'Could not update map positions. Try again later.' : '지도 위치를 갱신하지 못했습니다. 잠시 후 다시 시도해 주세요.') : '';
   return <div className="space-y-2" data-testid="map-refresh">
     <div className="flex flex-wrap items-center gap-3">
-      <button type="button" data-testid="map-refresh-start" className="rounded-lg bg-accent px-4 py-3 font-bold text-on-accent disabled:opacity-40" disabled={disabled || busy || remaining > 0} onClick={() => void start()}>{selectedUID ? (en ? 'Latest location' : '최신 위치 찾기') : (en ? 'Update map' : '지도 최신화')}</button>
-      {busy && <button type="button" data-testid="map-refresh-cancel" className="rounded-lg border border-border px-3 py-2 text-sm" onClick={cancel}>{en ? 'Stop waiting' : '대기 중지'}</button>}
+      <button type="button" data-testid="map-refresh-start" className="rounded-lg bg-accent px-4 py-3 font-bold text-on-accent disabled:opacity-40" disabled={disabled || busy || remaining > 0} onClick={() => void start()}>{selectedUID ? (locale === 'zh-TW' ? "尋找最新位置" : en ? 'Latest location' : '최신 위치 찾기') : (locale === 'zh-TW' ? "更新地圖" : en ? 'Update map' : '지도 최신화')}</button>
+      {busy && <button type="button" data-testid="map-refresh-cancel" className="rounded-lg border border-border px-3 py-2 text-sm" onClick={cancel}>{locale === 'zh-TW' ? "停止等待" : en ? 'Stop waiting' : '대기 중지'}</button>}
       {children}
-      {remaining > 0 && <span className="text-xs text-muted">{en ? `Next request in ${countdown}` : `다음 요청까지 ${countdown}`}</span>}
+      {remaining > 0 && <span className="text-xs text-muted">{locale === 'zh-TW' ? `距離下次可請求還有 ${countdown}` : en ? `Next request in ${countdown}` : `다음 요청까지 ${countdown}`}</span>}
     </div>
     {message && <p role="status" data-testid="map-refresh-status" className="text-sm text-muted">{message}{busy && percent != null && Number.isFinite(percent) ? ` ${Math.round(Math.max(0, Math.min(100, percent)))}%` : ''}</p>}
   </div>;

@@ -1,4 +1,4 @@
-import { useCalculatorLocale } from '@/lib/calculator-locale';
+import { formatCalculatorNumber, useCalculatorLocale } from '@/lib/calculator-locale';
 import { useMemo, useState } from 'react';
 import {
   INPUT_ITEM_IDS,
@@ -25,7 +25,7 @@ function toSafeNumber(raw: string): number {
 }
 
 function fmt(n: number): string {
-  return Math.round(n).toLocaleString('ko-KR');
+  return formatCalculatorNumber(Math.round(n));
 }
 
 function itemLabel(id: ScoreItemId): string {

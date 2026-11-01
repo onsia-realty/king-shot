@@ -182,7 +182,7 @@ export default function PlayerLookup({ heroes: catalog }: { heroes: HeroCatalog 
   return <div className="space-y-6">
     <section className={panel} aria-label={tr("영주 찾기")}>
       <div role="tablist" aria-label={tr("영주 찾는 방법")} className="mb-5 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
-        {([['search', tr("닉네임 검색")], ['map', tr("왕국 지도")], ['id', tr("영주 ID")], ['rankings', locale === 'en' ? 'Mystic Trial' : '신비한 시련'], ['comparison', locale === 'en' ? 'Kingdom VS' : '왕국 비교']] as const).map(([key, label], index, tabs) => <button key={key} type="button" id={`lookup-tab-${key}`} role="tab" aria-selected={tab === key} aria-controls={`lookup-panel-${key}`} tabIndex={tab === key ? 0 : -1} onClick={() => setTab(key)} onKeyDown={(event) => {
+        {([['search', tr("닉네임 검색")], ['map', tr("왕국 지도")], ['id', tr("영주 ID")], ['rankings', locale === 'zh-TW' ? '神秘試煉' : locale === 'en' ? 'Mystic Trial' : '신비한 시련'], ['comparison', locale === 'zh-TW' ? '王國比較' : locale === 'en' ? 'Kingdom VS' : '왕국 비교']] as const).map(([key, label], index, tabs) => <button key={key} type="button" id={`lookup-tab-${key}`} role="tab" aria-selected={tab === key} aria-controls={`lookup-panel-${key}`} tabIndex={tab === key ? 0 : -1} onClick={() => setTab(key)} onKeyDown={(event) => {
           const offset = event.key === 'ArrowRight' ? 1 : event.key === 'ArrowLeft' ? -1 : 0;
           const target = event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : offset ? (index + offset + tabs.length) % tabs.length : -1;
           if (target < 0) return;
@@ -222,7 +222,7 @@ export default function PlayerLookup({ heroes: catalog }: { heroes: HeroCatalog 
         </dl>
         <PlayerLocationMap key={JSON.stringify([result.uid, queriedId, player.kid, player.x, player.y])} kid={player.kid} x={player.x} y={player.y} uid={result.uid} name={player.nick_name} townLevel={player.town_center_level} power={player.power} tag={alliance?.abbr} aid={alliance?.aid} profileCachedAt={updated ? updated.getTime() / 1000 : null} onLookup={(value) => { void lookup(value, 'uid', true); }} />
         <div className="mt-6 border-t border-border pt-4 text-sm text-muted">
-          {updated ? <p>{tr("갱신 시간 ")}<time dateTime={updated.toISOString()}>{updated.toLocaleString(playerNumberLocale(), { timeZone: 'Asia/Seoul' })}</time>{tr(" (한국 시간)")}</p> : <p>{tr("갱신 시간 정보 없음")}</p>}
+          {updated ? <p>{tr("갱신 시간 ")}<time dateTime={updated.toISOString()}>{updated.toLocaleString(playerNumberLocale(locale), { timeZone: 'Asia/Seoul' })}</time>{tr(" (한국 시간)")}</p> : <p>{tr("갱신 시간 정보 없음")}</p>}
           {age !== undefined && age >= 0 && <p className="mt-1">{age < 60 ? tr("1분 이내 갱신") : `${format(Math.floor(age / 60))}${tr("분 전 갱신")}`}</p>}
         </div>
       </section>
@@ -237,7 +237,7 @@ export default function PlayerLookup({ heroes: catalog }: { heroes: HeroCatalog 
       {result.ranks && rankLabels.some(([rankKey, valueKey]) => hasValue(result.ranks?.[rankKey]) || hasValue(result.ranks?.[valueKey])) && <section className={panel} aria-labelledby="ranks-title"><h2 id="ranks-title" className="text-xl font-bold">{tr("순위")}</h2><dl className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3">{rankLabels.map(([rankKey, valueKey, label]) => {
         const rank = result.ranks?.[rankKey];
         const value = result.ranks?.[valueKey];
-        return hasValue(rank) || hasValue(value) ? <Stat key={rankKey} label={tr(label)}>{hasValue(rank) ? (locale === 'en' ? `#${format(rank)}` : `${format(rank)}위`) : tr("순위 정보 없음")}{hasValue(value) && <span className="mt-1 block text-sm text-muted">{valueKey === 'town_center_level' ? townLevel(value) : format(value)}</span>}</Stat> : null;
+        return hasValue(rank) || hasValue(value) ? <Stat key={rankKey} label={tr(label)}>{hasValue(rank) ? (locale === 'zh-TW' ? `第 ${format(rank)} 名` : locale === 'en' ? `#${format(rank)}` : `${format(rank)}위`) : tr("순위 정보 없음")}{hasValue(value) && <span className="mt-1 block text-sm text-muted">{valueKey === 'town_center_level' ? townLevel(value) : format(value)}</span>}</Stat> : null;
       })}</dl></section>}
 
       <section className={panel} aria-labelledby="governor-gear-title">

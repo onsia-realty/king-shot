@@ -1,6 +1,6 @@
 ---
 import LocaleText from '@/components/LocaleText.astro';
-import { staticEnglish } from '@/lib/static-translations';
+import { staticEnglish, staticTraditionalChinese } from '@/lib/static-translations';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Breadcrumb from '@/components/Breadcrumb.astro';
 import Disclaimer from '@/components/Disclaimer.astro';
@@ -16,19 +16,25 @@ const description =
 const faq = [
   {
     qEn: `How is value calculated?`,
+    qZhTW: `效益如何計算？`,
     aEn: `Each item is converted to KRW using unit prices from the Truegold 4/5 reference pack (₩7,500). The total is divided by the pack price. 100% matches the reference value; 150% means 1.5 times that value. Speedups use ₩7,500 = 119 hours.`,
+    aZhTW: `各道具依精金 4／5 參考禮包（₩7,500）單價換算成韓元，加總後除以禮包價格。100% 代表與參考價值相同，150% 為其 1.5 倍。加速以 ₩7,500＝119 小時計算。`,
     q: '효율은 어떻게 계산하나요?',
     a: '구성품마다 순금 4/5세대 기준 패키지(7,500원)의 개당 단가를 곱해 원화로 바꾸고, 그 합을 패키지 가격으로 나눕니다. 100%면 기준 패키지와 같은 값어치, 150%면 1.5배입니다. 가속은 7,500원 = 119시간으로 환산합니다.',
   },
   {
     qEn: `How does token optimization work?`,
+    qZhTW: `代幣最佳化如何運作？`,
     aEn: `It checks every combination of buying each of seven regular packs 0–5 times, with or without the daily quest doubler, and picks the cheapest combination meeting the target. If costs tie, it prefers more tokens.`,
+    aZhTW: `逐一檢查七種常規禮包各購買 0～5 次、是否加購每日任務雙倍的所有組合，選出達成目標的最低費用方案。若費用相同，優先選代幣較多的組合。`,
     q: '토큰 최적화 결과는 믿을 만한가요?',
     a: '일반 패키지 7종을 각각 0~5회 사는 모든 조합과 일일퀘스트 2배권 사용 여부를 전부 따져 목표를 넘는 가장 싼 조합을 고릅니다. 비용이 같으면 토큰이 많은 쪽을 고릅니다.',
   },
   {
     qEn: `How far should I buy in Chasing the Wind?`,
+    qZhTW: `追風之旅買到哪個階段較划算？`,
     aEn: `Without slot-expansion packs, the 20-chest milestone gives the most rewards per ₩10,000. Value stays competitive through 350 chests and drops sharply at 600. Toggle slot expansion and compare the marginal-value table.`,
+    aZhTW: `不購買欄位擴充禮包時，20 箱里程碑每 ₩10,000 的獎勵最多。到 350 箱仍具競爭力，600 箱則明顯下降。可切換欄位擴充選項，比較邊際效益表。`,
     q: '바람을 쫓는 여행은 어디까지 사는 게 좋나요?',
     a: '슬롯 증설 패키지 없이 계산하면 20상자 구간이 만원당 보상이 가장 높고, 350상자까지는 가성비가 유지되다가 600상자 구간에서 크게 떨어집니다. 슬롯 증설을 켜고 끄면서 한계효용 표를 비교해 보세요.',
   },
@@ -61,7 +67,7 @@ const jsonLd = [
 ];
 ---
 
-<BaseLayout titleEn={staticEnglish(title)} descriptionEn={`Compare Kingshot event pack value and grades, find the cheapest token combinations and evaluate Chasing the Wind milestones.`} title={title} description={description} jsonLd={jsonLd}>
+<BaseLayout titleEn={staticEnglish(title)} titleZhTW={staticTraditionalChinese(title)} descriptionEn={`Compare Kingshot event pack value and grades, find the cheapest token combinations and evaluate Chasing the Wind milestones.`} descriptionZhTW={`比較 Kingshot 活動禮包效益與評級，找出最低費用的代幣組合，並評估追風之旅的里程碑。`} title={title} description={description} jsonLd={jsonLd}>
   <div class="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
     <Breadcrumb
       items={[
@@ -73,23 +79,23 @@ const jsonLd = [
     />
 
     <header class="mb-8">
-      <h1 class="text-3xl font-extrabold sm:text-4xl"><LocaleText ko={`패키지 계산기`} en={`Pack Value Calculator`} /></h1>
+      <h1 class="text-3xl font-extrabold sm:text-4xl"><LocaleText ko={`패키지 계산기`} en={`Pack Value Calculator`} zhTW={`禮包效益計算器`} /></h1>
       <p class="mt-3 max-w-2xl text-muted">
-        <LocaleText ko={`이벤트 패키지를`} en={`Event packs are valued using the `} /> <a href="/tools/package-ref/" class="text-link hover:text-link-hover"><LocaleText ko={`패키지 기준표`} en={`Package Reference`} /></a
-        > <LocaleText ko={`단가로 환산해 효율 순으로 줄 세우고, 이벤트 토큰 목표를 가장 싸게 채우는 조합과 바람을 쫓는 여행에서 어느 마일스톤까지 사는 게 이득인지 계산합니다.`} en={` unit prices, then ranked by value. Find the cheapest combination for your event token target and compare which Chasing the Wind milestones are worth buying.`} />
+        <LocaleText ko={`이벤트 패키지를`} en={`Event packs are valued using the `} zhTW={`活動禮包以`} /> <a href="/tools/package-ref/" class="text-link hover:text-link-hover"><LocaleText ko={`패키지 기준표`} en={`Package Reference`} zhTW={`禮包參考表`} /></a
+        > <LocaleText ko={`단가로 환산해 효율 순으로 줄 세우고, 이벤트 토큰 목표를 가장 싸게 채우는 조합과 바람을 쫓는 여행에서 어느 마일스톤까지 사는 게 이득인지 계산합니다.`} en={` unit prices, then ranked by value. Find the cheapest combination for your event token target and compare which Chasing the Wind milestones are worth buying.`} zhTW={`的單價換算並依效益排序，同時計算達成活動代幣目標的最低費用組合，以及追風之旅哪些里程碑值得購買。`} />
       </p>
     </header>
 
     <PackValueCalculator client:load />
 
     <section class="mt-12">
-      <h2 class="text-xl font-bold"><LocaleText ko={`자주 묻는 질문`} en={`Frequently Asked Questions`} /></h2>
+      <h2 class="text-xl font-bold"><LocaleText ko={`자주 묻는 질문`} en={`Frequently Asked Questions`} zhTW={`常見問題`} /></h2>
       <dl class="mt-3 space-y-3">
         {
           faq.map((f) => (
             <div class="rounded-xl border border-border bg-surface px-4 py-3">
-              <dt class="font-bold"><LocaleText ko={f.q} en={f.qEn} /></dt>
-              <dd class="mt-1 text-sm text-muted"><LocaleText ko={f.a} en={f.aEn} /></dd>
+              <dt class="font-bold"><LocaleText ko={f.q} en={f.qEn} zhTW={f.qZhTW} /></dt>
+              <dd class="mt-1 text-sm text-muted"><LocaleText ko={f.a} en={f.aEn} zhTW={f.aZhTW} /></dd>
             </div>
           ))
         }
@@ -97,40 +103,40 @@ const jsonLd = [
     </section>
 
     <section class="mt-12">
-      <h2 class="text-xl font-bold"><LocaleText ko={`데이터 범위와 한계`} en={`Data Coverage and Limitations`} /></h2>
+      <h2 class="text-xl font-bold"><LocaleText ko={`데이터 범위와 한계`} en={`Data Coverage and Limitations`} zhTW={`資料範圍與限制`} /></h2>
       <ul class="mt-3 space-y-2 text-sm text-muted">
         <li>
-          <LocaleText ko={`효율 랭킹의 이벤트 패키지는 스킨 이벤트 6종(순금 4/5세대 기준)입니다. 이벤트마다 구성이 바뀌는데 자동 갱신이 없어 새 이벤트가 열리면 수동으로 고쳐야 합니다.`} en={`The value ranking covers six skin-event packs using the Truegold 4/5 reference generation. Contents vary by event and are updated manually, not automatically.`} />
+          <LocaleText ko={`효율 랭킹의 이벤트 패키지는 스킨 이벤트 6종(순금 4/5세대 기준)입니다. 이벤트마다 구성이 바뀌는데 자동 갱신이 없어 새 이벤트가 열리면 수동으로 고쳐야 합니다.`} en={`The value ranking covers six skin-event packs using the Truegold 4/5 reference generation. Contents vary by event and are updated manually, not automatically.`} zhTW={`效益排名涵蓋六種造型活動禮包，以精金 4／5 世代為基準。各活動內容不同，資料需手動更新，不會自動同步。`} />
         </li>
         <li>
-          <LocaleText ko={`효율은 기준 패키지 단가로 환산한 값이라 지금 필요 없는 아이템도 같은 값으로 셉니다. 실제 쓸모는 진행 상황에 따라 다릅니다.`} en={`Value uses reference unit prices, including items you do not currently need. Actual usefulness depends on your progress.`} />
+          <LocaleText ko={`효율은 기준 패키지 단가로 환산한 값이라 지금 필요 없는 아이템도 같은 값으로 셉니다. 실제 쓸모는 진행 상황에 따라 다릅니다.`} en={`Value uses reference unit prices, including items you do not currently need. Actual usefulness depends on your progress.`} zhTW={`效益以參考單價計算，即使目前不需要的道具也按同樣價值計入。實際用途取決於你的遊戲進度。`} />
         </li>
         <li>
-          <LocaleText ko={`바람을 쫓는 여행의 상자 가치는 확률 기대값입니다. 실제 개봉 결과는 운에 따라 달라집니다.`} en={`Chasing the Wind chest values are probability-weighted averages. Actual opening results depend on luck.`} />
+          <LocaleText ko={`바람을 쫓는 여행의 상자 가치는 확률 기대값입니다. 실제 개봉 결과는 운에 따라 달라집니다.`} en={`Chasing the Wind chest values are probability-weighted averages. Actual opening results depend on luck.`} zhTW={`追風之旅寶箱價值為機率加權的期望值，實際開箱結果取決於運氣。`} />
         </li>
-        <li><LocaleText ko={`게임 내 패키지 구성이나 가격이 이 표와 다르면 게임 쪽을 따라 주세요.`} en={`If pack contents or prices differ, use the information shown in the game.`} /></li>
+        <li><LocaleText ko={`게임 내 패키지 구성이나 가격이 이 표와 다르면 게임 쪽을 따라 주세요.`} en={`If pack contents or prices differ, use the information shown in the game.`} zhTW={`若禮包內容或價格與表格不同，請以遊戲內資訊為準。`} /></li>
         <li>
-          <LocaleText ko={`출처:`} en={`Source:`} />
+          <LocaleText ko={`출처:`} en={`Source:`} zhTW={`來源：`} />
           <a
             href="https://kshot-lab.com/tools/pack-value"
             target="_blank"
             rel="noopener noreferrer"
             class="text-link hover:text-link-hover">kshot-lab.com</a
-          > <LocaleText ko={`공개 데이터 (2026-10-09 수집)`} en={`Public data (collected October 9, 2026)`} />
+          > <LocaleText ko={`공개 데이터 (2026-10-09 수집)`} en={`Public data (collected October 9, 2026)`} zhTW={`公開資料（2026 年 10 月 9 日擷取）`} />
         </li>
       </ul>
     </section>
 
     <section class="mt-12">
-      <h2 class="text-xl font-bold"><LocaleText ko={`다른 계산기`} en={`Related Tools`} /></h2>
+      <h2 class="text-xl font-bold"><LocaleText ko={`다른 계산기`} en={`Related Tools`} zhTW={`其他計算工具`} /></h2>
       <ul class="mt-3 space-y-2">
         {
           otherTools.map((tool) => (
             <li class="rounded-xl border border-border bg-surface px-4 py-3">
               <a href={tool.href} class="font-bold hover:text-accent">
-                <LocaleText ko={tool.label} en={staticEnglish(tool.label)} />
+                <LocaleText ko={tool.label} en={staticEnglish(tool.label)} zhTW={staticTraditionalChinese(tool.label)} />
               </a>
-              <p class="mt-1 text-sm text-muted"><LocaleText ko={tool.summary} en={staticEnglish(tool.summary)} /></p>
+              <p class="mt-1 text-sm text-muted"><LocaleText ko={tool.summary} en={staticEnglish(tool.summary)} zhTW={staticTraditionalChinese(tool.summary)} /></p>
             </li>
           ))
         }

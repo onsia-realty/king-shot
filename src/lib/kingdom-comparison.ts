@@ -1,9 +1,9 @@
 export const comparisonMetrics = [
-  ['personal_power', '전투력', 'Power'], ['kills', '처치 수', 'Kills'],
-  ['research_power', '연구 전투력', 'Research Power'],
-  ['hero_total', '영웅 전투력', 'Hero Power'], ['hero_equip', '영웅 장비', 'Hero Gear'],
-  ['gov_gear', '영주 장비', 'Governor Gear'], ['gov_charm', '영주 보석', 'Governor Charms'],
-  ['pet_power', '펫 전투력', 'Pet Power'], ['mystic_trial', '신비한 시련', 'Mystic Trial'],
+  ['personal_power', '전투력', 'Power', '戰力'], ['kills', '처치 수', 'Kills', '擊殺數'],
+  ['research_power', '연구 전투력', 'Research Power', '研究戰力'],
+  ['hero_total', '영웅 전투력', 'Hero Power', '英雄戰力'], ['hero_equip', '영웅 장비', 'Hero Gear', '英雄裝備'],
+  ['gov_gear', '영주 장비', 'Governor Gear', '領主裝備'], ['gov_charm', '영주 보석', 'Governor Charms', '領主寶石'],
+  ['pet_power', '펫 전투력', 'Pet Power', '寵物戰力'], ['mystic_trial', '신비한 시련', 'Mystic Trial', '神秘試煉'],
 ] as const;
 export type ComparisonBoard = typeof comparisonMetrics[number][0];
 export interface ComparisonRow {

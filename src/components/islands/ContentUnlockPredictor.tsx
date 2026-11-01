@@ -1,4 +1,4 @@
-import { useCalculatorLocale } from '@/lib/calculator-locale';
+import { formatCalculatorDate, useCalculatorLocale } from '@/lib/calculator-locale';
 import { useEffect, useState } from 'react';
 import { CATEGORY_LABELS, CONFIDENCE_LABELS, KINGDOM_MAX, isoDate, localToday, predictUnlocks, type UnlockCategory, type UnlockItem } from '@/data/content-unlock';
 
@@ -12,14 +12,14 @@ const COLORS = {
 } as const;
 const ICONS = { hero: '♛', gold: '◆', system: '⚙', event: '⚑' } as const;
 const FOCUS = 'focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent';
-const fmtDate = (day: number) => isoDate(day).replaceAll('-', '.');
 
 function CategoryIcon({ category }: { category: UnlockCategory }) {
   return <span aria-hidden="true" className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border text-2xl ${COLORS[category]}`}>{ICONS[category]}</span>;
 }
 
 export default function ContentUnlockPredictor() {
-  const { t: ui, text: tx } = useCalculatorLocale();
+  const { locale, t: ui, text: tx } = useCalculatorLocale();
+  const fmtDate = (day: number) => locale === 'ko' ? isoDate(day).replaceAll('-', '.') : formatCalculatorDate(day, locale);
   const [raw, setRaw] = useState('1200');
   // Never infer unlock status from the build machine's date.
   const [today, setToday] = useState<number | null>(null);
@@ -73,7 +73,7 @@ export default function ContentUnlockPredictor() {
     <section aria-labelledby="kingdom-heading" className="rounded-2xl border border-border bg-surface p-5 sm:p-7">
       <div className="grid gap-5 sm:grid-cols-2 sm:items-center">
         <div>
-          <p className="text-xs font-bold tracking-widest text-accent">KINGDOM INTELLIGENCE</p>
+          <p className="text-xs font-bold tracking-widest text-accent">{ui('KINGDOM INTELLIGENCE', 'KINGDOM INTELLIGENCE', '王國情報')}</p>
           <h2 id="kingdom-heading" className="mt-2 text-xl font-bold">{ui('내 왕국의 다음 챕터', 'Your kingdom’s next chapter')}</h2>
           <p id="unlock-help" className="mt-2 text-sm text-muted">{ui('처음에는 예시 K1200을 보여 줍니다. 내 왕국을 입력하면 이 브라우저에 기억됩니다.', 'K1200 is the initial example. Enter your kingdom to remember it in this browser.')}</p>
         </div>

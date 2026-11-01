@@ -1,6 +1,6 @@
 ---
 import LocaleText from '@/components/LocaleText.astro';
-import { staticEnglish } from '@/lib/static-translations';
+import { staticEnglish, staticTraditionalChinese } from '@/lib/static-translations';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Breadcrumb from '@/components/Breadcrumb.astro';
 import Disclaimer from '@/components/Disclaimer.astro';
@@ -30,7 +30,7 @@ const jsonLd = {
 };
 ---
 
-<BaseLayout titleEn={staticEnglish(title)} descriptionEn={`Calculate Town Center upgrade costs and time for each selected step in Kingshot, including Truegold, Tempered Truegold, construction speed, pet buffs and the construction decree.`} fullTitle="킹샷 순금 계산기 — 업그레이드 재료·건설 시간 계산" description={description} jsonLd={jsonLd}>
+<BaseLayout titleEn={staticEnglish(title)} titleZhTW={staticTraditionalChinese(title)} descriptionEn={`Calculate Town Center upgrade costs and time for each selected step in Kingshot, including Truegold, Tempered Truegold, construction speed, pet buffs and the construction decree.`} descriptionZhTW={`計算 Kingshot 城鎮中心各階段的升級材料與時間，包含精金、淬鍊精金、建設速度、寵物加成及建設法令。`} fullTitle="킹샷 순금 계산기 — 업그레이드 재료·건설 시간 계산" description={description} jsonLd={jsonLd}>
   <div class="mx-auto w-full max-w-6xl px-4 py-5 sm:px-6 sm:py-10">
     <Breadcrumb
       items={[
@@ -42,9 +42,9 @@ const jsonLd = {
     />
 
     <header class="mb-5">
-      <h1 class="text-2xl font-extrabold sm:text-4xl"><LocaleText ko={`순금·건설 비용 계산기`} en={`Truegold & Building Calculator`} /></h1>
+      <h1 class="text-2xl font-extrabold sm:text-4xl"><LocaleText ko={`순금·건설 비용 계산기`} en={`Truegold & Building Calculator`} zhTW={`精金與建設計算器`} /></h1>
       <p class="mt-2 max-w-2xl text-sm text-muted sm:text-base">
-        <LocaleText ko={`도시센터를 어디까지 올릴까요? 현재 레벨과 목표를 고르면 단계별 순금과 건설 시간을 바로 확인할 수 있어요.`} en={`How far will you upgrade your Town Center? Select current and target levels to see Truegold costs and construction time for each step.`} />
+        <LocaleText ko={`도시센터를 어디까지 올릴까요? 현재 레벨과 목표를 고르면 단계별 순금과 건설 시간을 바로 확인할 수 있어요.`} en={`How far will you upgrade your Town Center? Select current and target levels to see Truegold costs and construction time for each step.`} zhTW={`城鎮中心想升到哪裡？選擇目前與目標等級，立即查看各階段的精金需求與建設時間。`} />
       </p>
     </header>
 
@@ -53,15 +53,15 @@ const jsonLd = {
     <TemperedTruegoldGuide />
 
     <section class="mt-12">
-      <h2 class="text-xl font-bold"><LocaleText ko={`다른 계산기`} en={`Related Tools`} /></h2>
+      <h2 class="text-xl font-bold"><LocaleText ko={`다른 계산기`} en={`Related Tools`} zhTW={`其他計算工具`} /></h2>
       <ul class="mt-3 space-y-2">
         {
           otherTools.map((tool) => (
             <li class="rounded-xl border border-border bg-surface px-4 py-3">
               <a href={tool.href} class="font-bold hover:text-accent">
-                <LocaleText ko={tool.label} en={staticEnglish(tool.label)} />
+                <LocaleText ko={tool.label} en={staticEnglish(tool.label)} zhTW={staticTraditionalChinese(tool.label)} />
               </a>
-              <p class="mt-1 text-sm text-muted"><LocaleText ko={tool.summary} en={staticEnglish(tool.summary)} /></p>
+              <p class="mt-1 text-sm text-muted"><LocaleText ko={tool.summary} en={staticEnglish(tool.summary)} zhTW={staticTraditionalChinese(tool.summary)} /></p>
             </li>
           ))
         }

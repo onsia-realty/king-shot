@@ -1,6 +1,6 @@
 ---
 import LocaleText from '@/components/LocaleText.astro';
-import { staticEnglish } from '@/lib/static-translations';
+import { staticEnglish, staticTraditionalChinese } from '@/lib/static-translations';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Breadcrumb from '@/components/Breadcrumb.astro';
 import Disclaimer from '@/components/Disclaimer.astro';
@@ -17,25 +17,33 @@ const description = `킹샷 왕국 번호만 넣으면 영웅 세대·순금·�
 const faq = [
   {
     qEn: `How are unlock dates calculated?`,
+    qZhTW: `解鎖日期如何計算？`,
     aEn: `Each content delay is added to the kingdom start date. Content tied to the SvS cycle, such as generation 3 heroes onward, is rounded up to the next Monday on the two-week cycle starting March 3, 2025.`,
+    aZhTW: `以王國開服日期加上各項內容所需天數。第三代起的英雄等與 SvS 週期綁定的內容，會順延至以 2025 年 3 月 3 日為起點、每兩週一次的下一個週一。`,
     q: '해금일은 어떻게 계산하나요?',
     a: '왕국 시작일에 콘텐츠별 경과 일수를 더합니다. 3세대 영웅 이후처럼 SvS 주기에 묶인 콘텐츠는 그 날짜를 2025-03-03부터 2주 간격으로 이어지는 다음 월요일로 올립니다.',
   },
   {
     qEn: `What is a unified group reference date?`,
+    qZhTW: `什麼是統一分組基準日？`,
     aEn: `K1–K1331 are grouped so that progression aligns on a shared date. These kingdoms use the group reference date instead of their individual start dates. Later kingdoms use their own start dates.`,
+    aZhTW: `K1～K1331 分為數個群組，讓進度對齊至共同日期。這些王國使用群組基準日，之後的王國則使用自己的開服日期。`,
     q: '통합 그룹 기준일이 뭔가요?',
     a: `K1~K1331은 몇 개 그룹으로 묶여 진행이 같은 날짜에 맞춰져 있습니다. 이 왕국들은 각자 시작일 대신 그룹 기준일로 계산합니다. 그 뒤 왕국은 자기 시작일을 씁니다.`,
   },
   {
     qEn: `How reliable is the “Estimated” confidence label?`,
+    qZhTW: `「推估」的可信度有多高？`,
     aEn: `Truegold 1/2/3, the first SvS and Truegold 9/10 are rough estimates with limited observed data. “Medium” confidence extends an 84-day cycle. Dates may differ by several days; use them for planning only.`,
+    aZhTW: `精金 1／2／3、首次 SvS 與精金 9／10 的實測資料有限，僅為粗略推估。「中等」可信度則依 84 天週期延伸。日期可能相差數天，請僅作規劃參考。`,
     q: '신뢰도 "추정"은 얼마나 믿을 만한가요?',
     a: '순금 1/2/3, 첫 SvS, 순금 9/10은 실측이 부족한 대략 추정입니다. "보통"은 84일 주기를 늘려 잡은 값입니다. 며칠씩 어긋날 수 있으니 계획용 참고로만 보세요.',
   },
   {
     qEn: `What about K${KINGDOM_MAX + 1} and later kingdoms?`,
+    qZhTW: `K${KINGDOM_MAX + 1} 之後的王國呢？`,
     aEn: `Start-date data is not available yet, so these kingdoms cannot be calculated. Currently K1–K${KINGDOM_MAX} are supported.`,
+    aZhTW: `尚無開服日期資料，因此暫時無法計算。目前支援 K1～K${KINGDOM_MAX}。`,
     q: `K${KINGDOM_MAX + 1} 이후 왕국은요?`,
     a: `아직 시작일 데이터가 없어서 계산하지 않습니다. 지금은 K1~K${KINGDOM_MAX}까지 지원합니다.`,
   },
@@ -68,7 +76,7 @@ const jsonLd = [
 ];
 ---
 
-<BaseLayout titleEn={staticEnglish(title)} descriptionEn={`Enter a Kingshot kingdom number to forecast dates and days remaining for ${ruleCount} unlocks, including hero generations, Truegold, War Academy and the first SvS.`} title={title} description={description} jsonLd={jsonLd}>
+<BaseLayout titleEn={staticEnglish(title)} titleZhTW={staticTraditionalChinese(title)} descriptionEn={`Enter a Kingshot kingdom number to forecast dates and days remaining for ${ruleCount} unlocks, including hero generations, Truegold, War Academy and the first SvS.`} descriptionZhTW={`輸入 Kingshot 王國編號，預測英雄世代、精金、戰爭學院、首次 SvS 等 ${ruleCount} 項內容的解鎖日期與剩餘天數。`} title={title} description={description} jsonLd={jsonLd}>
   <div class="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
     <Breadcrumb
       items={[
@@ -81,22 +89,22 @@ const jsonLd = [
 
     <header class="mb-8">
       <p class="mb-2 text-xs font-bold tracking-widest text-accent">KINGSHOT · CONTENT ROADMAP</p>
-      <h1 class="text-3xl font-extrabold sm:text-4xl"><LocaleText ko={`콘텐츠 해금 예측`} en={`Content Unlock Forecast`} /></h1>
+      <h1 class="text-3xl font-extrabold sm:text-4xl"><LocaleText ko={`콘텐츠 해금 예측`} en={`Content Unlock Forecast`} zhTW={`內容解鎖預測`} /></h1>
       <p class="mt-3 max-w-2xl text-muted">
-        <LocaleText ko={`영웅부터 순금까지, 콘텐츠 ${ruleCount}개의 다음 해금일을 한눈에.`} en={`From heroes to Truegold. See what’s next across ${ruleCount} content unlocks.`} />
+        <LocaleText ko={`영웅부터 순금까지, 콘텐츠 ${ruleCount}개의 다음 해금일을 한눈에.`} en={`From heroes to Truegold. See what’s next across ${ruleCount} content unlocks.`} zhTW={`從英雄到精金，一次掌握 ${ruleCount} 項內容的下一次解鎖日期。`} />
       </p>
     </header>
 
     <ContentUnlockPredictor client:load />
 
     <section class="mt-12">
-      <h2 class="text-xl font-bold"><LocaleText ko={`자주 묻는 질문`} en={`Frequently Asked Questions`} /></h2>
+      <h2 class="text-xl font-bold"><LocaleText ko={`자주 묻는 질문`} en={`Frequently Asked Questions`} zhTW={`常見問題`} /></h2>
       <div class="mt-3 space-y-3">
         {
           faq.map((f) => (
             <details class="rounded-xl border border-border bg-surface px-4 py-3">
-              <summary class="cursor-pointer rounded py-1 font-bold focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"><LocaleText ko={f.q} en={f.qEn} /></summary>
-              <p class="mt-2 text-sm text-muted"><LocaleText ko={f.a} en={f.aEn} /></p>
+              <summary class="cursor-pointer rounded py-1 font-bold focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"><LocaleText ko={f.q} en={f.qEn} zhTW={f.qZhTW} /></summary>
+              <p class="mt-2 text-sm text-muted"><LocaleText ko={f.a} en={f.aEn} zhTW={f.aZhTW} /></p>
             </details>
           ))
         }
@@ -104,35 +112,35 @@ const jsonLd = [
     </section>
 
     <section class="mt-12">
-      <h2 class="text-xl font-bold"><LocaleText ko={`데이터 범위와 한계`} en={`Data Coverage and Limitations`} /></h2>
+      <h2 class="text-xl font-bold"><LocaleText ko={`데이터 범위와 한계`} en={`Data Coverage and Limitations`} zhTW={`資料範圍與限制`} /></h2>
       <ul class="mt-3 space-y-2 text-sm text-muted">
-        <li><LocaleText ko={`왕국 시작일은 K1~K${KINGDOM_MAX}까지 있습니다. 그 뒤 왕국은 아직 계산하지 않습니다.`} en={`Kingdom start dates are available for K1–K${KINGDOM_MAX}. Later kingdoms are not supported yet.`} /></li>
+        <li><LocaleText ko={`왕국 시작일은 K1~K${KINGDOM_MAX}까지 있습니다. 그 뒤 왕국은 아직 계산하지 않습니다.`} en={`Kingdom start dates are available for K1–K${KINGDOM_MAX}. Later kingdoms are not supported yet.`} zhTW={`目前提供 K1～K${KINGDOM_MAX} 的王國開服日期，尚不支援之後的王國。`} /></li>
         <li>
-          <LocaleText ko={`모든 날짜는 예측입니다. 특히 "추정" 배지가 붙은 항목은 실측이 부족해 크게 어긋날 수 있습니다. 게임 안 공지나 실제 해금이 다르면 게임 쪽을 따라 주세요.`} en={`All dates are forecasts. Items marked “Estimated” have limited observed data and may differ substantially. Follow in-game announcements and actual unlocks if they differ.`} />
+          <LocaleText ko={`모든 날짜는 예측입니다. 특히 "추정" 배지가 붙은 항목은 실측이 부족해 크게 어긋날 수 있습니다. 게임 안 공지나 실제 해금이 다르면 게임 쪽을 따라 주세요.`} en={`All dates are forecasts. Items marked “Estimated” have limited observed data and may differ substantially. Follow in-game announcements and actual unlocks if they differ.`} zhTW={`所有日期皆為預測。標示「推估」的項目因實測資料不足，可能有較大誤差。如與遊戲公告或實際解鎖時間不同，請以遊戲為準。`} />
         </li>
-        <li><LocaleText ko={`남은 일수는 이 기기의 오늘 날짜로 셉니다. 해금 당일은 해금됨으로 표시합니다.`} en={`Days remaining use the current date on this device. Content is marked unlocked on its unlock date.`} /></li>
+        <li><LocaleText ko={`남은 일수는 이 기기의 오늘 날짜로 셉니다. 해금 당일은 해금됨으로 표시합니다.`} en={`Days remaining use the current date on this device. Content is marked unlocked on its unlock date.`} zhTW={`剩餘天數以此裝置的今天日期計算，解鎖當天即標示為已解鎖。`} /></li>
         <li>
-          <LocaleText ko={`출처:`} en={`Source:`} />
+          <LocaleText ko={`출처:`} en={`Source:`} zhTW={`來源：`} />
           <a
             href="https://kshot-lab.com/tools/content-unlock"
             target="_blank"
             rel="noopener noreferrer"
             class="text-link hover:text-link-hover">kshot-lab.com</a
-          > <LocaleText ko={`공개 데이터 (2026-10-09 수집)`} en={`Public data (collected October 9, 2026)`} />
+          > <LocaleText ko={`공개 데이터 (2026-10-09 수집)`} en={`Public data (collected October 9, 2026)`} zhTW={`公開資料（2026 年 10 月 9 日擷取）`} />
         </li>
       </ul>
     </section>
 
     <section class="mt-12">
-      <h2 class="text-xl font-bold"><LocaleText ko={`다른 계산기`} en={`Related Tools`} /></h2>
+      <h2 class="text-xl font-bold"><LocaleText ko={`다른 계산기`} en={`Related Tools`} zhTW={`其他計算工具`} /></h2>
       <ul class="mt-3 space-y-2">
         {
           otherTools.map((tool) => (
             <li class="rounded-xl border border-border bg-surface px-4 py-3">
               <a href={tool.href} class="font-bold hover:text-accent">
-                <LocaleText ko={tool.label} en={staticEnglish(tool.label)} />
+                <LocaleText ko={tool.label} en={staticEnglish(tool.label)} zhTW={staticTraditionalChinese(tool.label)} />
               </a>
-              <p class="mt-1 text-sm text-muted"><LocaleText ko={tool.summary} en={staticEnglish(tool.summary)} /></p>
+              <p class="mt-1 text-sm text-muted"><LocaleText ko={tool.summary} en={staticEnglish(tool.summary)} zhTW={staticTraditionalChinese(tool.summary)} /></p>
             </li>
           ))
         }

@@ -1,4 +1,4 @@
-import { useCalculatorLocale } from '@/lib/calculator-locale';
+import { formatCalculatorNumber, useCalculatorLocale } from '@/lib/calculator-locale';
 import { useEffect, useMemo, useState } from 'react';
 import { RARITY_LABEL, TROOP_CLASS_GLYPH, type Rarity, type TroopClass } from '@/lib/labels';
 
@@ -75,7 +75,7 @@ const EXPEDITION_ROWS = [
   { key: 'defense', label: '방어력' },
 ] as const;
 
-const num = (value: number) => value.toLocaleString('ko-KR');
+const num = (value: number) => formatCalculatorNumber(value);
 
 /** "370.29%" 같은 문자열에서 숫자만 뽑는다. 못 뽑으면 강조 없이 값만 보여준다 */
 function parsePercent(value: string | undefined): number | undefined {
@@ -162,7 +162,7 @@ function HeroColumn({ hero, other }: { hero: ComparisonHero; other?: ComparisonH
           {hero.portrait ? (
             <img
               src={hero.portrait}
-              alt={ui(`${hero.name} (${hero.nameEn}) 초상`, `${hero.nameEn || tx(hero.name)} portrait`)}
+              alt={ui(`${hero.name} (${hero.nameEn}) 초상`, `${hero.nameEn || tx(hero.name)} portrait`, `${hero.nameEn || tx(hero.name)} 肖像`)}
               width={128}
               height={128}
               loading="lazy"
@@ -323,7 +323,7 @@ export default function HeroComparison({ heroes }: Props) {
 
   const options = heroes.map((hero) => (
     <option key={hero.id} value={hero.id}>
-      {ui(`${hero.name} (${hero.nameEn}) · ${hero.generation}세대 ${RARITY_LABEL[hero.rarity]}`, `${hero.nameEn || tx(hero.name)} · Gen ${hero.generation} ${tx(RARITY_LABEL[hero.rarity])}`)}
+      {ui(`${hero.name} (${hero.nameEn}) · ${hero.generation}세대 ${RARITY_LABEL[hero.rarity]}`, `${hero.nameEn || tx(hero.name)} · Gen ${hero.generation} ${tx(RARITY_LABEL[hero.rarity])}`, `${hero.nameEn || tx(hero.name)} · 第 ${hero.generation} 世代 ${tx(RARITY_LABEL[hero.rarity])}`)}
     </option>
   ));
 

@@ -48,7 +48,7 @@ function numeric(value: unknown): number | undefined {
 }
 const level = (value: unknown) => numeric(value)?.toLocaleString(playerNumberLocale()) ?? '—';
 function exclusiveName(hero: ArenaHero, known: HeroCatalog[string] | undefined, locale: PlayerLocale) {
-  return (locale === 'en' ? known?.gearNameEn : undefined)
+  return (locale !== 'ko' ? known?.gearNameEn : undefined)
     ?? playerLabel(known?.gearName, locale) ?? playerLabel(hero.exclusive_gear?.name, locale)
     ?? playerText('전용 장비', locale);
 }
@@ -141,7 +141,7 @@ export default function ArenaHeroes({ heroes, catalog }: { heroes: ArenaHero[] |
     <h2 id="heroes-title" className="text-xl font-bold">{tr("아레나 방어 영웅")}</h2>
     {ordered.length ? <ul className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">{ordered.map((hero, index) => {
       const known = catalog[normalize(hero.name ?? '')] ?? catalog[String(hero.id ?? '')];
-      const name = (locale === 'en' ? known?.nameEn : undefined) ?? playerLabel(known?.name, locale) ?? playerLabel(hero.name, locale) ?? `${tr("방어 영웅 ")}${index + 1}`;
+      const name = (locale !== 'ko' ? known?.nameEn : undefined) ?? playerLabel(known?.name, locale) ?? playerLabel(hero.name, locale) ?? `${tr("방어 영웅 ")}${index + 1}`;
       const exclusiveLevel = hero.exclusive_gear?.level ?? hero.exclusive_gear_level;
       return <li key={`${hero.id ?? 'hero'}-${index}`} className="min-w-0 rounded-xl border border-border border-t-accent/70 bg-bg p-3">
         <div className="flex items-start gap-3">

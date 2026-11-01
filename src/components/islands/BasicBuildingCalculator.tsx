@@ -1,4 +1,4 @@
-import { useCalculatorLocale } from '@/lib/calculator-locale';
+import { formatCalculatorNumber, useCalculatorLocale } from '@/lib/calculator-locale';
 import { useMemo, useState } from 'react';
 import {
   BUILDING_COSTS,
@@ -36,7 +36,7 @@ function clampLevel(n: number, min: number, max: number): number {
 }
 
 function fmt(n: number): string {
-  return n.toLocaleString('ko-KR');
+  return formatCalculatorNumber(n);
 }
 
 /** 초를 `3일 12시간 30분` 꼴로 바꾼다. 0인 단위는 생략한다. */

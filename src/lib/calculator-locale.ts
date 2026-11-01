@@ -1,4 +1,5 @@
-import { useLocale } from './locale';
+import { getLocale, useLocale, type Locale } from './locale';
+import { CALCULATOR_ZH_TW, CALCULATOR_ZH_TEMPLATES } from './calculator-zh-tw';
 
 /** Display-only translations. Source data, keys, formulas and stored inputs remain Korean/unchanged. */
 const LABELS: Readonly<Record<string, string>> = {
@@ -943,7 +944,66 @@ export function calculatorEnglish(value: string): string {
   return '[Korean source] ' + value;
 }
 
+const zhTemplates = [...CALCULATOR_ZH_TEMPLATES]
+  .sort((a, b) => b[0].replace(/\{\d+\}/g, '').length - a[0].replace(/\{\d+\}/g, '').length)
+  .map(([ko, zh]) => ({
+    expression: new RegExp('^' + ko.split(/\{\d+\}/).map(escapeRegex).join('(.+?)') + '$'),
+    zh,
+  }));
+
+/** Unknown text has an explicit fallback; it is never silently presented as translated Korean. */
+export function calculatorTraditionalChinese(value: string, english?: string): string {
+  if (CALCULATOR_ZH_TW[value] !== undefined) return CALCULATOR_ZH_TW[value];
+  const trimmed = value.trim();
+  if (CALCULATOR_ZH_TW[trimmed] !== undefined) return value.replace(trimmed, CALCULATOR_ZH_TW[trimmed]);
+  if (!/[가-힣]/.test(value)) return value;
+  const money = /^₩([\d,.]+)만$/.exec(value);
+  if (money) return '₩' + (Number(money[1].replace(/,/g, '')) * 10000).toLocaleString('zh-TW');
+  // Match whole durations before the generic single-unit templates.
+  if (/^(?:[\d,.]+(?:일|시간|분|초)\s*)+$/.test(value)) {
+    return value.replace(/일/g, ' 天').replace(/시간/g, ' 小時').replace(/분/g, ' 分鐘').replace(/초/g, ' 秒');
+  }
+  for (const { expression, zh } of zhTemplates) {
+    const match = expression.exec(value);
+    if (match) {
+      const translated = zh.replace(/\{(\d+)\}/g, (_, index) => calculatorTraditionalChinese(match[Number(index) + 1]));
+      if (!translated.includes('［待翻譯］')) return translated;
+    }
+  }
+  const parts = value.split(/( · | → |, |\+| \/ |\s+(?=[\d₩]))/);
+  if (parts.length > 1) {
+    const result = parts.map(part => /[가-힣]/.test(part) ? calculatorTraditionalChinese(part) : part).join('');
+    if (!result.includes('［待翻譯］')) return result;
+  }
+  // Existing English hero/skill names remain the reference until their Chinese names are verified.
+  const fallback = english ?? calculatorEnglish(value);
+  return /[가-힣]/.test(fallback) ? '［待翻譯］' + value : fallback;
+}
+
+export function calculatorText(value: string, locale: Locale): string {
+  return locale === 'ko' ? value : locale === 'en' ? calculatorEnglish(value) : calculatorTraditionalChinese(value);
+}
+
+export function calculatorUi(ko: string, en: string, locale: Locale, zhTW?: string): string {
+  return locale === 'ko' ? ko : locale === 'en' ? en : zhTW ?? calculatorTraditionalChinese(ko, en);
+}
+
+export function formatCalculatorNumber(value: number, options?: Intl.NumberFormatOptions, locale: Locale = getLocale()): string {
+  return value.toLocaleString(locale === 'ko' ? 'ko-KR' : locale === 'en' ? 'en-US' : 'zh-TW', options);
+}
+
+/** Epoch-day dates are displayed in UTC, so changing language never shifts an unlock date. */
+export function formatCalculatorDate(day: number, locale: Locale): string {
+  return new Intl.DateTimeFormat(locale === 'ko' ? 'ko-KR' : locale === 'en' ? 'en-US' : 'zh-TW', {
+    year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'UTC',
+  }).format(new Date(day * 86400000));
+}
+
 export function useCalculatorLocale() {
-  const { locale, t } = useLocale();
-  return { locale, t, text: (value: string) => t(value, calculatorEnglish(value)) };
+  const { locale } = useLocale();
+  return {
+    locale,
+    t: (ko: string, en: string, zhTW?: string) => calculatorUi(ko, en, locale, zhTW),
+    text: (value: string) => calculatorText(value, locale),
+  };
 }

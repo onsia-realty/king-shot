@@ -1,4 +1,4 @@
-import { useCalculatorLocale } from '@/lib/calculator-locale';
+import { formatCalculatorNumber, useCalculatorLocale } from '@/lib/calculator-locale';
 import { useMemo, useState } from 'react';
 import { PACKAGE_GENERATIONS, type PackageGeneration } from '@/data/package-ref';
 import {
@@ -38,11 +38,11 @@ const TABS: readonly { key: Tab; label: string }[] = [
 ];
 
 function fmt(n: number): string {
-  return n.toLocaleString('ko-KR', { maximumFractionDigits: 1 });
+  return formatCalculatorNumber(n, { maximumFractionDigits: 1 });
 }
 
 function won(n: number): string {
-  return `${Math.round(n).toLocaleString('ko-KR')}원`;
+  return `${formatCalculatorNumber(Math.round(n))}원`;
 }
 
 const fieldClass =

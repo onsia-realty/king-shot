@@ -29,13 +29,13 @@ for (const entry of entries) {
 }
 ---
 
-<BaseLayout titleEn="Governor Gear & Map" descriptionEn={`Search by nickname or choose a governor on the kingdom map to inspect public gear, alliance information and arena defense heroes in Governor Gear & Map.`} fullTitle="킹샷 영주 장비 & 왕국 지도 — 상대 전력 확인하기" description="닉네임이나 영주 ID로 전투력과 공개 장비를 조회하고, 왕국 지도에서 도시 위치와 연맹 분포를 확인하세요. KvK 준비, 상대를 아는 것부터 시작하세요.">
+<BaseLayout titleEn="Governor Gear & Map" titleZhTW="領主裝備與地圖" descriptionEn={`Search by nickname or choose a governor on the kingdom map to inspect public gear, alliance information and arena defense heroes in Governor Gear & Map.`} descriptionZhTW={`以暱稱搜尋或在王國地圖上選擇領主，查看公開裝備、聯盟資訊與競技場防守英雄。`} fullTitle="킹샷 영주 장비 & 왕국 지도 — 상대 전력 확인하기" description="닉네임이나 영주 ID로 전투력과 공개 장비를 조회하고, 왕국 지도에서 도시 위치와 연맹 분포를 확인하세요. KvK 준비, 상대를 아는 것부터 시작하세요.">
   <div class="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
     <Breadcrumb items={[{ label: '홈', href: '/' }, { label: '영주 장비 & 지도' }]} class="mb-6" />
     <header class="mb-8">
-      <p class="mb-2 text-sm font-semibold text-accent"><LocaleText ko={`내 영주부터 다른 왕국의 영주까지`} en={`Explore your governor and governors across kingdoms`} /></p>
-      <h1 class="text-3xl font-extrabold sm:text-4xl"><LocaleText ko={`영주 장비 & 지도`} en={`Governor Gear & Map`} /></h1>
-      <p class="mt-3 max-w-2xl text-muted"><LocaleText ko={`닉네임으로 검색하거나 왕국 지도에서 영주를 선택하세요. 영주 ID를 몰라도 공개된 장비와 아레나 방어 영웅을 확인할 수 있습니다.`} en={`Search by nickname or select a governor on the kingdom map. View public gear and arena defense heroes even without knowing the governor ID.`} /></p>
+      <p class="mb-2 text-sm font-semibold text-accent"><LocaleText ko={`내 영주부터 다른 왕국의 영주까지`} en={`Explore your governor and governors across kingdoms`} zhTW={`從自己的領主到其他王國的領主，一起探索`} /></p>
+      <h1 class="text-3xl font-extrabold sm:text-4xl"><LocaleText ko={`영주 장비 & 지도`} en={`Governor Gear & Map`} zhTW={`領主裝備與地圖`} /></h1>
+      <p class="mt-3 max-w-2xl text-muted"><LocaleText ko={`닉네임으로 검색하거나 왕국 지도에서 영주를 선택하세요. 영주 ID를 몰라도 공개된 장비와 아레나 방어 영웅을 확인할 수 있습니다.`} en={`Search by nickname or select a governor on the kingdom map. View public gear and arena defense heroes even without knowing the governor ID.`} zhTW={`以暱稱搜尋，或在王國地圖上選擇領主。即使不知道領主 ID，也能查看公開裝備與競技場防守英雄。`} /></p>
     </header>
     <PlayerLookup client:load heroes={heroes} />
   </div>

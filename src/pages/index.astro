@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import LocaleText from '@/components/LocaleText.astro';
-import { staticEnglish } from '@/lib/static-translations';
+import { staticEnglish, staticTraditionalChinese } from '@/lib/static-translations';
 import VisitCounter from '@/components/VisitCounter.astro';
 import Disclaimer from '@/components/Disclaimer.astro';
 import GuideCard from '@/components/GuideCard.astro';
@@ -65,17 +65,17 @@ const database = [
 ];
 ---
 
-<BaseLayout fullTitle="킹샷 공략 — 영주 장비·왕국 지도·순금 계산기" fullTitleEn="Kingshot Guide — Governor Gear, Kingdom Maps & Truegold Tools" description={SITE_DESCRIPTION} descriptionEn={staticEnglish(SITE_DESCRIPTION)} image="/og-kingshot-heroes-v2.jpg" jsonLd={jsonLd}>
+<BaseLayout fullTitle="킹샷 공략 — 영주 장비·왕국 지도·순금 계산기" fullTitleEn="Kingshot Guide — Governor Gear, Kingdom Maps & Truegold Tools" fullTitleZhTW="Kingshot 攻略 — 領主裝備、王國地圖與精金計算工具" description={SITE_DESCRIPTION} descriptionEn={staticEnglish(SITE_DESCRIPTION)} descriptionZhTW={staticTraditionalChinese(SITE_DESCRIPTION)} image="/og-kingshot-heroes-v2.jpg" jsonLd={jsonLd}>
   {/* 1. 히어로 */}
   <section class="mx-auto max-w-6xl px-4 pt-14 pb-12 sm:pt-20">
     <div class="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-10">
     <div class="min-w-0">
     <p class="mb-3 text-sm font-bold tracking-widest text-accent uppercase">Kingshot</p>
     <h1 class="text-4xl leading-tight font-extrabold sm:text-5xl">
-      <LocaleText ko="킹샷 공략, " en="Kingshot guides, " /><span class="text-accent"><LocaleText ko="한국어로 한 곳에서" en="all in one place" /></span>
+      <LocaleText ko="킹샷 공략, " en="Kingshot guides, " zhTW="Kingshot 攻略，" /><span class="text-accent"><LocaleText ko="한국어로 한 곳에서" en="all in one place" zhTW="一站掌握" /></span>
     </h1>
     <p class="mt-5 max-w-2xl text-base text-muted sm:text-lg">
-      <LocaleText ko={SITE_DESCRIPTION} en={staticEnglish(SITE_DESCRIPTION)} />
+      <LocaleText ko={SITE_DESCRIPTION} en={staticEnglish(SITE_DESCRIPTION)} zhTW={staticTraditionalChinese(SITE_DESCRIPTION)} />
     </p>
 
     <div class="mt-8 flex flex-wrap gap-3">
@@ -86,14 +86,14 @@ const database = [
               href={btn.href}
               class="rounded-lg bg-accent px-5 py-2.5 font-bold text-on-accent no-underline hover:bg-accent-strong hover:text-on-accent"
             >
-              <LocaleText ko={btn.label} en={staticEnglish(btn.label)} />
+              <LocaleText ko={btn.label} en={staticEnglish(btn.label)} zhTW={staticTraditionalChinese(btn.label)} />
             </a>
           ) : (
             <a
               href={btn.href}
               class="rounded-lg border border-border bg-surface px-5 py-2.5 font-bold text-text no-underline hover:bg-raised hover:text-accent"
             >
-              <LocaleText ko={btn.label} en={staticEnglish(btn.label)} />
+              <LocaleText ko={btn.label} en={staticEnglish(btn.label)} zhTW={staticTraditionalChinese(btn.label)} />
             </a>
           )
         )
@@ -101,7 +101,7 @@ const database = [
     </div>
 
     <VisitCounter />
-    <p class="mt-3 text-xs text-muted"><LocaleText ko="홈·영주 조회·계산기는 영어 전환을 지원합니다. 공략 글과 다른 도감은 한국어로 제공됩니다." en="English is available on Home, Governor Gear & Map, and Tools. Guides and other encyclopedia pages are in Korean." /></p>
+    <p class="mt-3 text-xs text-muted"><LocaleText ko="홈·영주 조회·계산기는 영어·번체 중국어 전환을 지원합니다. 공략 글과 다른 도감은 한국어로 제공됩니다." en="English and Traditional Chinese are available on Home, Governor Gear & Map, and Tools. Guides and other encyclopedia pages are in Korean." zhTW="首頁、領主裝備與地圖、計算工具支援英文與繁體中文。攻略文章與其他圖鑑以韓文提供。" /></p>
     </div>
     <a
       href={KAKAO_OPENCHAT.url}
@@ -109,19 +109,19 @@ const database = [
       rel="noopener noreferrer"
       aria-label="킹샷 카카오톡 오픈채팅 참여하기 (새 창 열림)"
       data-aria-label-ko="킹샷 카카오톡 오픈채팅 참여하기 (새 창 열림)"
-      data-aria-label-en="Join Kingshot KakaoTalk Open Chat (opens in a new tab)"
+      data-aria-label-en="Join Kingshot KakaoTalk Open Chat (opens in a new tab)" data-aria-label-zh-tw="加入 Kingshot KakaoTalk 開放聊天室（另開分頁）"
       class="group flex flex-col rounded-2xl bg-kakao p-7 text-kakao-ink no-underline transition-shadow hover:text-kakao-ink hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-kakao lg:min-h-72"
     >
       <div class="flex items-center gap-2 text-sm font-bold">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path d="M12 3C6.477 3 2 6.477 2 10.8c0 2.77 1.86 5.2 4.66 6.57-.2.72-.74 2.68-.85 3.1-.13.52.19.51.4.37.17-.11 2.6-1.77 3.65-2.49.69.1 1.4.15 2.14.15 5.523 0 10-3.477 10-7.7S17.523 3 12 3Z" />
         </svg>
-        <LocaleText ko="카카오톡 오픈채팅" en="KakaoTalk Open Chat" />
+        <LocaleText ko="카카오톡 오픈채팅" en="KakaoTalk Open Chat" zhTW="KakaoTalk 開放聊天室" />
       </div>
-      <h2 class="mt-5 text-2xl leading-snug font-extrabold"><LocaleText ko="킹샷, 함께하면 더 쉬워집니다" en="Play smarter, together" /></h2>
-      <p class="mt-3 text-sm leading-relaxed"><LocaleText ko={KAKAO_OPENCHAT.blurb} en={staticEnglish(KAKAO_OPENCHAT.blurb)} /><br /><LocaleText ko="궁금한 건 묻고, 공략은 함께 나눠요." en="Ask questions and share tips in our Korean-speaking community." /></p>
+      <h2 class="mt-5 text-2xl leading-snug font-extrabold"><LocaleText ko="킹샷, 함께하면 더 쉬워집니다" en="Play smarter, together" zhTW="一起玩，成長更輕鬆" /></h2>
+      <p class="mt-3 text-sm leading-relaxed"><LocaleText ko={KAKAO_OPENCHAT.blurb} en={staticEnglish(KAKAO_OPENCHAT.blurb)} zhTW={staticTraditionalChinese(KAKAO_OPENCHAT.blurb)} /><br /><LocaleText ko="궁금한 건 묻고, 공략은 함께 나눠요." en="Ask questions and share tips in our Korean-speaking community." zhTW="在韓語社群中提問，一起分享攻略。" /></p>
       <span class="mt-6 flex items-center justify-between rounded-lg bg-kakao-ink px-4 py-3 text-sm font-bold text-kakao">
-        <LocaleText ko="오픈채팅 참여하기" en="Join Open Chat" /> <span aria-hidden="true">↗</span>
+        <LocaleText ko="오픈채팅 참여하기" en="Join Open Chat" zhTW="加入開放聊天室" /> <span aria-hidden="true">↗</span>
       </span>
     </a>
     </div>
@@ -140,7 +140,7 @@ const database = [
           playsinline
           autoplay
           tabindex="-1"
-          aria-label="킹샷 서버 홍보 영상" data-aria-label-ko="킹샷 서버 홍보 영상" data-aria-label-en="Kingshot server promotional video"
+          aria-label="킹샷 서버 홍보 영상" data-aria-label-ko="킹샷 서버 홍보 영상" data-aria-label-en="Kingshot server promotional video" data-aria-label-zh-tw="Kingshot 伺服器宣傳影片"
         >
           <source src="/video/intro-1622.webm" type="video/webm" />
           <source src="/video/intro-1622.mp4" type="video/mp4" />
@@ -193,7 +193,7 @@ const database = [
         </div>
       </div>
       <figcaption class="mt-2 text-sm text-muted">
-        <LocaleText ko="킹샷 서버 홍보 영상. 소리가 있으니 오른쪽 아래 버튼으로 켜고 끌 수 있습니다." en="Kingshot server promo. Use the buttons at the bottom right to play or pause and turn sound on or off." />
+        <LocaleText ko="킹샷 서버 홍보 영상. 소리가 있으니 오른쪽 아래 버튼으로 켜고 끌 수 있습니다." en="Kingshot server promo. Use the buttons at the bottom right to play or pause and turn sound on or off." zhTW="Kingshot 伺服器宣傳影片。可使用右下角按鈕播放、暫停或開關聲音。" />
       </figcaption>
     </figure>
 
@@ -201,77 +201,77 @@ const database = [
       <div aria-hidden="true" class="pointer-events-none absolute -right-16 -top-20 size-64 rounded-full bg-accent/5 blur-3xl"></div>
       <div class="relative grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
         <div>
-          <p class="text-xs font-bold tracking-wider text-accent"><LocaleText ko="닉네임으로 찾고, 지도에서 확인하세요" en="Search by nickname. Find them on the map." /></p>
-          <h2 id="player-feature-title" class="mt-2 text-2xl font-extrabold sm:text-3xl"><LocaleText ko="영주 장비 " en="Governor Gear " /><span class="text-accent"><LocaleText ko="& 지도" en="& Map" /></span></h2>
+          <p class="text-xs font-bold tracking-wider text-accent"><LocaleText ko="닉네임으로 찾고, 지도에서 확인하세요" en="Search by nickname. Find them on the map." zhTW="以暱稱搜尋，在地圖上查看。" /></p>
+          <h2 id="player-feature-title" class="mt-2 text-2xl font-extrabold sm:text-3xl"><LocaleText ko="영주 장비 " en="Governor Gear " zhTW="領主裝備" /><span class="text-accent"><LocaleText ko="& 지도" en="& Map" zhTW="與地圖" /></span></h2>
           <div class="mt-4 border-l-2 border-accent pl-4">
-            <p class="text-xs font-bold tracking-[0.16em] text-accent"><LocaleText ko="KvK 필승 전략" en="Plan your KvK battles" /></p>
-            <p class="mt-1 text-lg font-bold leading-snug text-text sm:text-xl"><LocaleText ko="상대의 전투력부터 확인하세요." en="Start by checking your opponent’s power." /></p>
-            <p class="mt-2 text-sm font-semibold tracking-widest text-accent-strong"><LocaleText ko="지피지기 백전백승" en="Know your opponent. Prepare your next move." /></p>
+            <p class="text-xs font-bold tracking-[0.16em] text-accent"><LocaleText ko="KvK 필승 전략" en="Plan your KvK battles" zhTW="規劃 KvK 戰略" /></p>
+            <p class="mt-1 text-lg font-bold leading-snug text-text sm:text-xl"><LocaleText ko="상대의 전투력부터 확인하세요." en="Start by checking your opponent’s power." zhTW="先掌握對手的戰力。" /></p>
+            <p class="mt-2 text-sm font-semibold tracking-widest text-accent-strong"><LocaleText ko="지피지기 백전백승" en="Know your opponent. Prepare your next move." zhTW="知己知彼，百戰百勝。" /></p>
           </div>
-          <p class="mt-3 max-w-2xl text-sm leading-relaxed text-muted sm:text-base"><LocaleText ko="궁금한 영주의 전투력과 공개된 장비, 아레나 영웅을 한곳에서 확인하세요. 위치 지도에서 주변 도시와 연맹도 함께 살펴볼 수 있어요." en="View a governor’s power, public gear and arena heroes in one place. Explore nearby cities and alliances on the location map." /></p>
+          <p class="mt-3 max-w-2xl text-sm leading-relaxed text-muted sm:text-base"><LocaleText ko="궁금한 영주의 전투력과 공개된 장비, 아레나 영웅을 한곳에서 확인하세요. 위치 지도에서 주변 도시와 연맹도 함께 살펴볼 수 있어요." en="View a governor’s power, public gear and arena heroes in one place. Explore nearby cities and alliances on the location map." zhTW="集中查看領主的戰力、公開裝備與競技場英雄，並在位置地圖上探索附近的城市與聯盟。" /></p>
         </div>
-        <a href="/player/" class="inline-flex min-h-12 items-center justify-center gap-3 rounded-xl bg-accent px-6 py-3 font-bold text-on-accent no-underline transition-colors hover:bg-accent-strong hover:text-on-accent focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"><LocaleText ko="영주 장비 & 지도 바로가기" en="Explore Governor Gear & Map" /> <span aria-hidden="true">→</span></a>
+        <a href="/player/" class="inline-flex min-h-12 items-center justify-center gap-3 rounded-xl bg-accent px-6 py-3 font-bold text-on-accent no-underline transition-colors hover:bg-accent-strong hover:text-on-accent focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"><LocaleText ko="영주 장비 & 지도 바로가기" en="Explore Governor Gear & Map" zhTW="查看領主裝備與地圖" /> <span aria-hidden="true">→</span></a>
       </div>
       <div class="relative mt-6 rounded-xl border border-accent/30 bg-bg/60 p-4 sm:p-5">
-        <p class="flex items-center gap-2 text-sm font-bold"><span class="rounded-full bg-accent px-2 py-0.5 text-xs text-on-accent">NEW</span><LocaleText ko="KvK 준비를 위한 새 기능" en="New tools for KvK preparation" /></p>
+        <p class="flex items-center gap-2 text-sm font-bold"><span class="rounded-full bg-accent px-2 py-0.5 text-xs text-on-accent">NEW</span><LocaleText ko="KvK 준비를 위한 새 기능" en="New tools for KvK preparation" zhTW="KvK 備戰新功能" /></p>
         <div class="mt-4 grid gap-3 sm:grid-cols-2">
           <a href="/player/?tab=comparison" class="group rounded-xl border border-border bg-surface p-4 no-underline transition-colors hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
-            <h3 class="text-lg font-bold text-text"><span aria-hidden="true">⚔️ </span><LocaleText ko="왕국 간 전력 비교" en="Kingdom power comparison" /></h3>
-            <p class="mt-2 text-sm leading-relaxed text-muted"><LocaleText ko="우리 왕국과 상대 왕국의 전투력·연구 전투력·장비 등 주요 순위를 나란히 비교하세요. 상위 10·50·100명의 합계와 차이까지 무료로 확인할 수 있어요." en="Compare power, research power, gear and more across two kingdoms. See top 10, 50 or 100 totals and differences for free." /></p>
-            <span class="mt-3 inline-flex items-center gap-2 text-sm font-bold text-accent"><LocaleText ko="왕국 비교하기" en="Compare kingdoms" /><span aria-hidden="true">→</span></span>
+            <h3 class="text-lg font-bold text-text"><span aria-hidden="true">⚔️ </span><LocaleText ko="왕국 간 전력 비교" en="Kingdom power comparison" zhTW="王國戰力比較" /></h3>
+            <p class="mt-2 text-sm leading-relaxed text-muted"><LocaleText ko="우리 왕국과 상대 왕국의 전투력·연구 전투력·장비 등 주요 순위를 나란히 비교하세요. 상위 10·50·100명의 합계와 차이까지 무료로 확인할 수 있어요." en="Compare power, research power, gear and more across two kingdoms. See top 10, 50 or 100 totals and differences for free." zhTW="並排比較兩個王國的戰力、研究戰力、裝備等主要排名，免費查看前 10、50 或 100 名的總和與差距。" /></p>
+            <span class="mt-3 inline-flex items-center gap-2 text-sm font-bold text-accent"><LocaleText ko="왕국 비교하기" en="Compare kingdoms" zhTW="比較王國" /><span aria-hidden="true">→</span></span>
           </a>
           <a href="/player/?tab=rankings" class="group rounded-xl border border-border bg-surface p-4 no-underline transition-colors hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
-            <h3 class="text-lg font-bold text-text"><span aria-hidden="true">🏆 </span><LocaleText ko="신비한 시련 순위" en="Mystic Trial rankings" /></h3>
-            <p class="mt-2 text-sm leading-relaxed text-muted"><LocaleText ko="왕국 번호로 신비한 시련 상위 100명의 순위와 점수를 확인하세요. 궁금한 영주를 선택하면 공개된 장비와 영웅도 살펴볼 수 있어요." en="Enter a kingdom number to view its top 100 Mystic Trial scores. Select a governor to explore their public gear and heroes." /></p>
-            <span class="mt-3 inline-flex items-center gap-2 text-sm font-bold text-accent"><LocaleText ko="시련 순위 보기" en="View trial rankings" /><span aria-hidden="true">→</span></span>
+            <h3 class="text-lg font-bold text-text"><span aria-hidden="true">🏆 </span><LocaleText ko="신비한 시련 순위" en="Mystic Trial rankings" zhTW="神秘試煉排名" /></h3>
+            <p class="mt-2 text-sm leading-relaxed text-muted"><LocaleText ko="왕국 번호로 신비한 시련 상위 100명의 순위와 점수를 확인하세요. 궁금한 영주를 선택하면 공개된 장비와 영웅도 살펴볼 수 있어요." en="Enter a kingdom number to view its top 100 Mystic Trial scores. Select a governor to explore their public gear and heroes." zhTW="輸入王國編號，查看神秘試煉前 100 名的排名與分數。選擇領主，即可查看其公開裝備與英雄。" /></p>
+            <span class="mt-3 inline-flex items-center gap-2 text-sm font-bold text-accent"><LocaleText ko="시련 순위 보기" en="View trial rankings" zhTW="查看試煉排名" /><span aria-hidden="true">→</span></span>
           </a>
         </div>
       </div>
       <ul class="relative mt-6 grid gap-3 sm:grid-cols-3">
-        <li class="rounded-xl border border-border bg-bg/60 p-4"><span class="text-xl" aria-hidden="true">🔎</span><h3 class="mt-2 font-bold"><LocaleText ko="ID를 몰라도 검색" en="Search without an ID" /></h3><p class="mt-1 text-sm leading-relaxed text-muted"><LocaleText ko="닉네임과 왕국 번호로 원하는 영주를 찾아보세요." en="Find a governor by nickname and kingdom number." /></p></li>
-        <li class="rounded-xl border border-border bg-bg/60 p-4"><span class="text-xl" aria-hidden="true">🛡️</span><h3 class="mt-2 font-bold"><LocaleText ko="장비와 영웅을 한눈에" en="Gear and heroes at a glance" /></h3><p class="mt-1 text-sm leading-relaxed text-muted"><LocaleText ko="공개된 영주 장비와 아레나 영웅의 장비·강화 상태를 확인하세요." en="Check public governor gear and arena heroes’ equipment and upgrades." /></p></li>
-        <li class="rounded-xl border border-border bg-bg/60 p-4"><span class="text-xl" aria-hidden="true">🗺️</span><h3 class="mt-2 font-bold"><LocaleText ko="위치 지도가 바로 표시" en="Open the location map" /></h3><p class="mt-1 text-sm leading-relaxed text-muted"><LocaleText ko="도시 위치와 주변 연맹을 보고, 다른 도시를 선택해 조회하세요." en="Explore city locations and nearby alliances, then select another city to look it up." /></p></li>
+        <li class="rounded-xl border border-border bg-bg/60 p-4"><span class="text-xl" aria-hidden="true">🔎</span><h3 class="mt-2 font-bold"><LocaleText ko="ID를 몰라도 검색" en="Search without an ID" zhTW="不知道 ID 也能搜尋" /></h3><p class="mt-1 text-sm leading-relaxed text-muted"><LocaleText ko="닉네임과 왕국 번호로 원하는 영주를 찾아보세요." en="Find a governor by nickname and kingdom number." zhTW="用暱稱與王國編號尋找領主。" /></p></li>
+        <li class="rounded-xl border border-border bg-bg/60 p-4"><span class="text-xl" aria-hidden="true">🛡️</span><h3 class="mt-2 font-bold"><LocaleText ko="장비와 영웅을 한눈에" en="Gear and heroes at a glance" zhTW="裝備與英雄一目了然" /></h3><p class="mt-1 text-sm leading-relaxed text-muted"><LocaleText ko="공개된 영주 장비와 아레나 영웅의 장비·강화 상태를 확인하세요." en="Check public governor gear and arena heroes’ equipment and upgrades." zhTW="查看公開領主裝備，以及競技場英雄的裝備與強化狀態。" /></p></li>
+        <li class="rounded-xl border border-border bg-bg/60 p-4"><span class="text-xl" aria-hidden="true">🗺️</span><h3 class="mt-2 font-bold"><LocaleText ko="위치 지도가 바로 표시" en="Open the location map" zhTW="直接查看位置地圖" /></h3><p class="mt-1 text-sm leading-relaxed text-muted"><LocaleText ko="도시 위치와 주변 연맹을 보고, 다른 도시를 선택해 조회하세요." en="Explore city locations and nearby alliances, then select another city to look it up." zhTW="查看城市位置與附近聯盟，並選擇其他城市進一步查詢。" /></p></li>
       </ul>
-      <p class="relative mt-4 text-xs text-muted"><LocaleText ko="장비는 공개된 정보만 표시하며, 위치 정보가 있는 영주는 지도가 자동으로 열립니다." en="Only public gear is shown. The map opens automatically when location data is available." /></p>
+      <p class="relative mt-4 text-xs text-muted"><LocaleText ko="장비는 공개된 정보만 표시하며, 위치 정보가 있는 영주는 지도가 자동으로 열립니다." en="Only public gear is shown. The map opens automatically when location data is available." zhTW="僅顯示公開裝備。有位置資料的領主會自動開啟地圖。" /></p>
     </section>
 
     <section aria-labelledby="unlock-feature-title" class="relative mt-6 overflow-hidden rounded-2xl border border-link/30 bg-surface p-5 sm:p-8">
       <div aria-hidden="true" class="pointer-events-none absolute -right-16 -top-20 size-64 rounded-full bg-link/10 blur-3xl"></div>
       <div class="relative grid items-center gap-8 md:grid-cols-[1fr_260px]">
         <div>
-          <p class="text-xs font-bold tracking-wider text-link"><LocaleText ko="다음 성장을 미리 준비하세요" en="Plan your next upgrade" /></p>
-          <h2 id="unlock-feature-title" class="mt-2 text-2xl font-extrabold sm:text-3xl"><LocaleText ko="우리 왕국의 " en="Your kingdom’s " /><span class="text-link"><LocaleText ko="콘텐츠 해금 예측" en="content unlock forecast" /></span></h2>
-          <p class="mt-3 max-w-xl text-base leading-relaxed text-muted"><LocaleText ko="다음 영웅은 언제? 순금은 어디까지? 왕국 번호 하나로 앞으로 열릴 콘텐츠와 남은 날짜를 확인하세요." en="When do the next heroes arrive? Which Truegold tiers are next? Enter your kingdom number to see upcoming unlocks and days remaining." /></p>
+          <p class="text-xs font-bold tracking-wider text-link"><LocaleText ko="다음 성장을 미리 준비하세요" en="Plan your next upgrade" zhTW="提前規劃下一步成長" /></p>
+          <h2 id="unlock-feature-title" class="mt-2 text-2xl font-extrabold sm:text-3xl"><LocaleText ko="우리 왕국의 " en="Your kingdom’s " zhTW="你的王國" /><span class="text-link"><LocaleText ko="콘텐츠 해금 예측" en="content unlock forecast" zhTW="內容解鎖預測" /></span></h2>
+          <p class="mt-3 max-w-xl text-base leading-relaxed text-muted"><LocaleText ko="다음 영웅은 언제? 순금은 어디까지? 왕국 번호 하나로 앞으로 열릴 콘텐츠와 남은 날짜를 확인하세요." en="When do the next heroes arrive? Which Truegold tiers are next? Enter your kingdom number to see upcoming unlocks and days remaining." zhTW="下一代英雄何時登場？精金將開放到哪一階？輸入王國編號，即可查看即將解鎖的內容與剩餘天數。" /></p>
           <ul class="mt-5 flex flex-wrap gap-2 text-sm font-semibold">
-            <li class="rounded-full border border-border bg-bg px-3 py-1.5"><LocaleText ko="⚔️ 영웅 세대" en="⚔️ Hero generations" /></li>
-            <li class="rounded-full border border-border bg-bg px-3 py-1.5"><LocaleText ko="✨ 순금 단계" en="✨ Truegold tiers" /></li>
-            <li class="rounded-full border border-border bg-bg px-3 py-1.5"><LocaleText ko="🏰 전쟁 아카데미" en="🏰 War Academy" /></li>
+            <li class="rounded-full border border-border bg-bg px-3 py-1.5"><LocaleText ko="⚔️ 영웅 세대" en="⚔️ Hero generations" zhTW="⚔️ 英雄世代" /></li>
+            <li class="rounded-full border border-border bg-bg px-3 py-1.5"><LocaleText ko="✨ 순금 단계" en="✨ Truegold tiers" zhTW="✨ 精金階段" /></li>
+            <li class="rounded-full border border-border bg-bg px-3 py-1.5"><LocaleText ko="🏰 전쟁 아카데미" en="🏰 War Academy" zhTW="🏰 戰爭學院" /></li>
           </ul>
-          <a href="/tools/content-unlock/" class="mt-6 inline-flex min-h-12 items-center justify-center gap-3 rounded-xl bg-link px-6 py-3 font-bold text-bg no-underline hover:bg-link-hover hover:text-bg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-link"><LocaleText ko="우리 왕국 해금 일정 보기" en="View your kingdom’s unlocks" /> <span aria-hidden="true">→</span></a>
-          <p class="mt-3 text-xs text-muted"><LocaleText ko="23개 콘텐츠의 예상 일정 · 게임 내 실제 해금과 다를 수 있습니다." en="Forecasts for 23 unlocks · Actual in-game dates may differ." /></p>
+          <a href="/tools/content-unlock/" class="mt-6 inline-flex min-h-12 items-center justify-center gap-3 rounded-xl bg-link px-6 py-3 font-bold text-bg no-underline hover:bg-link-hover hover:text-bg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-link"><LocaleText ko="우리 왕국 해금 일정 보기" en="View your kingdom’s unlocks" zhTW="查看王國解鎖時程" /> <span aria-hidden="true">→</span></a>
+          <p class="mt-3 text-xs text-muted"><LocaleText ko="23개 콘텐츠의 예상 일정 · 게임 내 실제 해금과 다를 수 있습니다." en="Forecasts for 23 unlocks · Actual in-game dates may differ." zhTW="23 項內容的預估時程・可能與遊戲內實際日期不同" /></p>
         </div>
         <div aria-hidden="true" class="rounded-2xl border border-link/20 bg-bg p-5">
-          <div class="flex items-center justify-between border-b border-border pb-4"><span class="text-sm font-bold text-link"><LocaleText ko="성장 캘린더" en="Progression calendar" /></span><span class="text-2xl">🗓️</span></div>
-          <div class="mt-4 rounded-xl border border-accent/30 bg-accent/10 p-4"><p class="text-xs text-accent">NEXT UNLOCK</p><p class="mt-2 text-lg font-extrabold"><LocaleText ko="다음 영웅 세대" en="Next hero generation" /></p><p class="mt-1 text-sm text-muted"><LocaleText ko="우리 왕국은 언제 열릴까?" en="When will it unlock in your kingdom?" /></p></div>
-          <div class="mt-3 flex items-center gap-3 rounded-xl bg-surface p-3"><span class="text-xl">✨</span><div><p class="text-sm font-bold"><LocaleText ko="순금 업그레이드" en="Truegold upgrades" /></p><p class="text-xs text-muted"><LocaleText ko="재료를 미리 준비하세요" en="Prepare your materials" /></p></div></div>
-          <div class="mt-3 flex items-center gap-3 rounded-xl bg-surface p-3"><span class="text-xl">🏰</span><div><p class="text-sm font-bold"><LocaleText ko="새로운 콘텐츠" en="New content" /></p><p class="text-xs text-muted"><LocaleText ko="앞으로의 일정을 한눈에" en="See what’s coming next" /></p></div></div>
+          <div class="flex items-center justify-between border-b border-border pb-4"><span class="text-sm font-bold text-link"><LocaleText ko="성장 캘린더" en="Progression calendar" zhTW="成長行事曆" /></span><span class="text-2xl">🗓️</span></div>
+          <div class="mt-4 rounded-xl border border-accent/30 bg-accent/10 p-4"><p class="text-xs text-accent">NEXT UNLOCK</p><p class="mt-2 text-lg font-extrabold"><LocaleText ko="다음 영웅 세대" en="Next hero generation" zhTW="下一代英雄" /></p><p class="mt-1 text-sm text-muted"><LocaleText ko="우리 왕국은 언제 열릴까?" en="When will it unlock in your kingdom?" zhTW="你的王國何時解鎖？" /></p></div>
+          <div class="mt-3 flex items-center gap-3 rounded-xl bg-surface p-3"><span class="text-xl">✨</span><div><p class="text-sm font-bold"><LocaleText ko="순금 업그레이드" en="Truegold upgrades" zhTW="精金升級" /></p><p class="text-xs text-muted"><LocaleText ko="재료를 미리 준비하세요" en="Prepare your materials" zhTW="提前準備材料" /></p></div></div>
+          <div class="mt-3 flex items-center gap-3 rounded-xl bg-surface p-3"><span class="text-xl">🏰</span><div><p class="text-sm font-bold"><LocaleText ko="새로운 콘텐츠" en="New content" zhTW="新內容" /></p><p class="text-xs text-muted"><LocaleText ko="앞으로의 일정을 한눈에" en="See what’s coming next" zhTW="一次掌握接下來的時程" /></p></div></div>
         </div>
       </div>
     </section>
 
     {/* 킹샷 세로 영상 4개 */}
-    <section aria-label="킹샷 세로 영상" data-aria-label-ko="킹샷 세로 영상" data-aria-label-en="Kingshot short videos" class="mt-8 min-w-0">
-      <div tabindex="0" role="region" aria-label="영상 자리 4개, 좌우로 스크롤" data-aria-label-ko="영상 자리 4개, 좌우로 스크롤" data-aria-label-en="Four video slots; scroll horizontally" class="grid grid-flow-col auto-cols-[76%] gap-4 overflow-x-auto overscroll-x-contain snap-x snap-mandatory rounded-2xl pb-3 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent sm:auto-cols-[42%] lg:grid-flow-row lg:grid-cols-4 lg:auto-cols-auto lg:overflow-visible">
+    <section aria-label="킹샷 세로 영상" data-aria-label-ko="킹샷 세로 영상" data-aria-label-en="Kingshot short videos" data-aria-label-zh-tw="Kingshot 短片" class="mt-8 min-w-0">
+      <div tabindex="0" role="region" aria-label="영상 자리 4개, 좌우로 스크롤" data-aria-label-ko="영상 자리 4개, 좌우로 스크롤" data-aria-label-en="Four video slots; scroll horizontally" data-aria-label-zh-tw="四部影片，可水平捲動" class="grid grid-flow-col auto-cols-[76%] gap-4 overflow-x-auto overscroll-x-contain snap-x snap-mandatory rounded-2xl pb-3 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent sm:auto-cols-[42%] lg:grid-flow-row lg:grid-cols-4 lg:auto-cols-auto lg:overflow-visible">
         {[1, 2, 3, 4].map((slot) => (
           <div data-short-slot={slot} class="relative aspect-[9/16] min-w-0 snap-start overflow-hidden rounded-2xl border border-border bg-surface">
             {slot === 1 ? (
-              <video data-short-video class="h-full w-full object-contain" src="/video/amane-kvk.mp4" poster="/video/amane-kvk-poster.jpg" aria-label="아마네 KvK 영상" data-aria-label-ko="아마네 KvK 영상" data-aria-label-en="Amane KvK video" controls muted loop playsinline preload="none"></video>
+              <video data-short-video class="h-full w-full object-contain" src="/video/amane-kvk.mp4" poster="/video/amane-kvk-poster.jpg" aria-label="아마네 KvK 영상" data-aria-label-ko="아마네 KvK 영상" data-aria-label-en="Amane KvK video" data-aria-label-zh-tw="Amane KvK 影片" controls muted loop playsinline preload="none"></video>
             ) : slot === 2 ? (
-              <video data-short-video class="h-full w-full object-contain" src="/video/snow-bear-hunt.mp4" poster="/video/snow-bear-hunt-poster.jpg" aria-label="설원곰 사냥 영상" data-aria-label-ko="설원곰 사냥 영상" data-aria-label-en="Snow bear hunt video" controls muted loop playsinline preload="none"></video>
+              <video data-short-video class="h-full w-full object-contain" src="/video/snow-bear-hunt.mp4" poster="/video/snow-bear-hunt-poster.jpg" aria-label="설원곰 사냥 영상" data-aria-label-ko="설원곰 사냥 영상" data-aria-label-en="Snow bear hunt video" data-aria-label-zh-tw="雪地獵熊影片" controls muted loop playsinline preload="none"></video>
             ) : slot === 3 ? (
-              <video data-short-video class="h-full w-full object-contain" src="/video/gate-battle.mp4" poster="/video/gate-battle-poster.jpg" aria-label="성문 전투 영상" data-aria-label-ko="성문 전투 영상" data-aria-label-en="Gate battle video" controls muted loop playsinline preload="none"></video>
+              <video data-short-video class="h-full w-full object-contain" src="/video/gate-battle.mp4" poster="/video/gate-battle-poster.jpg" aria-label="성문 전투 영상" data-aria-label-ko="성문 전투 영상" data-aria-label-en="Gate battle video" data-aria-label-zh-tw="城門戰鬥影片" controls muted loop playsinline preload="none"></video>
             ) : (
-              <video data-short-video class="h-full w-full object-contain" src="/video/jabel-elk-flight.mp4" poster="/video/jabel-elk-flight-poster.jpg" aria-label="제이벨 엘크 판타지 비행 영상" data-aria-label-ko="제이벨 엘크 판타지 비행 영상" data-aria-label-en="Jabel elk fantasy flight video" controls muted loop playsinline preload="none"></video>
+              <video data-short-video class="h-full w-full object-contain" src="/video/jabel-elk-flight.mp4" poster="/video/jabel-elk-flight-poster.jpg" aria-label="제이벨 엘크 판타지 비행 영상" data-aria-label-ko="제이벨 엘크 판타지 비행 영상" data-aria-label-en="Jabel elk fantasy flight video" data-aria-label-zh-tw="Jabel 麋鹿奇幻飛行影片" controls muted loop playsinline preload="none"></video>
             )}
           </div>
         ))}
@@ -316,24 +316,26 @@ const database = [
           if (el) el.hidden = !on;
         }
 
-        function controlLabel(btn, ko, en) {
+        function controlLabel(btn, ko, en, zhTW) {
           if (!btn) return;
           btn.setAttribute('data-aria-label-ko', ko);
           btn.setAttribute('data-aria-label-en', en);
-          btn.setAttribute('aria-label', document.documentElement.lang === 'en' ? en : ko);
+          btn.setAttribute('data-aria-label-zh-tw', zhTW);
+          var lang = document.documentElement.lang;
+          btn.setAttribute('aria-label', lang === 'zh-TW' ? zhTW : lang === 'en' ? en : ko);
         }
 
         function syncPlay() {
           var playing = !video.paused && !video.ended;
           icon(playBtn, 'pause', playing);
           icon(playBtn, 'play', !playing);
-          controlLabel(playBtn, playing ? '영상 일시정지' : '영상 재생', playing ? 'Pause video' : 'Play video');
+          controlLabel(playBtn, playing ? '영상 일시정지' : '영상 재생', playing ? 'Pause video' : 'Play video', playing ? '暫停影片' : '播放影片');
         }
 
         function syncMute() {
           icon(muteBtn, 'muted', video.muted);
           icon(muteBtn, 'sound', !video.muted);
-          controlLabel(muteBtn, video.muted ? '소리 켜기' : '소리 끄기', video.muted ? 'Unmute video' : 'Mute video');
+          controlLabel(muteBtn, video.muted ? '소리 켜기' : '소리 끄기', video.muted ? 'Unmute video' : 'Mute video', video.muted ? '開啟聲音' : '靜音');
         }
 
         function tryPlay() {
@@ -382,7 +384,7 @@ const database = [
       <section aria-labelledby="featured" class="mx-auto max-w-6xl px-4 py-10">
         <div class="mb-5 flex items-end justify-between gap-4">
           <h2 id="featured" class="text-2xl font-extrabold">
-            <LocaleText ko="먼저 읽으면 좋은 글" en="Start with these guides" />
+            <LocaleText ko="먼저 읽으면 좋은 글" en="Start with these guides" zhTW="推薦先讀的攻略" />
           </h2>
         </div>
         <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -402,10 +404,10 @@ const database = [
       <section aria-labelledby="latest" class="mx-auto max-w-6xl px-4 py-10">
         <div class="mb-5 flex items-end justify-between gap-4">
           <h2 id="latest" class="text-2xl font-extrabold">
-            <LocaleText ko="새로 올라온 공략" en="Latest guides" />
+            <LocaleText ko="새로 올라온 공략" en="Latest guides" zhTW="最新攻略" />
           </h2>
           <a href="/guides/" class="text-sm font-bold text-link no-underline hover:underline">
-            <LocaleText ko="전체 보기 →" en="View all →" />
+            <LocaleText ko="전체 보기 →" en="View all →" zhTW="查看全部 →" />
           </a>
         </div>
         <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -421,7 +423,7 @@ const database = [
 
   {/* 4. 카테고리 바로가기 */}
   <section aria-labelledby="categories" class="mx-auto max-w-6xl px-4 py-10">
-    <h2 id="categories" class="mb-5 text-2xl font-extrabold"><LocaleText ko="주제별로 찾기" en="Browse by topic" /></h2>
+    <h2 id="categories" class="mb-5 text-2xl font-extrabold"><LocaleText ko="주제별로 찾기" en="Browse by topic" zhTW="依主題瀏覽" /></h2>
     <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
       {
         CATEGORIES.map((category) => (
@@ -432,13 +434,13 @@ const database = [
             >
               <span class="flex items-center gap-2 font-bold text-text">
                 <span aria-hidden="true">{CATEGORY_EMOJI[category]}</span>
-                <LocaleText ko={category} en={staticEnglish(category)} />
+                <LocaleText ko={category} en={staticEnglish(category)} zhTW={staticTraditionalChinese(category)} />
                 <span class="ml-auto text-xs font-normal text-muted">
-                  <LocaleText ko={`${counts.get(category) ?? 0}편`} en={`${counts.get(category) ?? 0} guides`} />
+                  <LocaleText ko={`${counts.get(category) ?? 0}편`} en={`${counts.get(category) ?? 0} guides`} zhTW={`${counts.get(category) ?? 0} 篇攻略`} />
                 </span>
               </span>
               <span class="mt-1 line-clamp-2 text-sm text-muted">
-                <LocaleText ko={CATEGORY_DESCRIPTIONS[category]} en={staticEnglish(CATEGORY_DESCRIPTIONS[category])} />
+                <LocaleText ko={CATEGORY_DESCRIPTIONS[category]} en={staticEnglish(CATEGORY_DESCRIPTIONS[category])} zhTW={staticTraditionalChinese(CATEGORY_DESCRIPTIONS[category])} />
               </span>
             </a>
           </li>
@@ -449,7 +451,7 @@ const database = [
 
   {/* 5. 데이터베이스 */}
   <section aria-labelledby="database" class="mx-auto max-w-6xl px-4 py-10">
-    <h2 id="database" class="mb-5 text-2xl font-extrabold"><LocaleText ko="데이터베이스" en="Database" /></h2>
+    <h2 id="database" class="mb-5 text-2xl font-extrabold"><LocaleText ko="데이터베이스" en="Database" zhTW="資料庫" /></h2>
     <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {
         database.map((item) => (
@@ -461,8 +463,8 @@ const database = [
               <span class="text-3xl" aria-hidden="true">
                 {item.emoji}
               </span>
-              <span class="mt-3 text-lg font-extrabold text-text"><LocaleText ko={item.label} en={staticEnglish(item.label)} /></span>
-              <span class="mt-1 text-sm text-muted"><LocaleText ko={item.desc} en={staticEnglish(item.desc)} /></span>
+              <span class="mt-3 text-lg font-extrabold text-text"><LocaleText ko={item.label} en={staticEnglish(item.label)} zhTW={staticTraditionalChinese(item.label)} /></span>
+              <span class="mt-1 text-sm text-muted"><LocaleText ko={item.desc} en={staticEnglish(item.desc)} zhTW={staticTraditionalChinese(item.desc)} /></span>
             </a>
           </li>
         ))
@@ -477,11 +479,11 @@ const database = [
     >
       <div>
         <h2 id="community" class="text-xl font-extrabold sm:text-2xl">
-          <span aria-hidden="true">💬</span> <LocaleText ko="같이 하실 분 찾습니다" en="Find your community" />
+          <span aria-hidden="true">💬</span> <LocaleText ko="같이 하실 분 찾습니다" en="Find your community" zhTW="尋找一起玩的夥伴" />
         </h2>
-        <p class="mt-2 text-sm font-semibold text-text"><LocaleText ko={KAKAO_OPENCHAT.roomName} en={staticEnglish(KAKAO_OPENCHAT.roomName)} /></p>
+        <p class="mt-2 text-sm font-semibold text-text"><LocaleText ko={KAKAO_OPENCHAT.roomName} en={staticEnglish(KAKAO_OPENCHAT.roomName)} zhTW={staticTraditionalChinese(KAKAO_OPENCHAT.roomName)} /></p>
         <p class="mt-1 text-sm text-muted">
-          <LocaleText ko="막히는 부분을 물어보고, 연맹원을 구하고, 새 정보를 먼저 받아보세요." en="Ask for help, recruit alliance members and share the latest discoveries." />
+          <LocaleText ko="막히는 부분을 물어보고, 연맹원을 구하고, 새 정보를 먼저 받아보세요." en="Ask for help, recruit alliance members and share the latest discoveries." zhTW="遇到問題隨時提問，招募聯盟成員，分享最新發現。" />
         </p>
       </div>
       <KakaoButton variant="full" size="md" text="오픈채팅 참여" class="shrink-0 self-start sm:self-auto" />

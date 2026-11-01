@@ -19,10 +19,11 @@ export async function readApiJson(response: Response) {
   return response.json();
 }
 
-export function rateLimitMessage(code: string, locale: 'ko' | 'en'): string | undefined {
+export function rateLimitMessage(code: string, locale: 'ko' | 'en' | 'zh-TW'): string | undefined {
   const match = /^rate_limited(?::(\d+))?$/.exec(code);
   if (!match) return undefined;
   const seconds = Number(match[1] ?? 0);
+  if (locale === 'zh-TW') return `請求暫時受到限制。${seconds > 0 ? `請於 ${seconds} 秒後重試。` : '請稍後重試。'}`;
   return locale === 'en'
     ? `Requests are temporarily limited. ${seconds > 0 ? `Please try again after ${seconds} seconds.` : 'Please try again later.'}`
     : `요청이 일시적으로 제한되었습니다. ${seconds > 0 ? `${seconds}초 후 다시 시도해 주세요.` : '잠시 후 다시 시도해 주세요.'}`;

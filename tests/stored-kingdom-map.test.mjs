@@ -197,7 +197,7 @@ test('map copy shows saved time and explicit stale/partial states without sugges
       await flush();
       const tree = host.render(), copy = text(tree);
       assert.ok(button(tree, '지도 다시 불러오기'));
-      assert.ok(copy.includes(`저장 시각: ${savedTime(body.updated_at, false)}`));
+      assert.ok(copy.includes(`저장 시각: ${savedTime(body.updated_at, 'ko')}`));
       assert.equal(copy.includes('저장된 지도 대체 표시'), stale);
       assert.equal(copy.includes('일부 좌표만 표시'), partial);
       assert.match(copy, /저장된 지도 기준으로 도시를 표시합니다. 최근 이동은 반영되지 않을 수 있습니다/);
@@ -236,19 +236,19 @@ test('source metadata labels location timestamps separately from DB save timesta
   let body;
   t.mock.method(globalThis, 'fetch', async () => Response.json(body));
   t.after(() => { delete globalThis.__storedMapLocale; restoreWindow(); });
-  for (const lang of ['ko', 'en']) for (const source of ['mightpulse', 'official_profiles', undefined]) {
+  for (const lang of ['ko', 'en', 'zh-TW']) for (const source of ['mightpulse', 'official_profiles', undefined]) {
     globalThis.__storedMapLocale = lang;
     body = { ...snapshot(), source, stale: true };
     const host = mount(StoredMapScope, { kid: 1622, onLookup() {} });
     try {
       await flush();
       const tree = host.render(), copy = text(tree), upstream = source === 'mightpulse', en = lang === 'en';
-      assert.ok(copy.includes(savedTime(body.updated_at, en)));
-      assert.equal(copy.includes(en ? 'Map positions updated at:' : '지도 위치 갱신 시각:'), upstream);
-      assert.equal(nodes(tree).some(n => n.type === 'p' && text(n).startsWith(en ? 'Saved at:' : '저장 시각:')), !upstream);
-      assert.equal(copy.includes(en ? 'This is not the time of a city’s position.' : '도시 위치가 확인된 시각을 뜻하지 않습니다.'), !upstream);
+      assert.ok(copy.includes(savedTime(body.updated_at, lang)));
+      assert.equal(copy.includes(lang === 'zh-TW' ? '地圖位置更新時間：' : en ? 'Map positions updated at:' : '지도 위치 갱신 시각:'), upstream);
+      assert.equal(nodes(tree).some(n => n.type === 'p' && text(n).startsWith(lang === 'zh-TW' ? '儲存時間：' : en ? 'Saved at:' : '저장 시각:')), !upstream);
+      assert.equal(copy.includes(lang === 'zh-TW' ? '這並非城鎮位置的確認時間。' : en ? 'This is not the time of a city’s position.' : '도시 위치가 확인된 시각을 뜻하지 않습니다.'), !upstream);
       assert.doesNotMatch(copy, /mightpulse|official_profiles/i);
-      assert.ok(copy.includes(en ? 'Recent moves may not be reflected.' : '최근 이동은 반영되지 않을 수 있습니다.'));
+      assert.ok(copy.includes(lang === 'zh-TW' ? '可能尚未反映近期移動。' : en ? 'Recent moves may not be reflected.' : '최근 이동은 반영되지 않을 수 있습니다.'));
     } finally { host.unmount(); }
   }
 });
@@ -309,9 +309,10 @@ test('202, storage failure and non-JSON rate limits are distinct and never imply
       && (status !== 202 || e.queued) && (status !== 429 || e.retryAfter === 90));
     mock.mock.restore();
   }
-  assert.equal(savedTime(null, false), null);
-  assert.equal(savedTime('invalid', true), null);
-  assert.equal(savedTime(1_700_000_000, true), savedTime(new Date(1_700_000_000_000).toISOString(), true));
+  assert.equal(savedTime(null, 'ko'), null);
+  assert.equal(savedTime('invalid', 'en'), null);
+  assert.equal(savedTime(1_700_000_000, 'en'), savedTime(new Date(1_700_000_000_000).toISOString(), 'en'));
+  assert.equal(savedTime(1_700_000_000, 'zh-TW'), new Date(1_700_000_000_000).toLocaleString('zh-TW', { timeZone: 'Asia/Seoul' }));
 });
 
 test('same-kingdom refresh failures keep the existing map; select-all restores filters without fetching', async t => {
@@ -374,7 +375,7 @@ test('editing the kingdom input or receiving a profile kingdom does not submit o
   host.unmount();
 });
 
-for (const lang of ['ko', 'en']) test(`latest-location cooldown loads moved city without POST, with honest ${lang} copy and formatted countdown`, async t => {
+for (const lang of ['ko', 'en', 'zh-TW']) test(`latest-location cooldown loads moved city without POST, with honest ${lang} copy and formatted countdown`, async t => {
   const restoreWindow = browserTimers();
   globalThis.__storedMapLocale = lang;
   let mapReads = 0;
@@ -393,7 +394,7 @@ for (const lang of ['ko', 'en']) test(`latest-location cooldown loads moved city
   assert.equal(refreshProps(tree).baseline, null, 'DB save time must not become a location baseline');
   const refresh = mount(MapRefreshScope, refreshProps(tree));
   t.after(() => { refresh.unmount(); map.unmount(); restoreWindow(); delete globalThis.__storedMapLocale; });
-  const label = lang === 'en' ? 'Latest location' : '최신 위치 찾기';
+  const label = lang === 'zh-TW' ? '尋找最新位置' : lang === 'en' ? 'Latest location' : '최신 위치 찾기';
   button(refresh.render(), label).props.onClick();
   await flush(); tree = settle(map);
   refresh.render(refreshProps(tree)); let ui = settle(refresh);
@@ -401,12 +402,12 @@ for (const lang of ['ko', 'en']) test(`latest-location cooldown loads moved city
   assert.equal(canvas(tree).selected.uid, 60629598);
   assert.ok(calls.every(c => c[1] === 'GET'));
   assert.equal(calls.length, 3);
-  assert.match(text(ui), lang === 'en' ? /Please wait.*saved map/ : /다음 위치 수집까지 기다려.*저장 지도/);
-  assert.match(text(ui), lang === 'en' ? /12m 39s/ : /12분 39초/);
+  assert.match(text(ui), lang === 'zh-TW' ? /請稍候.*已儲存地圖/ : lang === 'en' ? /Please wait.*saved map/ : /다음 위치 수집까지 기다려.*저장 지도/);
+  assert.match(text(ui), lang === 'zh-TW' ? /12 分 39 秒/ : lang === 'en' ? /12m 39s/ : /12분 39초/);
   assert.match(text(ui), /Opendoor · X: 1187, Y: 1193/);
-  assert.ok(text(ui).includes(savedTime(moved.updated_at, lang === 'en')));
+  assert.ok(text(ui).includes(savedTime(moved.updated_at, lang)));
   assert.ok(button(ui, label).props.disabled);
-  assert.equal(button(ui, lang === 'en' ? 'Reload map' : '지도 다시 불러오기').props.disabled, false);
+  assert.equal(button(ui, lang === 'zh-TW' ? '重新載入地圖' : lang === 'en' ? 'Reload map' : '지도 다시 불러오기').props.disabled, false);
   const summary = nodes(ui).find(n => n.props?.['data-testid'] === 'map-location-summary');
   assert.match(summary.props.className, /basis-full/);
   assert.doesNotMatch(text(ui), /MightPulse|수집기가 주기적으로|재수집을 요청했습니다|Scan completed|수집이 완료/);

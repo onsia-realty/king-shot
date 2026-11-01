@@ -63,7 +63,7 @@ const hooks = {
 globalThis.__comparisonHooks = hooks;
 const react = url(Object.keys(hooks).map(name => `export const ${name} = (...args) => globalThis.__comparisonHooks.${name}(...args);`).join('\n'));
 const jsx = url('export const jsx = (type, props, key) => ({type, props, key}); export const jsxs = jsx; export const Fragment = "fragment";');
-const locale = url('export const useLocale = () => ({locale: globalThis.__comparisonLocale ?? "ko", t: (ko,en) => globalThis.__comparisonLocale === "en" ? en : ko});');
+const locale = url('export const useLocale = () => ({locale: globalThis.__comparisonLocale ?? "ko", t: (ko,en,zhTW) => globalThis.__comparisonLocale === "zh-TW" ? zhTW ?? en : globalThis.__comparisonLocale === "en" ? en : ko});');
 const response = url(await compile('../src/lib/api-response.ts'));
 const mappings = { react, 'react/jsx-runtime': jsx, '../../lib/locale': locale, '../../lib/api-response': response, '../../lib/kingdom-comparison': helperURL };
 const { default: Comparison } = await import(url((await compile('../src/components/islands/KingdomComparison.tsx')).replace(/from (["'])(.*?)\1/g, (_, _quote, name) => {
@@ -95,16 +95,16 @@ test('defaults never fetch, both requests start concurrently; edited values do n
   environment(t); const pending = [];
   t.mock.method(globalThis, 'fetch', (url, options) => new Promise(resolve => pending.push({ url, options, resolve })));
   const host = mount();
-  assert.deepEqual(nodes(host.render()).filter(n => n.type === 'input').map(n => n.props.value), ['1622', '1584']);
+  assert.deepEqual(nodes(host.render()).filter(n => n.type === 'input').map(n => n.props.value), ['1622', '1736']);
   assert.equal(find(host, 'select').props.value, 'personal_power');
   assert.equal(pending.length, 0);
   const work = submit(host);
-  assert.deepEqual(pending.map(p => p.url), ['/api/kingdom-rankings/?kid=1622&board=personal_power', '/api/kingdom-rankings/?kid=1584&board=personal_power']);
+  assert.deepEqual(pending.map(p => p.url), ['/api/kingdom-rankings/?kid=1622&board=personal_power', '/api/kingdom-rankings/?kid=1736&board=personal_power']);
   assert.ok(pending.every(p => p.options.signal instanceof AbortSignal));
   input(host, 'A', '9'); input(host, 'metric', 'kills');
   assert.match(heading(host), /전투력/);
   assert.match(text(host.render()), /마지막으로 조회한/);
-  pending[0].resolve(Response.json(fixture())); pending[1].resolve(Response.json(fixture(1584))); await work;
+  pending[0].resolve(Response.json(fixture())); pending[1].resolve(Response.json(fixture(1736))); await work;
   assert.match(heading(host), /전투력/);
   assert.match(text(nodes(host.render()).find(n => n.props?.id === 'comparison-test-side-0')), /1622/);
   assert.equal(pending.length, 2);
@@ -130,13 +130,13 @@ test('new requests clear prior results and stale successes/failures never replac
   environment(t); const pending = [];
   t.mock.method(globalThis, 'fetch', (url, options) => new Promise((resolve, reject) => pending.push({ url, options, resolve, reject })));
   const host = mount(); const first = submit(host);
-  pending[0].resolve(Response.json(fixture())); pending[1].resolve(Response.json(fixture(1584))); await first;
+  pending[0].resolve(Response.json(fixture())); pending[1].resolve(Response.json(fixture(1736))); await first;
   assert.equal(nodes(host.render()).filter(n => n.type === 'li').length, 200);
   const stale = submit(host);
   assert.equal(nodes(host.render()).filter(n => n.type === 'li').length, 0);
   input(host, 'metric', 'kills'); const latest = submit(host);
   assert.ok(pending.slice(2, 4).every(p => p.options.signal.aborted));
-  pending[4].resolve(Response.json(fixture(1622, 'kills'))); pending[5].resolve(Response.json(fixture(1584, 'kills'))); await latest;
+  pending[4].resolve(Response.json(fixture(1622, 'kills'))); pending[5].resolve(Response.json(fixture(1736, 'kills'))); await latest;
   pending[2].resolve(Response.json(fixture())); pending[3].reject(new Error('old')); await stale;
   assert.match(heading(host), /처치 수/);
   assert.equal(nodes(host.render()).filter(n => n.props?.role === 'alert').length, 0);
@@ -151,7 +151,7 @@ test('per-side error/empty/incomplete never reports a gap or a zero opponent and
   assert.match(text(host.render()), /불완전한 비교/);
   assert.equal(nodes(host.render()).some(n => n.props?.role === 'img'), false);
   for (const count of [0, 9]) {
-    other = Response.json(fixture(1584, 'personal_power', Array.from({ length: count }, (_, i) => row(i + 1))));
+    other = Response.json(fixture(1736, 'personal_power', Array.from({ length: count }, (_, i) => row(i + 1))));
     await submit(host); input(host, 'limit', '10');
     assert.match(text(host.render()), /불완전한 비교/);
     assert.equal(nodes(host.render()).some(n => n.props?.role === 'img'), false);
@@ -171,14 +171,14 @@ test('35-second timeout, explicit cancel and unmount abort both requests without
   [...timers.values()][0].fn();
   assert.ok(pending.every(p => p.options.signal.aborted));
   assert.match(text(host.render()), /시간이 초과/);
-  pending[0].resolve(Response.json(fixture())); pending[1].resolve(Response.json(fixture(1584))); await first;
+  pending[0].resolve(Response.json(fixture())); pending[1].resolve(Response.json(fixture(1736))); await first;
   assert.equal(nodes(host.render()).filter(n => n.type === 'li').length, 0);
   const second = submit(host);
   nodes(host.render()).find(n => n.type === 'button' && text(n) === '취소').props.onClick();
   assert.match(text(host.render()), /취소했습니다/);
-  pending[2].resolve(Response.json(fixture())); pending[3].resolve(Response.json(fixture(1584))); await second;
+  pending[2].resolve(Response.json(fixture())); pending[3].resolve(Response.json(fixture(1736))); await second;
   const third = submit(host); host.unmount();
-  pending[4].resolve(Response.json(fixture())); pending[5].resolve(Response.json(fixture(1584))); await third;
+  pending[4].resolve(Response.json(fixture())); pending[5].resolve(Response.json(fixture(1736))); await third;
   assert.ok(pending.every(p => p.options.signal.aborted)); assert.equal(timers.size, 0);
 });
 
@@ -193,4 +193,30 @@ test('selection prefers governor ID then UID; missing IDs disable rows; input va
   assert.deepEqual(selected, [['987', 'governor_id'], ['102', 'uid']]);
   assert.equal(buttons[2].props.disabled, true);
   await flush();
+});
+
+test('Traditional Chinese metric options, submitted metric, summaries, balance, errors and dates are localized', async t => {
+  environment(t); globalThis.__comparisonLocale = 'zh-TW';
+  let error = false;
+  t.mock.method(globalThis, 'fetch', async address => {
+    const params = new URL(address, 'https://local.test').searchParams;
+    return error ? Response.json({ ok: false }, { status: 502 }) : Response.json(fixture(Number(params.get('kid')), params.get('board')));
+  });
+  const host = mount();
+  const options = nodes(find(host, 'select')).filter(n => n.type === 'option').map(text);
+  assert.deepEqual(options, ['戰力', '擊殺數', '研究戰力', '英雄戰力', '英雄裝備', '領主裝備', '領主寶石', '寵物戰力', '神秘試煉']);
+  input(host, 'metric', 'research_power'); await submit(host);
+  assert.match(heading(host), /研究戰力.*前 100 名分數比較/);
+  assert.match(text(host.render()), /合計差距/);
+  assert.match(nodes(host.render()).find(n => n.props?.role === 'img').props['aria-label'], /前 100 名合計占比/);
+  input(host, 'metric', 'mystic_trial');
+  assert.match(text(host.render()), /下方仍顯示上次查詢的王國與指標/);
+  assert.match(heading(host), /研究戰力/);
+  assert.doesNotMatch(text(host.render()), /[가-힣]/);
+  assert.equal(text(find(host, 'time')), new Date(1793492880.102711 * 1000).toLocaleString('zh-TW', { timeZone: 'Asia/Seoul' }));
+  error = true; await submit(host);
+  assert.match(text(host.render()), /無法載入排名/);
+  assert.match(text(host.render()), /比較資料不完整/);
+  assert.doesNotMatch(text(host.render()), /[가-힣]/);
+  host.unmount();
 });

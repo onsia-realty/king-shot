@@ -69,9 +69,9 @@ export default function PlayerDiscovery({ onSelect }: { onSelect: SelectPlayer }
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end"><div className="min-w-0 flex-1"><label htmlFor="search-kingdom" className="block text-sm font-bold">{tr("왕국 번호 (선택)")}</label><input id="search-kingdom" className={`${field} mt-2`} inputMode="numeric" maxLength={5} value={kingdom} onChange={(e) => setKingdom(e.target.value)} placeholder={tr("예: 1622 · 비우면 전체 왕국")} /></div><button className={button} disabled={loading}>{loading ? tr("검색 중…") : tr("닉네임 검색")}</button></div>
       <p className="text-sm text-muted">{tr("왕국 지정 시 지도 스냅샷의 닉네임을 검색해 최대 100명을 표시합니다. 전체 왕국 검색은 제공처의 결과 수 제한으로 누락될 수 있습니다.")}</p>
     </form>
-    <p role="status" className="text-sm text-muted">{loading ? tr("닉네임을 검색하고 있습니다.") : result ? `${tr("검색 결과 ")}${(result.total ?? rows.length).toLocaleString(playerNumberLocale())}${tr("명 · 표시 가능한 결과 ")}${rows.length.toLocaleString(playerNumberLocale())}${tr("명")}` : tr("검색어를 입력하면 영주 목록이 표시됩니다.")}</p>
+    <p role="status" className="text-sm text-muted">{loading ? tr("닉네임을 검색하고 있습니다.") : result ? `${tr("검색 결과 ")}${(result.total ?? rows.length).toLocaleString(playerNumberLocale(locale))}${tr("명 · 표시 가능한 결과 ")}${rows.length.toLocaleString(playerNumberLocale(locale))}${tr("명")}` : tr("검색어를 입력하면 영주 목록이 표시됩니다.")}</p>
     {error && <p role="alert" className="text-sm text-danger">{playerError(error, locale)}</p>}
-    {(result?.stale || result?.partial) && <p role="status" className="rounded-lg bg-raised p-3 text-sm text-muted">{locale === 'en' ? 'Showing saved search data because the latest lookup was unavailable. Recent moves, name changes, or uncaptured players may be missing.' : '현재 조회에 연결하지 못해 저장된 검색 결과를 표시합니다. 최근 이동·닉네임 변경이나 미수집 영주는 반영되지 않을 수 있습니다.'}</p>}
+    {(result?.stale || result?.partial) && <p role="status" className="rounded-lg bg-raised p-3 text-sm text-muted">{locale === 'zh-TW' ? '無法取得最新資料，目前顯示已儲存的搜尋結果。近期移動、暱稱變更或尚未收集的領主可能未反映在結果中。' : locale === 'en' ? 'Showing saved search data because the latest lookup was unavailable. Recent moves, name changes, or uncaptured players may be missing.' : '현재 조회에 연결하지 못해 저장된 검색 결과를 표시합니다. 최근 이동·닉네임 변경이나 미수집 영주는 반영되지 않을 수 있습니다.'}</p>}
     {result && rows.length === 0 && <p className="rounded-lg bg-raised p-4 text-muted">{tr("검색된 영주가 없습니다. 검색어를 줄이거나 왕국 번호를 비워 다시 검색해 주세요.")}</p>}
     <ul className="space-y-2">{rows.slice(page * 30, (page + 1) * 30).map((player) => <li key={`${player.uid}-${player.kid}`}><button type="button" onClick={() => {
       const fid = String(player.fid ?? '');
@@ -79,7 +79,7 @@ export default function PlayerDiscovery({ onSelect }: { onSelect: SelectPlayer }
     }} className="w-full min-w-0 rounded-xl border border-border p-4 text-left hover:border-accent hover:bg-raised">
       <span className="block break-words font-bold [overflow-wrap:anywhere]">{player.nick_name || tr("이름 정보 없음")}</span>
       <span className="mt-1 block break-words text-sm text-muted">{tr("왕국 ")}{player.kid ?? tr("정보 없음")} · {player.alliance_abbr ? `[${player.alliance_abbr}] ` : ''}{player.alliance_name || tr("연맹 정보 없음")}</span>
-      <span className="mt-1 block text-sm">{tr("전투력 ")}{player.power == null ? tr("정보 없음") : Number(player.power).toLocaleString(playerNumberLocale())}</span>
+      <span className="mt-1 block text-sm">{tr("전투력 ")}{player.power == null ? tr("정보 없음") : Number(player.power).toLocaleString(playerNumberLocale(locale))}</span>
     </button></li>)}</ul>
     {rows.length > 30 && <nav aria-label={tr("검색 결과 페이지")} className="flex items-center justify-between gap-2 text-sm"><button type="button" disabled={page === 0} onClick={() => setPage(page - 1)} className="rounded-lg border border-border px-3 py-2 disabled:opacity-40">{tr("이전")}</button><span>{page + 1} / {Math.ceil(rows.length / 30)}{tr("쪽")}</span><button type="button" disabled={(page + 1) * 30 >= rows.length} onClick={() => setPage(page + 1)} className="rounded-lg border border-border px-3 py-2 disabled:opacity-40">{tr("다음")}</button></nav>}
   </div>;

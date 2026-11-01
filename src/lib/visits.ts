@@ -18,9 +18,11 @@ export async function fetchVisits(record = false): Promise<VisitCounts | null> {
 
 export async function updateVisitCounter(record = false) {
   const counts = await fetchVisits(record);
+  const language = document.documentElement?.lang;
+  const numberLocale = language === 'zh-TW' ? 'zh-TW' : language === 'en' ? 'en-US' : 'ko-KR';
   for (const field of ['today', 'total'] as const) {
     document.querySelectorAll(`[data-visits-${field}]`).forEach(element => {
-      element.textContent = counts ? counts[field].toLocaleString('ko-KR') : '—';
+      element.textContent = counts ? counts[field].toLocaleString(numberLocale) : '—';
     });
   }
 }

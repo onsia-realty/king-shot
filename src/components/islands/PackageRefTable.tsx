@@ -1,4 +1,4 @@
-import { useCalculatorLocale } from '@/lib/calculator-locale';
+import { formatCalculatorNumber, useCalculatorLocale } from '@/lib/calculator-locale';
 import { useState } from 'react';
 import {
   BASE_PACKAGE_PRICE_KRW,
@@ -13,13 +13,13 @@ import {
  */
 
 function fmt(n: number): string {
-  return n.toLocaleString('ko-KR');
+  return formatCalculatorNumber(n);
 }
 
 /** 단가는 1원 미만도 나와서 크기에 따라 소수 자릿수를 다르게 둔다. */
 function fmtPrice(n: number): string {
   const digits = n < 1 ? 2 : n < 100 ? 1 : 0;
-  return n.toLocaleString('ko-KR', { maximumFractionDigits: digits });
+  return formatCalculatorNumber(n, { maximumFractionDigits: digits });
 }
 
 export default function PackageRefTable() {

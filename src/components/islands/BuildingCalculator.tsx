@@ -1,11 +1,11 @@
-import { useCalculatorLocale } from '@/lib/calculator-locale';
+import { formatCalculatorNumber, useCalculatorLocale } from '@/lib/calculator-locale';
 import { useMemo, useState } from 'react';
 import BasicBuildingCalculator from './BasicBuildingCalculator';
 import { CONSTRUCTION_BUILDINGS, CONSTRUCTION_REFERENCE_MIN_LEVEL } from '@/data/construction-costs';
 import { adjustedTime, levelLabel, planBuildingSteps, RESOURCE_KEYS, RESOURCE_LABELS } from '@/lib/construction';
 
 const town = CONSTRUCTION_BUILDINGS.find(b => b.id === 'town-center')!;
-const fmt = (value: number) => value.toLocaleString('ko-KR', { maximumFractionDigits: 2 });
+const fmt = (value: number) => formatCalculatorNumber(value, { maximumFractionDigits: 2 });
 function duration(value: number) {
   const seconds = Math.round(value);
   if (!seconds) return '0초';
@@ -70,7 +70,7 @@ export default function BuildingCalculator() {
           <div className="mt-3 rounded-xl border border-border bg-raised p-4">
             <h3 className="flex items-center gap-2 text-sm font-semibold"><svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 text-accent-strong" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg>{ui("건설시간 합계", "Total construction time")}</h3>
             <p className="mt-2 text-2xl font-extrabold tabular-nums leading-tight text-accent-strong sm:text-3xl">{tx(duration(adjusted))}</p>
-            <p className="mt-1 text-xs text-muted">{ui( "도시센터 · 보너스 적용 · ", "Town Center · With bonuses · ")}{reduction.toLocaleString('ko-KR', { maximumFractionDigits: 1 })}{ui("% 감소", "% reduction")}</p>
+            <p className="mt-1 text-xs text-muted">{ui( "도시센터 · 보너스 적용 · ", "Town Center · With bonuses · ")}{formatCalculatorNumber(reduction, { maximumFractionDigits: 1 })}{ui("% 감소", "% reduction")}</p>
           </div>
           <p className="mt-2 text-xs leading-relaxed text-muted">{ui("건설시간의 합계이며 실제 완료 시각은 아닙니다. 병렬 건설·도움·가속 아이템 제외.", "Sum of construction times, not a completion date. Excludes parallel construction, help, and speedups.")}</p>
         </>}

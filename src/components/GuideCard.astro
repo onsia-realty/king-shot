@@ -1,7 +1,7 @@
 ---
 import LocaleText from '@/components/LocaleText.astro';
 import { isLocaleScope } from '@/lib/locale';
-import { staticEnglish } from '@/lib/static-translations';
+import { staticEnglish, staticTraditionalChinese } from '@/lib/static-translations';
 import {
   CATEGORY_EMOJI,
   DIFFICULTY_STYLES,
@@ -47,7 +47,7 @@ const searchIndex = searchable
       href={categoryHref(category)}
       class="relative z-10 inline-flex items-center gap-1 rounded-md border border-accent/40 bg-accent/12 px-2 py-0.5 text-xs font-bold text-accent no-underline hover:bg-accent/20 hover:text-accent"
     >
-      <span aria-hidden="true">{CATEGORY_EMOJI[category]}</span><LocaleText ko={category} en={staticEnglish(category)} />
+      <span aria-hidden="true">{CATEGORY_EMOJI[category]}</span><LocaleText ko={category} en={staticEnglish(category)} zhTW={staticTraditionalChinese(category)} />
     </a>
     <span
       class:list={[
@@ -56,11 +56,11 @@ const searchIndex = searchable
       ]}
       title={`난이도 ${difficulty}`}
       data-title-ko={`난이도 ${difficulty}`}
-      data-title-en={`Difficulty: ${staticEnglish(difficulty)}`}
+      data-title-en={`Difficulty: ${staticEnglish(difficulty)}`} data-title-zh-tw={`難度：${staticTraditionalChinese(difficulty)}`}
     >
-      <LocaleText ko={difficulty} en={staticEnglish(difficulty)} />
+      <LocaleText ko={difficulty} en={staticEnglish(difficulty)} zhTW={staticTraditionalChinese(difficulty)} />
     </span>
-    {isLocaleScope(Astro.url.pathname) && <span class="text-xs text-muted"><LocaleText ko="한국어 공략" en="Korean-language guide" /></span>}
+    {isLocaleScope(Astro.url.pathname) && <span class="text-xs text-muted"><LocaleText ko="한국어 공략" en="Korean-language guide" zhTW="韓文攻略" /></span>}
   </div>
 
   <Heading lang="ko" class="text-lg font-extrabold text-text">
@@ -73,7 +73,7 @@ const searchIndex = searchable
 
   <div class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-muted">
     <time datetime={isoDate(date)}>
-      <LocaleText ko={`${isRevised ? '수정' : '발행'} ${formatDate(date)}`} en={`${isRevised ? 'Updated' : 'Published'} ${new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeZone: 'UTC' }).format(date)}`} />
+      <LocaleText ko={`${isRevised ? '수정' : '발행'} ${formatDate(date)}`} en={`${isRevised ? 'Updated' : 'Published'} ${new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeZone: 'UTC' }).format(date)}`} zhTW={`${isRevised ? '更新於' : '發布於'} ${new Intl.DateTimeFormat('zh-TW', { dateStyle: 'medium', timeZone: 'UTC' }).format(date)}`} />
     </time>
     {
       tags.length > 0 && (

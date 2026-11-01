@@ -219,7 +219,7 @@ export default function KingdomMapCanvas(props: Props) {
 
   useEffect(() => {
     // The draw/event loop stays mounted; read current copy without resetting camera or images.
-    const tr = playerText;
+    const tr = (text: string) => playerText(text, localeRef.current);
     const element = canvas.current;
     if (!element) return;
     const ctx = element.getContext('2d');
@@ -272,7 +272,7 @@ export default function KingdomMapCanvas(props: Props) {
             const lang = localeRef.current;
             if (hoverIdentity !== city || hoverLocale !== lang) {
               const text = (value: string) => playerText(value, lang);
-              tooltip.textContent = `${city.nick_name || text('이름 정보 없음')}\n${city.alliance_abbr ? `[${city.alliance_abbr}]` : text('연맹 정보 없음')} · ${compactCityLevel(city.tc)}\n${text('전투력 ')}${city.power?.toLocaleString(lang === 'ko' ? 'ko-KR' : 'en-US') ?? text('정보 없음')}\nX: ${city.x} · Y: ${city.y}`;
+              tooltip.textContent = `${city.nick_name || text('이름 정보 없음')}\n${city.alliance_abbr ? `[${city.alliance_abbr}]` : text('연맹 정보 없음')} · ${compactCityLevel(city.tc)}\n${text('전투력 ')}${city.power?.toLocaleString(playerNumberLocale(lang)) ?? text('정보 없음')}\nX: ${city.x} · Y: ${city.y}`;
               hoverIdentity = city; hoverLocale = lang;
             }
             const { width, height } = dimensions.current;
@@ -515,7 +515,7 @@ export default function KingdomMapCanvas(props: Props) {
     <div className="mb-3 flex flex-wrap items-center gap-2">
       <button type="button" className={control} aria-label={tr("지도 확대")} disabled={scale >= MAX_CITY_SCALE} onClick={() => zoom(1.5)}>{tr("확대 ＋")}</button>
       <button type="button" className={control} aria-label={tr("지도 축소")} disabled={scale <= limits().minScale} onClick={() => zoom(1 / 1.5)}>{tr("축소 −")}</button>
-      <button type="button" className={control} disabled={props.fitAllCities && !props.cities.length} onClick={() => props.fitAllCities ? fitVisibleCities() : update({ x: (props.bounds.min + props.bounds.max) / 2, y: (props.bounds.min + props.bounds.max) / 2, scale: limits().minScale })}>{props.fitAllCities ? (locale === 'en' ? 'Fit all cities' : '전체 도시 보기') : props.coverageLabel ?? tr("전체 왕국")}</button>
+      <button type="button" className={control} disabled={props.fitAllCities && !props.cities.length} onClick={() => props.fitAllCities ? fitVisibleCities() : update({ x: (props.bounds.min + props.bounds.max) / 2, y: (props.bounds.min + props.bounds.max) / 2, scale: limits().minScale })}>{props.fitAllCities ? (locale === 'zh-TW' ? '顯示所有城鎮' : locale === 'en' ? 'Fit all cities' : '전체 도시 보기') : props.coverageLabel ?? tr("전체 왕국")}</button>
       <button type="button" className={control} onClick={() => update({ x: 600, y: 600, scale: 4 })}>{tr("왕성")}</button>
       <button type="button" className={control} aria-pressed={expanded} onClick={() => setExpanded(!expanded)}>{expanded ? tr("확장 닫기") : tr("화면 확장")}</button>
     </div>
@@ -528,7 +528,7 @@ export default function KingdomMapCanvas(props: Props) {
       <div className="pointer-events-none absolute right-3 top-3 rounded-md bg-bg/85 px-2 py-1 text-xs text-muted">{tr("배율 ")}{scale.toFixed(1)}</div>
       {props.selected && <section ref={popup} aria-label={tr("선택한 도시 정보")} className="absolute z-10 overflow-y-auto overscroll-contain rounded-xl border border-accent/50 bg-raised p-4 shadow-xl" style={{ left: 8, top: 8, width: 'min(300px, calc(100% - 16px))', maxHeight: 'calc(100% - 16px)' }}>
         {candidates.length > 1 && <div className="mb-3 border-b border-border pb-3">
-          <p className="mb-2 text-xs text-muted">{locale === 'ko' ? '겹친 도시 선택' : 'Choose an overlapping city'} ({candidates.length})</p>
+          <p className="mb-2 text-xs text-muted">{locale === 'zh-TW' ? '選擇重疊的城鎮' : locale === 'ko' ? '겹친 도시 선택' : 'Choose an overlapping city'} ({candidates.length})</p>
           <div className="flex flex-col gap-1">{candidates.map((city) => <button type="button" key={city.uid} aria-pressed={String(city.uid) === String(props.selected?.uid)} className="rounded border border-border px-2 py-2 text-left text-xs aria-pressed:border-accent" onClick={() => model.current.onSelect(city)}>
             {city.alliance_abbr ? `[${city.alliance_abbr}] ` : ''}{city.nick_name || tr('이름 정보 없음')} · {city.x}, {city.y}
           </button>)}</div>
@@ -536,7 +536,7 @@ export default function KingdomMapCanvas(props: Props) {
         <div className="flex items-start justify-between gap-3"><h3 className="min-w-0 break-words font-bold [overflow-wrap:anywhere]">{props.selected.nick_name || tr("이름 정보 없음")}</h3><button type="button" className="shrink-0 rounded px-2 py-1 hover:bg-bg" aria-label={tr("도시 정보 닫기")} onClick={() => closePopup.current()}>✕</button></div>
         <p className="mt-1 text-sm text-muted">{props.selected.alliance_abbr ? `[${props.selected.alliance_abbr}]` : tr("연맹 정보 없음")} · {cityLevel(props.selected)}</p>
         <p className="mt-3 text-sm">X: {props.selected.x} · Y: {props.selected.y}</p>
-        <p className="mt-1 text-sm">{tr("전투력 ")}{props.selected.power?.toLocaleString(playerNumberLocale()) ?? tr("정보 없음")}</p>
+        <p className="mt-1 text-sm">{tr("전투력 ")}{props.selected.power?.toLocaleString(playerNumberLocale(locale)) ?? tr("정보 없음")}</p>
         <p className="mt-2 text-xs text-muted">{tr("저장 시점 보호막: ")}{props.selected.shield_active == null ? tr("정보 없음") : props.selected.shield_active ? tr("있음") : tr("없음")}{tr(" · 연소: ")}{props.selected.burn_active == null ? tr("정보 없음") : props.selected.burn_active ? tr("있음") : tr("없음")}</p>
         <button type="button" className="mt-4 w-full rounded-lg bg-accent px-4 py-3 font-bold text-on-accent" onClick={() => { setExpanded(false); props.onLookup(props.selected!); }}>{tr("장비 보기")}</button>
       </section>}

@@ -29,10 +29,10 @@ const hooks = {
 globalThis.__rankingHooks = hooks;
 const react = moduleURL(Object.keys(hooks).map(name => `export const ${name} = (...args) => globalThis.__rankingHooks.${name}(...args);`).join('\n'));
 const jsx = moduleURL('export const jsx = (type, props, key) => ({type, props, key}); export const jsxs = jsx; export const Fragment = "fragment";');
-const locale = moduleURL('export const useLocale = () => ({ locale: globalThis.__rankingLocale ?? "ko", t: (ko, en) => globalThis.__rankingLocale === "en" ? en : ko });');
+const locale = moduleURL('export const getLocale = () => globalThis.__rankingLocale ?? "ko"; export const useLocale = () => ({ locale: getLocale(), t: (ko, en, zhTW) => getLocale() === "zh-TW" ? zhTW ?? en : getLocale() === "en" ? en : ko });');
 const response = moduleURL(await compile('../src/lib/api-response.ts'));
 const stub = moduleURL('export default function Stub() {}');
-const localization = moduleURL('export const playerText = t => t; export const playerNumberLocale = () => "ko-KR"; export const playerError = t => t; export const playerLabel = t => t; export const playerStatValue = t => t;');
+const localization = moduleURL(imports(await compile('../src/lib/player-localization.ts'), { './locale': locale, './api-response': response }));
 function imports(source, mappings) {
   return source.replace(/from (["'])(.*?)\1/g, (_, _quote, name) => {
     assert.ok(mappings[name], `Unexpected import: ${name}`);
@@ -219,6 +219,31 @@ test('portraits reject unsafe URLs and fall back to a Unicode initial after an i
   for (const src of ['javascript:alert(1)', 'http://example.test/a', 'data:image/svg+xml,bad', 'bad-url', null]) {
     assert.equal(find(mount(portrait.type, { src, name: 'A' }), 'img'), undefined);
   }
+});
+
+test('Traditional Chinese ranking labels, counts, dates, errors and raw identity survive locale changes', async t => {
+  environment(t);
+  globalThis.__rankingLocale = 'zh-TW';
+  let response = Response.json(snapshot({ rows: [row(1, { nick_name: '원본暱稱', alliance_abbr: '원盟' })] }));
+  const fetch = t.mock.method(globalThis, 'fetch', async () => response);
+  const host = mount(Rankings);
+  assert.match(text(host.render()), /神秘試煉/);
+  assert.doesNotMatch(text(host.render()), /[가-힣]/);
+  await submit(host);
+  const copy = text(host.render());
+  assert.match(copy, /王國 1584.*已取得 1 人.*顯示 1 人/);
+  assert.match(copy, /원본暱稱/); assert.match(copy, /원盟/);
+  assert.doesNotMatch(copy.replaceAll('원본暱稱', '').replaceAll('원盟', ''), /[가-힣]/);
+  assert.equal(text(find(host, 'time')), new Date(1_700_000_000_000).toLocaleString('zh-TW', { timeZone: 'Asia/Seoul' }));
+  assert.match(rows(host)[0].props.children.props['aria-label'], /第 1 名.*查看個人資料與裝備/);
+  globalThis.__rankingLocale = 'en'; assert.match(text(host.render()), /Mystic Trial/);
+  globalThis.__rankingLocale = 'zh-TW'; assert.match(text(host.render()), /神秘試煉/);
+  assert.equal(fetch.mock.callCount(), 1);
+  response = new Response('', { status: 429, headers: { 'Retry-After': '12' } });
+  await submit(host); assert.match(text(host.render()), /12 秒後重試/);
+  const lookup = mount(Lookup, { heroes: {} });
+  assert.deepEqual(nodes(lookup.render()).filter(n => n.props?.role === 'tab').map(text), ['搜尋暱稱', '王國地圖', '領主 ID', '神秘試煉', '王國比較']);
+  lookup.unmount(); host.unmount();
 });
 
 test('five tabs support End/Home/wrapping and the fourth ranking tab still reveals profile/gear', async t => {

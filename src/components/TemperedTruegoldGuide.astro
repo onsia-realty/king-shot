@@ -29,27 +29,27 @@ const refinement = [
     <AstroImage src={crucible} alt="" width={80} height={80} loading="lazy" class="h-16 w-16 shrink-0 object-contain sm:h-20 sm:w-20" />
     <div>
       <h2 id="tempered-guide-title" class="text-lg font-extrabold sm:text-2xl">
-        <LocaleText ko="담금질 순금, 언제 얼마나 필요할까?" en="Tempered Truegold: when and how much?" />
+        <LocaleText ko="담금질 순금, 언제 얼마나 필요할까?" en="Tempered Truegold: when and how much?" zhTW="何時需要淬鍊精金？需要多少？" />
       </h2>
       <p class="mt-2 text-sm text-muted">
-        <LocaleText ko="도시센터 TG5 → TG6부터 순금과 담금질 순금을 함께 준비하세요." en="From Town Center TG5 → TG6, you need both Truegold and Tempered Truegold." />
+        <LocaleText ko="도시센터 TG5 → TG6부터 순금과 담금질 순금을 함께 준비하세요." en="From Town Center TG5 → TG6, you need both Truegold and Tempered Truegold." zhTW="城鎮中心從 TG5 升至 TG6 起，需要同時準備精金與淬鍊精金。" />
       </p>
     </div>
   </div>
 
   <div class="mt-5 grid gap-3 sm:grid-cols-2">
     <div class="rounded-xl border border-border p-4">
-      <h3 class="font-bold"><LocaleText ko="① 건설에 넣는 재료" en="① Materials for construction" /></h3>
-      <p class="mt-1 text-sm text-muted"><LocaleText ko="아래 카드는 도시센터 한 등급을 올리는 재료입니다. 위 계산기에서 남은 단계만 계산하세요." en="Each card covers one full Town Center tier. Use the calculator above for only your remaining steps." /></p>
+      <h3 class="font-bold"><LocaleText ko="① 건설에 넣는 재료" en="① Materials for construction" zhTW="① 建設所需材料" /></h3>
+      <p class="mt-1 text-sm text-muted"><LocaleText ko="아래 카드는 도시센터 한 등급을 올리는 재료입니다. 위 계산기에서 남은 단계만 계산하세요." en="Each card covers one full Town Center tier. Use the calculator above for only your remaining steps." zhTW="每張卡片列出城鎮中心提升一個完整等級所需的材料。若只想計算剩餘階段，請使用上方計算器。" /></p>
     </div>
     <div class="rounded-xl border border-amber-400/20 bg-amber-400/5 p-4">
-      <h3 class="font-bold text-amber-300"><LocaleText ko="② 정련에 쓰는 순금은 별도" en="② Refinement uses extra Truegold" /></h3>
-      <p class="mt-1 text-sm text-muted"><LocaleText ko="담금질 순금을 만드는 데에도 순금이 듭니다. 건설용 순금을 먼저 남겨두고 정련에 쓸 양을 정하세요." en="Making Tempered Truegold also consumes Truegold. Reserve your construction supply before deciding how much to refine." /></p>
+      <h3 class="font-bold text-amber-300"><LocaleText ko="② 정련에 쓰는 순금은 별도" en="② Refinement uses extra Truegold" zhTW="② 精煉另需消耗精金" /></h3>
+      <p class="mt-1 text-sm text-muted"><LocaleText ko="담금질 순금을 만드는 데에도 순금이 듭니다. 건설용 순금을 먼저 남겨두고 정련에 쓸 양을 정하세요." en="Making Tempered Truegold also consumes Truegold. Reserve your construction supply before deciding how much to refine." zhTW="製作淬鍊精金也會消耗精金。請先保留建設所需的數量，再決定要投入多少進行精煉。" /></p>
     </div>
   </div>
 
   <p class="mb-3 mt-5 text-xs text-muted">
-    <LocaleText ko="도시센터 · 각 카드 = 5개 하위 단계 합계 · 선행 건물·정련 비용 제외" en="Town Center · Each card totals all 5 substeps · Excludes prerequisites and refinement costs" />
+    <LocaleText ko="도시센터 · 각 카드 = 5개 하위 단계 합계 · 선행 건물·정련 비용 제외" en="Town Center · Each card totals all 5 substeps · Excludes prerequisites and refinement costs" zhTW="城鎮中心・每張卡片為 5 個子階段的總和・不含前置建築與精煉費用" />
   </p>
   <ul class="grid grid-cols-1 gap-2 min-[400px]:grid-cols-2 lg:grid-cols-5">
     {tiers.map((tier) => (
@@ -59,14 +59,14 @@ const refinement = [
           <div class="flex items-center justify-between gap-2">
             <dt class="flex items-center gap-1 text-xs text-muted">
               <svg aria-hidden="true" viewBox="0 0 24 24" class="h-4 w-4 shrink-0 text-amber-300" fill="currentColor"><path d="M6 7h12l4 11H2L6 7Z" /></svg>
-              <LocaleText ko="순금" en="Truegold" />
+              <LocaleText ko="순금" en="Truegold" zhTW="精金 (TG)" />
             </dt>
             <dd class="font-bold tabular-nums text-amber-200">{tier.tg}</dd>
           </div>
           <div class="flex items-center justify-between gap-2 rounded-lg bg-amber-400/10 px-2 py-2">
             <dt class="flex items-center gap-1 text-xs text-amber-200">
               <svg aria-hidden="true" viewBox="0 0 24 24" class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m12 2 8 7-3 12H7L4 9l8-7Z M4 9h16M12 2l-3 7 3 12 3-12-3-7Z" /></svg>
-              <LocaleText ko="담금질 순금" en="Tempered" />
+              <LocaleText ko="담금질 순금" en="Tempered" zhTW="淬鍊精金" />
             </dt>
             <dd class="font-extrabold tabular-nums text-amber-300">{tier.tempered}</dd>
           </div>
@@ -77,19 +77,19 @@ const refinement = [
 
   <details class="mt-4 rounded-xl border border-border px-4 py-3">
     <summary class="cursor-pointer text-sm font-semibold">
-      <LocaleText ko="순금 용광로 · 정련 비용표 펼치기" en="Truegold Crucible · Refinement costs" />
+      <LocaleText ko="순금 용광로 · 정련 비용표 펼치기" en="Truegold Crucible · Refinement costs" zhTW="精金熔爐・展開精煉費用表" />
     </summary>
     <p class="mt-3 text-sm text-muted">
-      <LocaleText ko="정련 횟수가 쌓이면 1회 비용도 올라갑니다. 획득량은 무작위 범위이며, 확정 수량이나 평균이 아닙니다." en="The cost per refinement rises with your weekly count. Output is a random range, not a guaranteed amount or an average." />
+      <LocaleText ko="정련 횟수가 쌓이면 1회 비용도 올라갑니다. 획득량은 무작위 범위이며, 확정 수량이나 평균이 아닙니다." en="The cost per refinement rises with your weekly count. Output is a random range, not a guaranteed amount or an average." zhTW="每週精煉次數越多，單次費用就越高。產量為隨機範圍，並非保證數量或平均值。" />
     </p>
     <div class="mt-3 overflow-x-auto">
       <table class="w-full text-left text-sm tabular-nums">
-        <caption class="sr-only"><LocaleText ko="정련 1회당 순금 비용과 담금질 순금 획득 범위" en="Truegold cost and Tempered Truegold output per refinement" /></caption>
+        <caption class="sr-only"><LocaleText ko="정련 1회당 순금 비용과 담금질 순금 획득 범위" en="Truegold cost and Tempered Truegold output per refinement" zhTW="每次精煉的精金費用與淬鍊精金產量範圍" /></caption>
         <thead class="text-xs text-muted">
           <tr>
-            <th scope="col" class="py-2 pr-3"><LocaleText ko="주간 회차" en="Weekly attempt" /></th>
-            <th scope="col" class="py-2 pr-3"><LocaleText ko="순금 / 회" en="Truegold / attempt" /></th>
-            <th scope="col" class="py-2"><LocaleText ko="담금질 순금 / 회" en="Tempered / attempt" /></th>
+            <th scope="col" class="py-2 pr-3"><LocaleText ko="주간 회차" en="Weekly attempt" zhTW="每週次數" /></th>
+            <th scope="col" class="py-2 pr-3"><LocaleText ko="순금 / 회" en="Truegold / attempt" zhTW="精金／次" /></th>
+            <th scope="col" class="py-2"><LocaleText ko="담금질 순금 / 회" en="Tempered / attempt" zhTW="淬鍊精金／次" /></th>
           </tr>
         </thead>
         <tbody>
@@ -103,7 +103,7 @@ const refinement = [
         </tbody>
       </table>
     </div>
-    <p class="mt-3 text-xs text-muted"><LocaleText ko="표는 할인 전 비용입니다. 매일 첫 정련은 순금 비용 50% 할인으로 안내됩니다. 실제 적용 조건은 게임에서 확인하세요." en="Costs shown are before discounts. The first daily refinement is listed at 50% off Truegold cost; check the current conditions in-game." /></p>
-    <a href="/buildings/truegold-crucible/" class="mt-3 inline-block text-sm text-link hover:text-link-hover"><LocaleText ko="순금 용광로 알아보기 →" en="About the Truegold Crucible →" /></a>
+    <p class="mt-3 text-xs text-muted"><LocaleText ko="표는 할인 전 비용입니다. 매일 첫 정련은 순금 비용 50% 할인으로 안내됩니다. 실제 적용 조건은 게임에서 확인하세요." en="Costs shown are before discounts. The first daily refinement is listed at 50% off Truegold cost; check the current conditions in-game." zhTW="表中列出折扣前費用。每日首次精煉的精金費用標示為五折，實際適用條件請以遊戲內資訊為準。" /></p>
+    <a href="/buildings/truegold-crucible/" class="mt-3 inline-block text-sm text-link hover:text-link-hover"><LocaleText ko="순금 용광로 알아보기 →" en="About the Truegold Crucible →" zhTW="了解精金熔爐 →" /></a>
   </details>
 </section>

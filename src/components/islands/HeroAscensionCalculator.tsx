@@ -1,4 +1,4 @@
-import { useCalculatorLocale } from '@/lib/calculator-locale';
+import { formatCalculatorNumber, useCalculatorLocale } from '@/lib/calculator-locale';
 import { useMemo, useState } from 'react';
 import {
   HERO_SHARD_ROWS,
@@ -25,7 +25,7 @@ function toSafeInt(raw: string): number {
 }
 
 function fmt(n: number): string {
-  return n.toLocaleString('ko-KR');
+  return formatCalculatorNumber(n);
 }
 
 interface Step {

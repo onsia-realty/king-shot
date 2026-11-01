@@ -18,6 +18,9 @@ interface Props {
   fullTitleEn?: string;
   titleEn?: string;
   descriptionEn?: string;
+  fullTitleZhTW?: string;
+  titleZhTW?: string;
+  descriptionZhTW?: string;
   description?: string;
   /** OG 이미지 (절대/상대 경로 모두 허용) */
   image?: string;
@@ -32,6 +35,9 @@ const {
   fullTitleEn,
   titleEn,
   descriptionEn,
+  fullTitleZhTW,
+  titleZhTW,
+  descriptionZhTW,
   description = SITE_DESCRIPTION,
   image = '/og-default.png',
   noindex = false,
@@ -40,6 +46,7 @@ const {
 
 const localeScope = isLocaleScope(Astro.url.pathname);
 const englishTitle = fullTitleEn ?? (titleEn ? `${titleEn} | Kingshot Guide` : undefined);
+const traditionalTitle = fullTitleZhTW ?? (titleZhTW ? `${titleZhTW} | Kingshot 攻略` : englishTitle);
 const pageTitle = fullTitle ?? (title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} — 킹샷 한국어 공략`);
 const site = Astro.site ?? new URL('https://example.com');
 const canonical = new URL(Astro.url.pathname, site).href;
@@ -52,8 +59,8 @@ const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title data-locale-ko={localeScope ? pageTitle : undefined} data-locale-en={localeScope ? englishTitle : undefined}>{pageTitle}</title>
-    <meta name="description" content={description} data-content-ko={localeScope ? description : undefined} data-content-en={localeScope ? descriptionEn : undefined} />
+    <title data-locale-ko={localeScope ? pageTitle : undefined} data-locale-en={localeScope ? englishTitle : undefined} data-locale-zh-tw={localeScope ? traditionalTitle : undefined}>{pageTitle}</title>
+    <meta name="description" content={description} data-content-ko={localeScope ? description : undefined} data-content-en={localeScope ? descriptionEn : undefined} data-content-zh-tw={localeScope ? descriptionZhTW ?? descriptionEn : undefined} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
@@ -74,17 +81,17 @@ const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 
     {/* Open Graph */}
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content="ko_KR" data-content-ko={localeScope ? "ko_KR" : undefined} data-content-en={localeScope ? "en_US" : undefined} />
-    <meta property="og:site_name" content={SITE_NAME} />
-    <meta property="og:title" content={pageTitle} data-content-ko={localeScope ? pageTitle : undefined} data-content-en={localeScope ? englishTitle : undefined} />
-    <meta property="og:description" content={description} data-content-ko={localeScope ? description : undefined} data-content-en={localeScope ? descriptionEn : undefined} />
+    <meta property="og:locale" content="ko_KR" data-content-ko={localeScope ? "ko_KR" : undefined} data-content-en={localeScope ? "en_US" : undefined} data-content-zh-tw={localeScope ? "zh_TW" : undefined} />
+    <meta property="og:site_name" content={SITE_NAME} data-content-ko={localeScope ? SITE_NAME : undefined} data-content-en={localeScope ? 'Kingshot Guide' : undefined} data-content-zh-tw={localeScope ? 'Kingshot 攻略' : undefined} />
+    <meta property="og:title" content={pageTitle} data-content-ko={localeScope ? pageTitle : undefined} data-content-en={localeScope ? englishTitle : undefined} data-content-zh-tw={localeScope ? traditionalTitle : undefined} />
+    <meta property="og:description" content={description} data-content-ko={localeScope ? description : undefined} data-content-en={localeScope ? descriptionEn : undefined} data-content-zh-tw={localeScope ? descriptionZhTW ?? descriptionEn : undefined} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
 
     {/* Twitter */}
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={pageTitle} data-content-ko={localeScope ? pageTitle : undefined} data-content-en={localeScope ? englishTitle : undefined} />
-    <meta name="twitter:description" content={description} data-content-ko={localeScope ? description : undefined} data-content-en={localeScope ? descriptionEn : undefined} />
+    <meta name="twitter:title" content={pageTitle} data-content-ko={localeScope ? pageTitle : undefined} data-content-en={localeScope ? englishTitle : undefined} data-content-zh-tw={localeScope ? traditionalTitle : undefined} />
+    <meta name="twitter:description" content={description} data-content-ko={localeScope ? description : undefined} data-content-en={localeScope ? descriptionEn : undefined} data-content-zh-tw={localeScope ? descriptionZhTW ?? descriptionEn : undefined} />
     <meta name="twitter:image" content={ogImage} />
 
     {jsonLdList.map((data) => (
@@ -94,7 +101,7 @@ const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
     <slot name="head" />
   </head>
   <body class="min-h-screen bg-bg text-text antialiased">
-    <a class="skip-link" href="#main"><LocaleText ko="본문 바로가기" en="Skip to content" /></a>
+    <a class="skip-link" href="#main"><LocaleText ko="본문 바로가기" en="Skip to content" zhTW="跳至主要內容" /></a>
     <div class="flex min-h-screen flex-col">
       <Header />
       <main id="main" class="flex-1">

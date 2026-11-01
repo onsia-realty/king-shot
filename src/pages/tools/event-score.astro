@@ -1,6 +1,6 @@
 ---
 import LocaleText from '@/components/LocaleText.astro';
-import { staticEnglish } from '@/lib/static-translations';
+import { staticEnglish, staticTraditionalChinese } from '@/lib/static-translations';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Breadcrumb from '@/components/Breadcrumb.astro';
 import Disclaimer from '@/components/Disclaimer.astro';
@@ -16,19 +16,25 @@ const description =
 const faq = [
   {
     qEn: `Can I split items across several days?`,
+    qZhTW: `可以將道具分散到不同天使用嗎？`,
     aEn: `The calculator assumes each item is spent once and assigns all of it to the highest-scoring day. When multiple days award the same points, it chooses the earliest and lists the other eligible days beside it.`,
+    aZhTW: `計算器假設每項道具僅使用一次，並全部分配至得分最高的一天。若多天積分相同，會選最早的一天，並在旁列出其他適用日期。`,
     q: '아이템을 여러 일자에 나눠 쓰면 안 되나요?',
     a: '이 계산기는 아이템을 한 번씩만 쓴다고 보고 배점이 가장 높은 일자에 전부 넣습니다. 같은 점수를 주는 일자가 여러 날이면 가장 빠른 날에 배정하고 나머지 날은 옆에 따로 적어 둡니다.',
   },
   {
     qEn: `How are training speedups evaluated?`,
+    qZhTW: `訓練加速如何計算？`,
     aEn: `It compares direct use (30 points per minute) with training or promoting troops for that duration and picks the higher score. Promotions are limited to owned troops. Remaining speedups go to new troops of the same tier or direct use, whichever scores higher.`,
+    aZhTW: `比較直接使用（每分鐘 30 分）與用同樣時間訓練或晉升部隊的得分，選擇較高者。晉升數量不超過持有部隊，剩餘加速則分配至同階新兵訓練或直接使用中得分較高的方式。`,
     q: '훈련 가속은 어떻게 계산하나요?',
     a: '가속을 그대로 쓸 때(분당 30점)와 그 시간으로 병력을 훈련하거나 승급할 때 점수를 비교해 높은 쪽을 고릅니다. 승급은 보유 병력만큼만 올리고, 남는 가속은 같은 티어 신규 훈련과 가속 사용 중 점수가 높은 쪽에 씁니다.',
   },
   {
     qEn: `Why do both events show the same score?`,
+    qZhTW: `為什麼兩個活動的積分相同？`,
     aEn: `Item scores are identical in KvK and Hall of Governors. The difference comes from using training speedups on troops. A tier-10 troop earns 60 points in KvK and 39 in Hall of Governors, so higher training speed bonuses favor KvK.`,
+    aZhTW: `KvK 與最強領主的道具積分相同，差異來自將訓練加速用於部隊。每名 10 階部隊在 KvK 為 60 分、最強領主為 39 分，因此訓練速度加成越高，KvK 越有利。`,
     q: '두 이벤트 점수가 똑같이 나와요.',
     a: '보유 아이템 배점은 KvK와 지고의 영주가 같습니다. 차이는 훈련 가속을 병력에 쓸 때 생깁니다. 10급 병력 기준 1명당 KvK는 60점, 지고의 영주는 39점이라 훈련 속도 보너스가 높을수록 KvK가 유리해집니다.',
   },
@@ -61,7 +67,7 @@ const jsonLd = [
 ];
 ---
 
-<BaseLayout titleEn={staticEnglish(title)} descriptionEn={`Estimate KvK and Hall of Governors scores from owned items and troop training settings. Compare event totals and the best daily allocation.`} title={title} description={description} jsonLd={jsonLd}>
+<BaseLayout titleEn={staticEnglish(title)} titleZhTW={staticTraditionalChinese(title)} descriptionEn={`Estimate KvK and Hall of Governors scores from owned items and troop training settings. Compare event totals and the best daily allocation.`} descriptionZhTW={`依持有道具與部隊訓練設定，估算 KvK 與最強領主積分，比較活動總分與每日最佳分配。`} title={title} description={description} jsonLd={jsonLd}>
   <div class="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
     <Breadcrumb
       items={[
@@ -73,18 +79,18 @@ const jsonLd = [
     />
 
     <header class="mb-8">
-      <h1 class="text-3xl font-extrabold sm:text-4xl"><LocaleText ko={`이벤트 점수 계산기`} en={`Event Score Calculator`} /></h1>
+      <h1 class="text-3xl font-extrabold sm:text-4xl"><LocaleText ko={`이벤트 점수 계산기`} en={`Event Score Calculator`} zhTW={`活動積分計算器`} /></h1>
       <p class="mt-3 max-w-2xl text-muted">
-        <LocaleText ko={`모아 둔 순금, 가속, 영웅 파편, 망치, 미스릴을 KvK와 지고의 영주 중 어디에 쓸지 고민될 때 쓰세요. 수량을 넣으면 이벤트별 예상 총점과 몇 일차에 무엇을 써야 하는지 바로 나옵니다. 훈련 가속은 병력을 뽑는 쪽과 그냥 쓰는 쪽 중 점수가 높은 쪽을 자동으로 고릅니다.`} en={`Decide whether to spend saved Truegold, speedups, hero shards, hammers and Mithril in KvK or Hall of Governors. Enter quantities to see estimated totals and the best day for each item. Training speedups are automatically assigned to training troops or direct use, whichever scores higher.`} />
+        <LocaleText ko={`모아 둔 순금, 가속, 영웅 파편, 망치, 미스릴을 KvK와 지고의 영주 중 어디에 쓸지 고민될 때 쓰세요. 수량을 넣으면 이벤트별 예상 총점과 몇 일차에 무엇을 써야 하는지 바로 나옵니다. 훈련 가속은 병력을 뽑는 쪽과 그냥 쓰는 쪽 중 점수가 높은 쪽을 자동으로 고릅니다.`} en={`Decide whether to spend saved Truegold, speedups, hero shards, hammers and Mithril in KvK or Hall of Governors. Enter quantities to see estimated totals and the best day for each item. Training speedups are automatically assigned to training troops or direct use, whichever scores higher.`} zhTW={`不知道累積的精金、加速、英雄碎片、錘子與秘銀該用於 KvK 還是最強領主？輸入數量即可查看預估總分與各道具的最佳使用日。訓練加速會自動選擇訓練部隊或直接使用中得分較高的方式。`} />
       </p>
     </header>
 
     <EventScoreCalculator client:load />
 
     <section class="mt-12">
-      <h2 class="text-xl font-bold"><LocaleText ko={`아이템별 점수표`} en={`Points by Item`} /></h2>
+      <h2 class="text-xl font-bold"><LocaleText ko={`아이템별 점수표`} en={`Points by Item`} zhTW={`各道具積分表`} /></h2>
       <p class="mt-2 text-sm text-muted">
-        <LocaleText ko={`단위 하나당 점수입니다. 줄표(-)는 그 날 점수가 없다는 뜻입니다.`} en={`Points are per unit. A dash (-) means the item earns no points on that day.`} />
+        <LocaleText ko={`단위 하나당 점수입니다. 줄표(-)는 그 날 점수가 없다는 뜻입니다.`} en={`Points are per unit. A dash (-) means the item earns no points on that day.`} zhTW={`表中為每單位積分。破折號（-）表示該道具在當天不計分。`} />
       </p>
       <div class="mt-4">
         <ScoreMatrix client:load />
@@ -92,13 +98,13 @@ const jsonLd = [
     </section>
 
     <section class="mt-12">
-      <h2 class="text-xl font-bold"><LocaleText ko={`자주 묻는 질문`} en={`Frequently Asked Questions`} /></h2>
+      <h2 class="text-xl font-bold"><LocaleText ko={`자주 묻는 질문`} en={`Frequently Asked Questions`} zhTW={`常見問題`} /></h2>
       <dl class="mt-3 space-y-3">
         {
           faq.map((f) => (
             <div class="rounded-xl border border-border bg-surface px-4 py-3">
-              <dt class="font-bold"><LocaleText ko={f.q} en={f.qEn} /></dt>
-              <dd class="mt-1 text-sm text-muted"><LocaleText ko={f.a} en={f.aEn} /></dd>
+              <dt class="font-bold"><LocaleText ko={f.q} en={f.qEn} zhTW={f.qZhTW} /></dt>
+              <dd class="mt-1 text-sm text-muted"><LocaleText ko={f.a} en={f.aEn} zhTW={f.aZhTW} /></dd>
             </div>
           ))
         }
@@ -106,36 +112,36 @@ const jsonLd = [
     </section>
 
     <section class="mt-12">
-      <h2 class="text-xl font-bold"><LocaleText ko={`데이터 범위와 한계`} en={`Data Coverage and Limitations`} /></h2>
+      <h2 class="text-xl font-bold"><LocaleText ko={`데이터 범위와 한계`} en={`Data Coverage and Limitations`} zhTW={`資料範圍與限制`} /></h2>
       <ul class="mt-3 space-y-2 text-sm text-muted">
         <li>
-          <LocaleText ko={`KvK는 확인된 1~5일차 항목만 들어 있습니다. 6일차 이후는 빠져 있어 KvK 총점이 실제보다 낮게 나올 수 있습니다.`} en={`KvK includes only confirmed items for days 1–5. Day 6 and later are excluded, so the estimated KvK total may be lower than the actual total.`} />
+          <LocaleText ko={`KvK는 확인된 1~5일차 항목만 들어 있습니다. 6일차 이후는 빠져 있어 KvK 총점이 실제보다 낮게 나올 수 있습니다.`} en={`KvK includes only confirmed items for days 1–5. Day 6 and later are excluded, so the estimated KvK total may be lower than the actual total.`} zhTW={`KvK 僅納入已確認的第 1～5 天項目，未包含第 6 天之後的項目，因此預估總分可能低於實際總分。`} />
         </li>
         <li>
-          <LocaleText ko={`게임에서는 아이템을 직접 쓰는 게 아니라 건설·연구·제작으로 소모할 때 점수가 들어옵니다. 소모 순서, 버프, 특수 규칙에 따라 실제 점수는 달라질 수 있습니다.`} en={`In-game points are awarded when items are consumed in construction, research or crafting, rather than by directly using them. Spending order, buffs and special rules may affect actual scores.`} />
+          <LocaleText ko={`게임에서는 아이템을 직접 쓰는 게 아니라 건설·연구·제작으로 소모할 때 점수가 들어옵니다. 소모 순서, 버프, 특수 규칙에 따라 실제 점수는 달라질 수 있습니다.`} en={`In-game points are awarded when items are consumed in construction, research or crafting, rather than by directly using them. Spending order, buffs and special rules may affect actual scores.`} zhTW={`遊戲是在建設、研究或製作消耗道具時給予積分，並非直接使用道具就計分。消耗順序、加成與特殊規則可能影響實際分數。`} />
         </li>
         <li>
-          <LocaleText ko={`출처:`} en={`Source:`} />
+          <LocaleText ko={`출처:`} en={`Source:`} zhTW={`來源：`} />
           <a
             href="https://kshot-lab.com/tools/event-score"
             target="_blank"
             rel="noopener noreferrer"
             class="text-link hover:text-link-hover">kshot-lab.com</a
-          > <LocaleText ko={`공개 데이터 (2026-10-09 수집)`} en={`Public data (collected October 9, 2026)`} />
+          > <LocaleText ko={`공개 데이터 (2026-10-09 수집)`} en={`Public data (collected October 9, 2026)`} zhTW={`公開資料（2026 年 10 月 9 日擷取）`} />
         </li>
       </ul>
     </section>
 
     <section class="mt-12">
-      <h2 class="text-xl font-bold"><LocaleText ko={`다른 계산기`} en={`Related Tools`} /></h2>
+      <h2 class="text-xl font-bold"><LocaleText ko={`다른 계산기`} en={`Related Tools`} zhTW={`其他計算工具`} /></h2>
       <ul class="mt-3 space-y-2">
         {
           otherTools.map((tool) => (
             <li class="rounded-xl border border-border bg-surface px-4 py-3">
               <a href={tool.href} class="font-bold hover:text-accent">
-                <LocaleText ko={tool.label} en={staticEnglish(tool.label)} />
+                <LocaleText ko={tool.label} en={staticEnglish(tool.label)} zhTW={staticTraditionalChinese(tool.label)} />
               </a>
-              <p class="mt-1 text-sm text-muted"><LocaleText ko={tool.summary} en={staticEnglish(tool.summary)} /></p>
+              <p class="mt-1 text-sm text-muted"><LocaleText ko={tool.summary} en={staticEnglish(tool.summary)} zhTW={staticTraditionalChinese(tool.summary)} /></p>
             </li>
           ))
         }

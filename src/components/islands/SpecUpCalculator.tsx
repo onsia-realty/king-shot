@@ -1,4 +1,4 @@
-import { useCalculatorLocale } from '@/lib/calculator-locale';
+import { formatCalculatorNumber, useCalculatorLocale } from '@/lib/calculator-locale';
 import { useState } from 'react';
 import { PACKAGE_GENERATIONS, type PackageGeneration } from '@/data/package-ref';
 import {
@@ -40,7 +40,7 @@ const GOVERNOR_OPTIONS = [
 ];
 
 function fmt(n: number): string {
-  return n.toLocaleString('ko-KR');
+  return formatCalculatorNumber(n);
 }
 
 /** 원본 표기를 따른다: 1만 이상은 만 단위 소수 한 자리(딱 떨어지면 정수), 미만은 원 단위. */
@@ -48,7 +48,7 @@ function fmtKrw(n: number): string {
   if (n >= 10000) {
     const man = n / 10000;
     const text =
-      n % 10000 === 0 ? fmt(man) : man.toLocaleString('ko-KR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+      n % 10000 === 0 ? fmt(man) : formatCalculatorNumber(man, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
     return `₩${text}만`;
   }
   return `₩${fmt(Math.round(n))}`;
@@ -58,7 +58,7 @@ function fmtKrw(n: number): string {
 function fmtUnit(n: number): string {
   if (n >= 10000) return fmtKrw(n);
   const digits = n < 1 ? 2 : n < 100 ? 1 : 0;
-  return `₩${n.toLocaleString('ko-KR', { maximumFractionDigits: digits })}`;
+  return `₩${formatCalculatorNumber(n, { maximumFractionDigits: digits })}`;
 }
 
 function fmtPct(n: number, digits = 1): string {
