@@ -145,7 +145,7 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       || Number(value) < 1 || Number(value) > 10000) return sendError(res, 'invalid_kid');
     kid = Number(value);
     const requestedBoard = params.get('board') ?? 'mystic_trial';
-    if (params.getAll('board').length > 1 || !Object.hasOwn(BOARD_TYPES, requestedBoard)) {
+    if (params.getAll('board').length > 1 || !Object.prototype.hasOwnProperty.call(BOARD_TYPES, requestedBoard)) {
       return sendError(res, 'invalid_board');
     }
     board = requestedBoard as Board;
