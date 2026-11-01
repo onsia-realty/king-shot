@@ -24,7 +24,7 @@ async function setup(t) {
 const realRow = { rank: 1, uid: 59104008, governor_id: 234903407, nick_name: 'theGRINreaper',
   score: 3103, kid: 1584, aid: 159300059, alliance_abbr: 'LOL',
   avatar_url: 'https://got-global-avatar.akamaized.net/avatar/example.png' };
-const boardTypes = { personal_power: 3, kills: 4, hero_total: 8, hero_equip: 13,
+const boardTypes = { personal_power: 3, kills: 4, hero_total: 8, research_power: 11, hero_equip: 13,
   gov_gear: 14, gov_charm: 15, pet_power: 16, mystic_trial: 20 };
 const fixture = (kid = 1584, board = 'mystic_trial') => ({ ok: true, kid, limit: 100, boards: [{ key: board, type: boardTypes[board] }],
   board: { type: boardTypes[board], key: board, name: 'Mystic Trial', limit: 100, count: 1,
@@ -114,7 +114,7 @@ test('unknown, empty, inherited and duplicate boards fail before credentials or 
   assert.equal(fetch.mock.callCount(), 0);
 });
 
-test('all eight selected boards normalize the same row contract with one fixed-limit fetch each', async t => {
+test('all supported boards normalize the same row contract with one fixed-limit fetch each', async t => {
   const handler = await setup(t);
   for (const board of Object.keys(boardTypes)) {
     const fetch = t.mock.method(globalThis, 'fetch', async (url, options) => {

@@ -154,9 +154,12 @@ export default function PlayerLookup({ heroes: catalog }: { heroes: HeroCatalog 
     // Shared links prefill the form; a blank visit never sends a lookup request.
     if (!started.current) {
       started.current = true;
-      const initialId = new URLSearchParams(window.location.search).get('id') ?? '';
+      const params = new URLSearchParams(window.location.search);
+      const initialId = params.get('id') ?? '';
+      const initialTab = params.get('tab');
       setId(initialId);
       if (initialId) setTab('id');
+      else if (initialTab === 'comparison' || initialTab === 'rankings') setTab(initialTab);
     }
     return () => { request.current?.abort(); request.current = null; };
   }, []);

@@ -212,6 +212,21 @@ const database = [
         </div>
         <a href="/player/" class="inline-flex min-h-12 items-center justify-center gap-3 rounded-xl bg-accent px-6 py-3 font-bold text-on-accent no-underline transition-colors hover:bg-accent-strong hover:text-on-accent focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"><LocaleText ko="영주 장비 & 지도 바로가기" en="Explore Governor Gear & Map" /> <span aria-hidden="true">→</span></a>
       </div>
+      <div class="relative mt-6 rounded-xl border border-accent/30 bg-bg/60 p-4 sm:p-5">
+        <p class="flex items-center gap-2 text-sm font-bold"><span class="rounded-full bg-accent px-2 py-0.5 text-xs text-on-accent">NEW</span><LocaleText ko="KvK 준비를 위한 새 기능" en="New tools for KvK preparation" /></p>
+        <div class="mt-4 grid gap-3 sm:grid-cols-2">
+          <a href="/player/?tab=comparison" class="group rounded-xl border border-border bg-surface p-4 no-underline transition-colors hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
+            <h3 class="text-lg font-bold text-text"><span aria-hidden="true">⚔️ </span><LocaleText ko="왕국 간 전력 비교" en="Kingdom power comparison" /></h3>
+            <p class="mt-2 text-sm leading-relaxed text-muted"><LocaleText ko="우리 왕국과 상대 왕국의 전투력·연구 전투력·장비 등 주요 순위를 나란히 비교하세요. 상위 10·50·100명의 합계와 차이까지 무료로 확인할 수 있어요." en="Compare power, research power, gear and more across two kingdoms. See top 10, 50 or 100 totals and differences for free." /></p>
+            <span class="mt-3 inline-flex items-center gap-2 text-sm font-bold text-accent"><LocaleText ko="왕국 비교하기" en="Compare kingdoms" /><span aria-hidden="true">→</span></span>
+          </a>
+          <a href="/player/?tab=rankings" class="group rounded-xl border border-border bg-surface p-4 no-underline transition-colors hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
+            <h3 class="text-lg font-bold text-text"><span aria-hidden="true">🏆 </span><LocaleText ko="신비한 시련 순위" en="Mystic Trial rankings" /></h3>
+            <p class="mt-2 text-sm leading-relaxed text-muted"><LocaleText ko="왕국 번호로 신비한 시련 상위 100명의 순위와 점수를 확인하세요. 궁금한 영주를 선택하면 공개된 장비와 영웅도 살펴볼 수 있어요." en="Enter a kingdom number to view its top 100 Mystic Trial scores. Select a governor to explore their public gear and heroes." /></p>
+            <span class="mt-3 inline-flex items-center gap-2 text-sm font-bold text-accent"><LocaleText ko="시련 순위 보기" en="View trial rankings" /><span aria-hidden="true">→</span></span>
+          </a>
+        </div>
+      </div>
       <ul class="relative mt-6 grid gap-3 sm:grid-cols-3">
         <li class="rounded-xl border border-border bg-bg/60 p-4"><span class="text-xl" aria-hidden="true">🔎</span><h3 class="mt-2 font-bold"><LocaleText ko="ID를 몰라도 검색" en="Search without an ID" /></h3><p class="mt-1 text-sm leading-relaxed text-muted"><LocaleText ko="닉네임과 왕국 번호로 원하는 영주를 찾아보세요." en="Find a governor by nickname and kingdom number." /></p></li>
         <li class="rounded-xl border border-border bg-bg/60 p-4"><span class="text-xl" aria-hidden="true">🛡️</span><h3 class="mt-2 font-bold"><LocaleText ko="장비와 영웅을 한눈에" en="Gear and heroes at a glance" /></h3><p class="mt-1 text-sm leading-relaxed text-muted"><LocaleText ko="공개된 영주 장비와 아레나 영웅의 장비·강화 상태를 확인하세요." en="Check public governor gear and arena heroes’ equipment and upgrades." /></p></li>

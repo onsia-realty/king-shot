@@ -2,7 +2,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import { allowRequest } from '../src/lib/server/same-site.js';
 
 const BOARD_TYPES = {
-  personal_power: 3, kills: 4, hero_total: 8, hero_equip: 13,
+  personal_power: 3, kills: 4, hero_total: 8, research_power: 11, hero_equip: 13,
   gov_gear: 14, gov_charm: 15, pet_power: 16, mystic_trial: 20,
 } as const;
 type Board = keyof typeof BOARD_TYPES;
