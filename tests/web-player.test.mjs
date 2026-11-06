@@ -104,6 +104,40 @@ test('privacy true discards even populated or malformed governor gear; unknown p
   assert.equal(web.normalizeWebPlayer({ ...fixture(), lords_gear_privacy: undefined }, '101', undefined, now), null);
 });
 
+test('populated profiles allow empty optional hero equipment and skills without losing other sections', () => {
+  for (const patch of [{ gear_tiles: [] }, { skill_levels: [] }, { gear_tiles: [], skill_levels: [] }]) {
+    const data = fixture();
+    Object.assign(data.heroes[0], patch);
+    const result = web.normalizeWebPlayer(data, '101', '202', now);
+    assert.ok(result);
+    assert.equal(result.heroes[0].level, 80);
+    assert.equal(result.heroes[0].star, 26);
+    assert.equal(result.gov_gear.items.length, 1);
+    if (patch.gear_tiles) {
+      assert.deepEqual(result.heroes[0].gear, []);
+      assert.equal(result.heroes[0].exclusive_gear, null);
+    }
+    if (patch.skill_levels) assert.deepEqual(result.heroes[0].skill_levels, []);
+    assert.equal(web.normalizeWebPlayer({ ...data, profile_populated: undefined }, '101', undefined, now), null);
+  }
+  for (const patch of [{ gear_tiles: null }, { gear_tiles: [{}] }, { skill_levels: undefined }, { skill_levels: [{}] }]) {
+    const data = fixture();
+    Object.assign(data.heroes[0], patch);
+    assert.equal(web.normalizeWebPlayer(data, '101', '202', now), null);
+  }
+});
+
+test('empty optional hero sections stay on the web fast path', async t => {
+  const handler = await setup(t);
+  const data = fixture();
+  data.heroes[0].gear_tiles = [];
+  data.heroes[0].skill_levels = [];
+  const calls = upstream(t, () => Response.json(data));
+  const result = await request(handler);
+  assert.equal(result.body.source, 'web');
+  assert.equal(calls.length, 1);
+});
+
 test('timestamps use oldest source snapshot; missing or future source time remains unknown', () => {
   const result = web.normalizeWebPlayer(fixture(), '101', undefined, now);
   assert.equal(result.cached_at, now / 1000 - 180);
@@ -139,7 +173,7 @@ test('403, HTML, malformed JSON, wrong identity and incomplete shapes all fall b
     () => new Response('{broken', { headers: { 'Content-Type': 'application/json' } }),
     ...[{ uid: 999 }, { fid: 999 }, { governor_id: 999 }, { heroes: [] }, { heroes: [{}] },
       { lords_gear: [] }, { lords_gear: [{}] }, { nick_name: {} }, { profile_populated: false },
-      { heroes: [{ ...fixture().heroes[0], gear_tiles: [] }] },
+      { heroes: [{ ...fixture().heroes[0], gear_tiles: null }] },
     ].map(patch => () => Response.json({ ...fixture(), ...patch })),
   ];
   for (const response of bad) {

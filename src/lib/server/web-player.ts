@@ -53,8 +53,11 @@ export function normalizeWebPlayer(value: unknown, expectedUid: string, expected
   if (!heroRows || new Set(heroRows.map(hero => playerId(hero.id))).size !== heroRows.length) return null;
   const heroes: Record<string, unknown>[] = [];
   for (const hero of heroRows) {
-    const gear = rows(hero.gear_tiles, 5, true);
-    const skills = rows(hero.skill_levels, 10, true);
+    // A populated profile can have an unequipped hero or no unlocked skills.
+    // Empty optional sections are valid; absent/malformed sections still fall back.
+    const requireItems = value.profile_populated !== true;
+    const gear = rows(hero.gear_tiles, 5, requireItems);
+    const skills = rows(hero.skill_levels, 10, requireItems);
     if (!playerId(hero.id) || !numeric(hero.hero_level) || hero.hero_level < 1
       || !numeric(hero.pos) || hero.pos < 1 || hero.pos > 5
       || !numeric(hero.star_raw) || hero.star_raw > 30 || !gear || !skills
