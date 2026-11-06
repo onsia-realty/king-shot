@@ -2,32 +2,20 @@ import { useLocale } from '../../lib/locale';
 import { readApiJson, RateLimitError } from '../../lib/api-response';
 import { playerText, playerText as tr, playerNumberLocale, playerError, playerLabel, playerStatValue } from '../../lib/player-localization';
 import { useEffect, useRef, useState, type SubmitEvent, type ReactNode } from 'react';
+import { isFullPlayerResult, mapPlayerResult, matchesPlayer, playerIdentity, playerCache, type LookupResult, type MapPlayerPreview } from '../../lib/player-preview';
 
-import ArenaHeroes, { type ArenaHero, type HeroCatalog } from './ArenaHeroes';
+import ArenaHeroes, { type HeroCatalog } from './ArenaHeroes';
 import PlayerDiscovery, { type PlayerIdType } from './PlayerDiscovery';
 import KingdomMap from './KingdomMap';
 import KingdomRankings from './KingdomRankings';
 import KingdomComparison from './KingdomComparison';
 import PlayerLocationMap from './PlayerLocationMap';
 export type { HeroCatalog } from './ArenaHeroes';
-type Scalar = string | number | null;
-interface GovernorGear {
-  slot?: Scalar; name?: string; quality?: Scalar; tier?: Scalar; star?: Scalar;
-  strength_level?: Scalar; score?: Scalar; combat?: Scalar; icon?: string;
-  gems?: { slot?: Scalar; id?: Scalar }[];
-}
-interface LookupResult {
-  ok: boolean; governor_id?: Scalar; uid?: Scalar; message?: string;
-  player?: {
-    nick_name?: string; kid?: Scalar; power?: Scalar; town_center_level?: Scalar;
-    vip?: Scalar; x?: Scalar; y?: Scalar; kills?: Scalar; avatar_url?: string;
-    alliance?: { aid?: Scalar; abbr?: string; name?: string; rank?: Scalar; rank_label?: string;
-      power?: Scalar; count?: Scalar; flag_url?: string; leader_name?: string } | null;
-  } | null;
-  heroes?: ArenaHero[] | null; ranks?: Record<string, Scalar> | null;
-  gov_gear?: { hidden?: boolean; message?: string; items?: GovernorGear[] | null } | null;
-  fresh?: boolean; cached_at?: Scalar; age_seconds?: Scalar;
-}
+type PlayerDisplay = { result: LookupResult } & (
+  | { kind: 'preview'; preview: MapPlayerPreview }
+  | { kind: 'saved'; savedAt: number }
+  | { kind: 'full'; savedAt: number }
+);
 
 const panel = 'min-w-0 rounded-2xl border border-border bg-surface p-4 sm:p-6';
 const slots: Record<string, string> = { helmet: '머리', gloves: '장갑', armor: '갑옷', boots: '신발' };
@@ -83,26 +71,34 @@ function Picture({ src, label, local = false }: { src?: string; label: string; l
 export default function PlayerLookup({ heroes: catalog }: { heroes: HeroCatalog }) {
   const { locale } = useLocale();
   const tr = (text: string) => playerText(text, locale);
+  const t = (ko: string, en: string, zh: string) => locale === 'zh-TW' ? zh : locale === 'en' ? en : ko;
   const [id, setId] = useState('');
   const [tab, setTab] = useState<'search' | 'map' | 'id' | 'rankings' | 'comparison'>('search');
   const [loading, setLoading] = useState(false);
+  const [retryUntil, setRetryUntil] = useState(0);
   const [error, setError] = useState('');
-  const [result, setResult] = useState<LookupResult | null>(null);
+  const [display, setDisplay] = useState<PlayerDisplay | null>(null);
+  const result = display?.result;
   const [queriedId, setQueriedId] = useState('');
   const request = useRef<AbortController | null>(null);
   const started = useRef(false);
   const profile = useRef<HTMLDivElement | null>(null);
   const scrollToProfile = useRef(false);
+  const selection = useRef<{ value: string; type: PlayerIdType; preview?: MapPlayerPreview; refresh: boolean } | null>(null);
 
-  async function lookup(value: string, idType: PlayerIdType = 'governor_id', revealProfile = false) {
+  async function lookup(value: string, idType: PlayerIdType = 'governor_id', revealProfile = false, preview?: MapPlayerPreview, refresh = false) {
+    if (refresh && (request.current || Date.now() < retryUntil)) return;
     scrollToProfile.current = revealProfile;
     request.current?.abort();
     request.current = null;
     setLoading(false);
+    setRetryUntil(0);
     const fid = value.trim();
     if (!/^\d{1,15}$/.test(fid) || !/[1-9]/.test(fid)) {
       setError('조회 ID는 1~15자리의 0보다 큰 숫자로 입력해 주세요.');
-      setResult(null);
+      setDisplay(null);
+      setQueriedId('');
+      selection.current = null;
       return;
     }
     const controller = new AbortController();
@@ -114,24 +110,38 @@ export default function PlayerLookup({ heroes: catalog }: { heroes: HeroCatalog 
     }, 105_000);
     setLoading(true);
     setError('');
-    setResult(null);
+    selection.current = { value: fid, type: idType, preview, refresh };
+    const saved = playerCache.get(fid, idType);
+    const seed = preview ? mapPlayerResult(preview, fid, idType) : null;
+    const immediate: PlayerDisplay | null = saved ? { kind: 'saved', ...saved }
+      : seed && preview ? { kind: 'preview', result: seed, preview }
+      : display && matchesPlayer(display.result, fid, idType)
+        ? display.kind === 'full' ? { ...display, kind: 'saved' } : { ...display } : null;
+    setDisplay(immediate);
+    setQueriedId(String(immediate?.result.governor_id ?? ''));
+    if (idType === 'uid') setId(String(immediate?.result.governor_id ?? ''));
     try {
-      const response = await fetch(`/api/player/?id=${encodeURIComponent(fid)}${idType === 'uid' ? '&id_type=uid' : ''}`, { signal: controller.signal, headers: { Accept: 'application/json' } });
+      const response = await fetch(`/api/player/?id=${encodeURIComponent(fid)}${idType === 'uid' ? '&id_type=uid' : ''}${refresh ? '&refresh=1' : ''}`, { signal: controller.signal, cache: refresh ? 'no-store' : 'default', headers: { Accept: 'application/json' } });
       const data: LookupResult = await readApiJson(response);
       if (controller.signal.aborted || request.current !== controller) return;
-      if (!response.ok || !data.ok) {
-        setError(data.message || '영주 정보를 불러오지 못했습니다. ID를 확인하고 다시 조회해 주세요.');
+      if (!response.ok || !data?.ok) {
+        setError(typeof data?.message === 'string' ? data.message : '영주 정보를 불러오지 못했습니다. ID를 확인하고 다시 조회해 주세요.');
         return;
       }
       if (!data.player) {
         setError('조회된 영주 정보가 없습니다. 다른 ID로 다시 조회해 주세요.');
         return;
       }
+      if (!isFullPlayerResult(data) || !matchesPlayer(data, fid, idType)) {
+        setError('영주 정보를 불러오지 못했습니다. ID를 확인하고 다시 조회해 주세요.');
+        return;
+      }
       const governorId = String(data.governor_id ?? '');
       const validGovernorId = /^\d{1,15}$/.test(governorId) && /[1-9]/.test(governorId);
       setQueriedId(validGovernorId ? governorId.replace(/^0+/, '') : '');
       setId(validGovernorId ? governorId : '');
-      setResult(data);
+      playerCache.put(fid, idType, data);
+      setDisplay({ kind: 'full', result: data, savedAt: Date.now() });
       const url = new URL(window.location.href);
       if (validGovernorId) url.searchParams.set('id', governorId);
       else url.searchParams.delete('id');
@@ -139,6 +149,7 @@ export default function PlayerLookup({ heroes: catalog }: { heroes: HeroCatalog 
       window.history.replaceState(null, '', url);
     } catch (error) {
       if (request.current === controller && (!controller.signal.aborted || timedOut)) {
+        if (error instanceof RateLimitError && error.retryAfterSeconds > 0) setRetryUntil(Date.now() + error.retryAfterSeconds * 1000);
         setError(error instanceof RateLimitError ? error.message : timedOut ? '조회 시간이 초과되었습니다. 잠시 후 다시 조회해 주세요.' : '조회 연결에 문제가 생겼습니다. 잠시 후 다시 시도해 주세요.');
       }
     } finally {
@@ -164,6 +175,12 @@ export default function PlayerLookup({ heroes: catalog }: { heroes: HeroCatalog 
     return () => { request.current?.abort(); request.current = null; };
   }, []);
 
+  useEffect(() => {
+    if (!retryUntil) return;
+    const timer = window.setTimeout(() => setRetryUntil(0), Math.min(2_147_483_647, Math.max(0, retryUntil - Date.now())));
+    return () => window.clearTimeout(timer);
+  }, [retryUntil]);
+
   function submit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     void lookup(id);
@@ -174,10 +191,22 @@ export default function PlayerLookup({ heroes: catalog }: { heroes: HeroCatalog 
     if (!result || !scrollToProfile.current || !profile.current) return;
     scrollToProfile.current = false;
     profile.current.scrollIntoView({ behavior: 'instant', block: 'start' });
-  }, [result]);
+  }, [display]);
   const alliance = player?.alliance;
   const updated = cachedTime(result?.cached_at);
   const age = numeric(result?.age_seconds);
+  const previewOnly = display?.kind === 'preview';
+  const mapUpdated = display?.kind === 'preview' ? cachedTime(display.preview.updated_at) : undefined;
+  const detailsPending = loading
+    ? t('상세 정보를 불러오는 중…', 'Loading details…', '正在載入詳細資料…')
+    : t('상세 정보를 불러오지 못했습니다. 다시 시도해 주세요.', 'Details could not be loaded. Please retry.', '無法載入詳細資料，請重試。');
+  const feedback = error && <div role="alert" className="mt-2 space-y-2 text-sm text-danger">
+    <p id="lookup-error">{playerError(error, locale)}</p>
+    {selection.current && <button type="button" disabled={loading || retryUntil > 0} className="rounded-lg border border-border px-3 py-2 disabled:opacity-40" onClick={() => {
+      const target = selection.current;
+      if (target) void lookup(target.value, target.type, false, target.preview, target.refresh);
+    }}>{t('다시 시도', 'Retry', '重試')}</button>}
+  </div>;
 
   return <div className="space-y-6">
     <section className={panel} aria-label={tr("영주 찾기")}>
@@ -193,7 +222,7 @@ export default function PlayerLookup({ heroes: catalog }: { heroes: HeroCatalog 
         }} className={`min-w-0 rounded-lg border px-2 py-3 text-sm font-bold ${tab === key ? 'border-accent bg-accent text-on-accent' : 'border-border bg-bg text-muted hover:text-text'}`}>{label}</button>)}
       </div>
       <div id="lookup-panel-search" role="tabpanel" aria-labelledby="lookup-tab-search" hidden={tab !== 'search'}><PlayerDiscovery onSelect={(value, type) => { void lookup(value, type); }} /></div>
-      <div id="lookup-panel-map" role="tabpanel" aria-labelledby="lookup-tab-map" hidden={tab !== 'map'}><KingdomMap playerKingdom={hasValue(player?.kid) ? String(player?.kid) : undefined} onSelect={(value, type) => { void lookup(value, type, true); }} /></div>
+      <div id="lookup-panel-map" role="tabpanel" aria-labelledby="lookup-tab-map" hidden={tab !== 'map'}><KingdomMap playerKingdom={hasValue(player?.kid) ? String(player?.kid) : undefined} onSelect={(value, type, preview) => { void lookup(value, type, true, preview); }} /></div>
       <div id="lookup-panel-id" role="tabpanel" aria-labelledby="lookup-tab-id" hidden={tab !== 'id'}>
     <form onSubmit={submit} aria-busy={loading} noValidate>
       <label htmlFor="governor-id" className="block font-bold">{tr("영주 ID (게임 프로필의 ID)")}</label>
@@ -207,31 +236,44 @@ export default function PlayerLookup({ heroes: catalog }: { heroes: HeroCatalog 
       <div id="lookup-panel-rankings" role="tabpanel" aria-labelledby="lookup-tab-rankings" hidden={tab !== 'rankings'}><KingdomRankings playerKingdom={hasValue(player?.kid) ? String(player?.kid) : undefined} onSelect={(value, type) => { void lookup(value, type, true); }} /></div>
       <div id="lookup-panel-comparison" role="tabpanel" aria-labelledby="lookup-tab-comparison" hidden={tab !== 'comparison'}><KingdomComparison onSelect={(value, type) => { void lookup(value, type, true); }} /></div>
       <p role="status" className="mt-3 text-sm text-accent">{loading ? tr("영주 정보를 불러오고 있습니다. 정보 갱신에 시간이 걸릴 수 있습니다.") : ''}</p>
-      {error && <p id="lookup-error" role="alert" className="mt-2 text-sm text-danger">{playerError(error, locale)}</p>}
+      {!result && feedback}
     </section>
 
     {result && player && <div ref={profile} className="space-y-6 scroll-mt-24" aria-label={tr("영주 조회 결과")}>
+      <div aria-live="polite" data-testid="player-preview-status" className="space-y-2 text-sm text-muted">
+        {previewOnly && <p>{t('지도 정보 미리보기 · 장비와 상세 정보는 별도로 불러옵니다.', 'Map preview · equipment and details load separately.', '地圖預覽 · 裝備與詳細資料將另外載入。')}</p>}
+        {display?.kind === 'saved' && <p>{t('이전에 저장한 정보 · 저장 시각: ', 'Previously saved data · saved at: ', '先前儲存的資料 · 儲存時間：')}<time dateTime={new Date(display.savedAt).toISOString()}>{new Date(display.savedAt).toLocaleString(playerNumberLocale(locale), { timeZone: 'Asia/Seoul' })}</time>{tr(' (한국 시간)')}</p>}
+        {playerIdentity(result.uid, 'uid') && <button type="button" data-testid="player-refresh" disabled={loading || retryUntil > 0} className="rounded-lg border border-border bg-raised px-3 py-2 font-semibold disabled:opacity-40" onClick={() => {
+          void lookup(String(result.uid), 'uid', false, display?.kind === 'preview' ? display.preview : undefined, true);
+        }}>{loading && selection.current?.refresh ? t('정보 다시 조회 중…', 'Reloading profile…', '正在重新查詢資料…') : t('정보 갱신', 'Refresh profile', '更新資料')}</button>}
+        {loading && <p role="status">{t('영주 정보를 조회하는 중…', 'Loading player profile…', '正在查詢領主資料…')}</p>}
+        {feedback}
+      </div>
       <section className={panel} aria-labelledby="profile-title">
         <div className="flex items-center gap-4">
           <Picture src={player.avatar_url} label={player.nick_name ?? tr("영주")} />
-          <div className="min-w-0"><h2 id="profile-title" className="break-words text-2xl font-bold [overflow-wrap:anywhere]">{player.nick_name || tr("이름 정보 없음")}</h2><p className="mt-1 break-all text-sm text-muted">{queriedId ? `${tr("영주 ID ")}${queriedId}` : tr("영주 ID 정보 없음")}</p></div>
+          <div className="min-w-0"><h2 id="profile-title" className="break-words text-2xl font-bold [overflow-wrap:anywhere]">{player.nick_name || (previewOnly ? '—' : tr("이름 정보 없음"))}</h2><p className="mt-1 break-all text-sm text-muted">{queriedId ? `${tr("영주 ID ")}${queriedId}` : previewOnly ? `${tr('영주 ID ')}—` : tr("영주 ID 정보 없음")}</p></div>
         </div>
         <dl className="mt-6 grid grid-cols-2 gap-x-4 gap-y-5 sm:grid-cols-3">
           <Stat label={tr("왕국")}>{format(player.kid)}</Stat><Stat label={tr("전투력")}>{format(player.power)}</Stat><Stat label={tr("도시 센터")}>{townLevel(player.town_center_level)}</Stat>
           <Stat label={tr("VIP 레벨")}>{format(player.vip)}</Stat><Stat label={tr("처치 수")}>{format(player.kills)}</Stat>
         </dl>
-        <PlayerLocationMap key={JSON.stringify([result.uid, queriedId, player.kid, player.x, player.y])} kid={player.kid} x={player.x} y={player.y} uid={result.uid} name={player.nick_name} townLevel={player.town_center_level} power={player.power} tag={alliance?.abbr} aid={alliance?.aid} profileCachedAt={updated ? updated.getTime() / 1000 : null} onLookup={(value) => { void lookup(value, 'uid', true); }} />
+        <PlayerLocationMap kid={player.kid} x={player.x} y={player.y} uid={result.uid} name={player.nick_name} townLevel={player.town_center_level} power={player.power} tag={alliance?.abbr} aid={alliance?.aid} profileCachedAt={updated ? updated.getTime() / 1000 : null} mapPreview={previewOnly} onLookup={(value, preview) => { void lookup(value, 'uid', true, preview); }} />
         <div className="mt-6 border-t border-border pt-4 text-sm text-muted">
-          {updated ? <p>{tr("갱신 시간 ")}<time dateTime={updated.toISOString()}>{updated.toLocaleString(playerNumberLocale(locale), { timeZone: 'Asia/Seoul' })}</time>{tr(" (한국 시간)")}</p> : <p>{tr("갱신 시간 정보 없음")}</p>}
-          {age !== undefined && age >= 0 && <p className="mt-1">{age < 60 ? tr("1분 이내 갱신") : `${format(Math.floor(age / 60))}${tr("분 전 갱신")}`}</p>}
+          {previewOnly ? <p>{display.preview.source === 'mightpulse'
+            ? t('지도 위치 갱신 시각: ', 'Map positions updated at: ', '地圖位置更新時間：')
+            : t('지도 저장 시각 (위치 확인 시각 아님): ', 'Map saved at (not position confirmation): ', '地圖儲存時間（非位置確認時間）：')}
+            {mapUpdated ? <time dateTime={mapUpdated.toISOString()}>{mapUpdated.toLocaleString(playerNumberLocale(locale), { timeZone: 'Asia/Seoul' })}</time> : '—'}{tr(' (한국 시간)')}</p>
+            : updated ? <p>{display?.kind === 'saved' ? t('원본 갱신 시각: ', 'Source updated at: ', '來源更新時間：') : tr("갱신 시간 ")}<time dateTime={updated.toISOString()}>{updated.toLocaleString(playerNumberLocale(locale), { timeZone: 'Asia/Seoul' })}</time>{tr(" (한국 시간)")}</p> : <p>{tr("갱신 시간 정보 없음")}</p>}
+          {display?.kind === 'full' && age !== undefined && age >= 0 && <p className="mt-1">{age < 60 ? tr("1분 이내 갱신") : `${format(Math.floor(age / 60))}${tr("분 전 갱신")}`}</p>}
         </div>
       </section>
 
       <section className={panel} aria-labelledby="alliance-title">
         <h2 id="alliance-title" className="text-xl font-bold">{tr("연맹")}</h2>
-        {alliance ? <><div className="mt-4 flex items-center gap-3"><Picture src={alliance.flag_url} label={tr("연맹")} /><p className="min-w-0 break-words font-bold [overflow-wrap:anywhere]">{alliance.abbr && `[${alliance.abbr}] `}{alliance.name || tr("이름 정보 없음")}</p></div>
+        {alliance ? <><div className="mt-4 flex items-center gap-3"><Picture src={alliance.flag_url} label={tr("연맹")} /><p className="min-w-0 break-words font-bold [overflow-wrap:anywhere]">{alliance.abbr && `[${alliance.abbr}] `}{alliance.name || (previewOnly ? '—' : tr("이름 정보 없음"))}</p></div>
           <dl className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3"><Stat label={tr("연맹 ID")}>{hasValue(alliance.aid) ? String(alliance.aid) : '—'}</Stat><Stat label={tr("연맹 전투력")}>{format(alliance.power)}</Stat><Stat label={tr("연맹원 수")}>{format(alliance.count)}</Stat><Stat label={tr("맹주")}>{alliance.leader_name || '—'}</Stat><Stat label={tr("연맹 직위")}>{playerLabel(alliance.rank_label, locale) ?? (hasValue(alliance.rank) ? `${tr("직위 ")}${format(alliance.rank)}` : '—')}</Stat></dl>
-        </> : <p className="mt-4 text-muted">{tr("연맹 정보가 없습니다.")}</p>}
+        </> : <p className="mt-4 text-muted">{previewOnly ? detailsPending : tr("연맹 정보가 없습니다.")}</p>}
       </section>
 
       {result.ranks && rankLabels.some(([rankKey, valueKey]) => hasValue(result.ranks?.[rankKey]) || hasValue(result.ranks?.[valueKey])) && <section className={panel} aria-labelledby="ranks-title"><h2 id="ranks-title" className="text-xl font-bold">{tr("순위")}</h2><dl className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3">{rankLabels.map(([rankKey, valueKey, label]) => {
@@ -242,14 +284,17 @@ export default function PlayerLookup({ heroes: catalog }: { heroes: HeroCatalog 
 
       <section className={panel} aria-labelledby="governor-gear-title">
         <h2 id="governor-gear-title" className="text-xl font-bold">{tr("영주 장비")}</h2>
-        {result.gov_gear?.hidden ? <p className="mt-4 rounded-xl bg-raised p-4 text-muted">{tr("장비를 비공개로 설정한 영주입니다")}</p> : result.gov_gear?.items?.length ? <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{result.gov_gear.items.map((gear, index) => <li key={index} className="min-w-0 rounded-xl border border-border p-4">
+        {previewOnly ? <p role="status" aria-busy={loading} className="mt-4 rounded-xl bg-raised p-4 text-muted">{detailsPending}</p> : result.gov_gear?.hidden ? <p className="mt-4 rounded-xl bg-raised p-4 text-muted">{tr("장비를 비공개로 설정한 영주입니다")}</p> : result.gov_gear?.items?.length ? <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{result.gov_gear.items.map((gear, index) => <li key={index} className="min-w-0 rounded-xl border border-border p-4">
           <div className="flex items-center gap-3"><Picture src={gear.icon} label={tr("장비")} /><h3 className="min-w-0 break-words font-bold">{playerLabel(gear.name, locale) ?? (slots[String(gear.slot).toLowerCase()] ? tr(slots[String(gear.slot).toLowerCase()]) : `${tr("영주 장비 ")}${index + 1}`)}</h3></div>
           <dl className="mt-4 grid grid-cols-2 gap-3"><Stat label={tr("등급")}>{tr(grades[String(gear.quality).toLowerCase()] ?? playerLabel(String(gear.quality ?? ''), locale) ?? '—')}</Stat><Stat label={tr("티어")}>{format(gear.tier)}</Stat><Stat label={tr("성급")}>{format(gear.star)}</Stat><Stat label={tr("강화 레벨")}>{format(gear.strength_level)}</Stat><Stat label={tr("장비 점수")}>{format(gear.score)}</Stat><Stat label={tr("전투력")}>{format(gear.combat)}</Stat></dl>
           {gear.gems?.length ? <p className="mt-3 text-sm text-muted">{tr("장착 보석 ")}{gear.gems.length}{tr("개")}</p> : null}
         </li>)}</ul> : <p className="mt-4 text-muted">{tr("공개된 영주 장비 정보가 없습니다.")}</p>}
       </section>
 
-      <ArenaHeroes heroes={result.heroes ?? []} catalog={catalog} />
+      {previewOnly ? <section className={panel} aria-labelledby="arena-preview-title">
+        <h2 id="arena-preview-title" className="text-xl font-bold">{tr('아레나 방어 영웅')}</h2>
+        <p role="status" aria-busy={loading} className="mt-4 rounded-xl bg-raised p-4 text-muted">{detailsPending}</p>
+      </section> : <ArenaHeroes heroes={result.heroes ?? []} catalog={catalog} />}
     </div>}
   </div>;
 }

@@ -1,9 +1,10 @@
 import { useEffect, useId, useState, type SubmitEvent } from 'react';
 import { useLocale } from '../../lib/locale';
-import type { SelectPlayer } from './PlayerDiscovery';
+import type { PlayerIdType } from './PlayerDiscovery';
+import type { MapPlayerPreview } from '../../lib/player-preview';
 import StoredKingdomMap from './StoredKingdomMap';
 
-interface Props { playerKingdom?: string; onSelect: SelectPlayer }
+interface Props { playerKingdom?: string; onSelect: (value: string, type: PlayerIdType, preview?: MapPlayerPreview) => void }
 
 export default function KingdomMap({ playerKingdom, onSelect }: Props) {
   const { locale } = useLocale();
@@ -30,6 +31,6 @@ export default function KingdomMap({ playerKingdom, onSelect }: Props) {
       </div>
     </form>
     {invalid && <p id={`${id}-error`} role="alert" className="text-sm text-danger">{locale === 'zh-TW' ? "請輸入 1～10000 的王國編號。" : en ? 'Enter a kingdom number from 1 to 10000.' : '왕국 번호는 1~10000 사이의 숫자로 입력해 주세요.'}</p>}
-    {kid === null ? <p className="text-sm text-muted">{locale === 'zh-TW' ? "輸入王國編號，即可查看地圖中所有聯盟的城鎮。" : en ? 'Enter a kingdom to view its available city map across all alliances.' : '왕국 번호를 조회하면 지도에서 확인되는 모든 연맹의 도시를 함께 표시합니다.'}</p> : <StoredKingdomMap kid={kid} onLookup={uid => onSelect(uid, 'uid')} />}
+    {kid === null ? <p className="text-sm text-muted">{locale === 'zh-TW' ? "輸入王國編號，即可查看地圖中所有聯盟的城鎮。" : en ? 'Enter a kingdom to view its available city map across all alliances.' : '왕국 번호를 조회하면 지도에서 확인되는 모든 연맹의 도시를 함께 표시합니다.'}</p> : <StoredKingdomMap kid={kid} onLookup={(uid, preview) => onSelect(uid, 'uid', preview)} />}
   </div>;
 }

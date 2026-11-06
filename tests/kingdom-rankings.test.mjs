@@ -31,6 +31,7 @@ const react = moduleURL(Object.keys(hooks).map(name => `export const ${name} = (
 const jsx = moduleURL('export const jsx = (type, props, key) => ({type, props, key}); export const jsxs = jsx; export const Fragment = "fragment";');
 const locale = moduleURL('export const getLocale = () => globalThis.__rankingLocale ?? "ko"; export const useLocale = () => ({ locale: getLocale(), t: (ko, en, zhTW) => getLocale() === "zh-TW" ? zhTW ?? en : getLocale() === "en" ? en : ko });');
 const response = moduleURL(await compile('../src/lib/api-response.ts'));
+const playerPreview = moduleURL(await compile('../src/lib/player-preview.ts'));
 const stub = moduleURL('export default function Stub() {}');
 const localization = moduleURL(imports(await compile('../src/lib/player-localization.ts'), { './locale': locale, './api-response': response }));
 function imports(source, mappings) {
@@ -45,7 +46,7 @@ const rankingsURL = moduleURL(imports(await compile('../src/components/islands/K
 const { default: Rankings } = await import(rankingsURL);
 const { default: Lookup } = await import(moduleURL(imports(await compile('../src/components/islands/PlayerLookup.tsx'), {
   react, 'react/jsx-runtime': jsx, '../../lib/locale': locale, '../../lib/api-response': response,
-  '../../lib/player-localization': localization, './ArenaHeroes': stub, './PlayerDiscovery': stub,
+  '../../lib/player-localization': localization, '../../lib/player-preview': playerPreview, './ArenaHeroes': stub, './PlayerDiscovery': stub,
   './KingdomMap': stub, './KingdomRankings': rankingsURL, './KingdomComparison': stub, './PlayerLocationMap': stub,
 })));
 function mount(component, props = {}) {
@@ -254,7 +255,7 @@ test('five tabs support End/Home/wrapping and the fourth ranking tab still revea
   t.after(() => { if (previous) Object.defineProperty(globalThis, 'document', previous); else delete globalThis.document; });
   const calls = [];
   t.mock.method(globalThis, 'fetch', async url => {
-    calls.push(url); return Response.json({ ok: true, governor_id: '987', uid: '101', player: { nick_name: 'Selected governor', kid: 1584 }, gov_gear: { hidden: true } });
+    calls.push(url); return Response.json({ ok: true, governor_id: '987', uid: '101', player: { nick_name: 'Selected governor', kid: 1584 }, heroes: [], ranks: {}, gov_gear: { hidden: true, items: [] } });
   });
   const host = mount(Lookup, { heroes: {} });
   const tabs = () => nodes(host.render()).filter(n => n.props?.role === 'tab');

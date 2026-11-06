@@ -256,7 +256,7 @@ test('source metadata labels location timestamps separately from DB save timesta
 test('profile selection uses map coordinates and changes UID within the same kingdom without a refetch', async t => {
   const restoreWindow = browserTimers(), lookedUp = [];
   const fetch = t.mock.method(globalThis, 'fetch', async () => Response.json(snapshot()));
-  const props = { kid: 1622, selectedUID: '2', initialFocus: { x: 50, y: 60, scale: 20 }, onLookup: uid => lookedUp.push(uid) };
+  const props = { kid: 1622, selectedUID: '2', initialFocus: { x: 50, y: 60, scale: 20 }, onLookup: (uid, preview) => lookedUp.push({ uid, preview }) };
   const host = mount(StoredMapScope, props);
   t.after(() => { host.unmount(); restoreWindow(); });
   await flush();
@@ -269,7 +269,10 @@ test('profile selection uses map coordinates and changes UID within the same kin
   assert.equal(map.fitAllCities, true);
   assert.equal(map.preserveCameraOnUpdate, true);
   map.onLookup(map.selected);
-  assert.deepEqual(lookedUp, ['2']);
+  assert.equal(lookedUp[0].uid, '2');
+  assert.equal(lookedUp[0].preview.city, map.selected);
+  assert.equal(lookedUp[0].preview.kid, 1622);
+  assert.equal(lookedUp[0].preview.updated_at, snapshot().updated_at);
   map.onClose();
   assert.equal(canvas(host.render()).selected, null);
   nodes(tree).find(n => n.type === 'select').props.onChange({ target: { value: '22' } });
@@ -363,11 +366,15 @@ test('unmount aborts the old kingdom request; a late response cannot replace the
 });
 
 test('editing the kingdom input or receiving a profile kingdom does not submit or replace the active map', () => {
-  const host = mount(KingdomMap, { playerKingdom: '1622', onSelect() {} });
+  const selections = [];
+  const host = mount(KingdomMap, { playerKingdom: '1622', onSelect: (...args) => selections.push(args) });
   let tree = host.render();
   nodes(tree).find(n => n.type === 'form').props.onSubmit({ preventDefault() {} });
   tree = host.render();
   assert.equal(nodes(tree).find(n => n.type === Stored).props.kid, 1622);
+  const preview = { kid: 1622, city: cities[1], updated_at: snapshot().updated_at };
+  nodes(tree).find(n => n.type === Stored).props.onLookup('2', preview);
+  assert.deepEqual(selections, [['2', 'uid', preview]]);
   nodes(tree).find(n => n.type === 'input').props.onChange({ target: { value: '1623' } });
   assert.equal(nodes(host.render()).find(n => n.type === Stored).props.kid, 1622);
   host.render({ playerKingdom: '1624', onSelect() {} }); host.commit();

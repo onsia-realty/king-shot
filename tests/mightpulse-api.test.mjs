@@ -11,9 +11,16 @@ const compiled = ts.transpileModule(source, {
 const guard = ts.transpileModule(await readFile(new URL('../src/lib/server/same-site.ts', import.meta.url), 'utf8'), {
   compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext },
 }).outputText;
+const web = ts.transpileModule(await readFile(new URL('../src/lib/server/web-player.ts', import.meta.url), 'utf8'), {
+  compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext },
+}).outputText;
+// These regression cases isolate the official path. Web integration is exercised in web-player.test.mjs.
+const webURL = `data:text/javascript;base64,${Buffer.from(web.replace('export async function lookupWebPlayer(', 'async function unusedLookupWebPlayer(')
+  + '\nexport function lookupWebPlayer() { return null; }').toString('base64')}`;
+const flush = () => new Promise(resolve => setImmediate(resolve));
 let serial = 0;
 const fixture = {
-  ok: true, uid: 60611017, governor_id: 241496933,
+  ok: true, uid: 60611017, governor_id: 241496933, source: 'official',
   player: { nick_name: 'Test player', heroes: ['wrong nested section'] },
   heroes: [{ id: 1, gear: [{ enhancement_level: 10 }] }],
   ranks: { power_rank: 12 },
@@ -30,7 +37,7 @@ async function setup(t) {
   });
   // 핸들러마다 새 같은 사이트 검사 모듈을 물려 요청 수 제한 카운터가 테스트끼리 섞이지 않게 한다.
   const guardURL = `data:text/javascript;base64,${Buffer.from(guard).toString('base64')}#${serial++}`;
-  const source = compiled.replace('../src/lib/server/same-site.js', guardURL);
+  const source = compiled.replace('../src/lib/server/same-site.js', guardURL).replace('../src/lib/server/web-player.js', webURL);
   return (await import(`data:text/javascript;base64,${Buffer.from(source).toString('base64')}#${serial++}`)).default;
 }
 async function request(handler, url = '/api/player/?id=241496933', method = 'GET') {
@@ -102,7 +109,8 @@ test('hidden governor gear discards accidental items and localizes the notice', 
 test('positive ID boundaries accepted and visible gear retained', async t => {
   const handler = await setup(t);
   const gear = { hidden: false, items: [{ equipid: 123 }], message: null };
-  const fetch = t.mock.method(globalThis, 'fetch', async () => Response.json({ ...fixture, gov_gear: gear }));
+  const fetch = t.mock.method(globalThis, 'fetch', async url => Response.json({ ...fixture,
+    governor_id: Number(new URL(url).pathname.split('/').pop()), gov_gear: gear }));
   for (const id of ['1', '999999999999999']) {
     const result = await request(handler, `/api/player?id=${id}`);
     assert.equal(result.status, 200);
@@ -126,6 +134,7 @@ test('UID selection validates type and keeps cache/in-flight keys separate from 
   const fid = request(handler, '/api/player?id=60611017');
   const uid = request(handler, '/api/player?id=60611017&id_type=uid');
   const uidAgain = request(handler, '/api/player?id=00060611017&id_type=uid');
+  await flush();
   assert.equal(fetch.mock.callCount(), 2);
   assert.equal(urls[0], 'https://api.mightpulse.com/v1/players/60611017?include=base,heroes,ranks,gov_gear');
   assert.equal(urls[1], `${urls[0]}&id_type=uid`);
@@ -182,6 +191,7 @@ test('cache TTL, age and CDN lifetime; same-ID in-flight deduplication', async t
   const fetch = t.mock.method(globalThis, 'fetch', () => new Promise(resolve => { finish = resolve; }));
   const first = request(handler);
   const second = request(handler, '/api/player?id=241496933');
+  await flush();
   assert.equal(fetch.mock.callCount(), 1);
   finish(Response.json(fixture));
   assert.deepEqual((await first).body, (await second).body);
@@ -194,6 +204,7 @@ test('cache TTL, age and CDN lifetime; same-ID in-flight deduplication', async t
   assert.equal(cached.headers['Cache-Control'], 'public, max-age=0, s-maxage=180');
   t.mock.timers.tick(180_000);
   const refreshed = request(handler);
+  await flush();
   assert.equal(fetch.mock.callCount(), 2);
   finish(Response.json(fixture));
   assert.equal((await refreshed).body.age_seconds, 60);
@@ -208,12 +219,14 @@ test('95-second timeout aborts fetch/body and releases pending request for retry
     return { ok: true, json: () => new Promise(() => {}) };
   });
   const result = request(handler);
+  await flush();
   t.mock.timers.tick(90_000);
   assert.equal(signal.aborted, false);
   t.mock.timers.tick(5_000);
   error(await result, 504, 'timeout');
   assert.equal(signal.aborted, true);
   const retry = request(handler);
+  await flush();
   assert.equal(fetch.mock.callCount(), 2);
   t.mock.timers.tick(95_000);
   error(await retry, 504, 'timeout');
@@ -221,7 +234,8 @@ test('95-second timeout aborts fetch/body and releases pending request for retry
 
 test('cache evicts oldest entry at 100 successful IDs', async t => {
   const handler = await setup(t);
-  const fetch = t.mock.method(globalThis, 'fetch', async () => Response.json(fixture));
+  const fetch = t.mock.method(globalThis, 'fetch', async url => Response.json({ ...fixture,
+    uid: null, governor_id: Number(new URL(url).pathname.split('/').pop()) }));
   for (let id = 1; id <= 101; id++) assert.equal((await request(handler, `/api/player?id=${id}`)).status, 200);
   await request(handler, '/api/player?id=101');
   assert.equal(fetch.mock.callCount(), 101);
@@ -251,5 +265,5 @@ test('Vite dev middleware uses the Node handler for both slash variants', async 
     assert.equal(result.status, 200);
     assert.deepEqual(result.body.heroes, fixture.heroes);
   }
-  assert.equal(fetch.mock.callCount(), 1);
+  assert.equal(fetch.mock.callCount(), 2);
 });

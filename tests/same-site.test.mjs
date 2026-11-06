@@ -22,6 +22,7 @@ async function freshHandler(name) {
   const map = moduleURL((await compile('../src/lib/server/mightpulse-map.ts')).replace('./mightpulse-discovery.js', discovery)
     .replace('./kingdom-store.js', store));
   const source = (await compile(`../api/${name}.ts`))
+    .replace('../src/lib/server/web-player.js', moduleURL(await compile('../src/lib/server/web-player.ts')))
     .replace('../src/lib/server/mightpulse-discovery.js', discovery).replace('../src/lib/server/same-site.js', guard)
     .replace('../src/lib/server/kingdom-store.js', store).replace('../src/lib/server/mightpulse-map.js', map);
   return (await import(moduleURL(source))).default;

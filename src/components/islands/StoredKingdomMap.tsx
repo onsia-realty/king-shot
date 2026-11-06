@@ -2,11 +2,12 @@ import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useLocale, type Locale } from '../../lib/locale';
 import { retryAfterSeconds } from '../../lib/api-response';
 import { locationTimestamp, parseMapSnapshot, type MapSnapshot } from '../../lib/map-refresh';
+import type { MapPlayerPreview } from '../../lib/player-preview';
 import MapRefresh from './MapRefresh';
 import OfficialAllianceMap from './OfficialAllianceMap';
 import KingdomMapCanvas, { allianceColor, type MapAlliance, type MapCity, type MapFocus } from './KingdomMapCanvas';
 
-interface Props { kid: number; initialFocus?: MapFocus; selectedUID?: string; onLookup: (uid: string) => void }
+interface Props { kid: number; initialFocus?: MapFocus; selectedUID?: string; onLookup: (uid: string, preview?: MapPlayerPreview) => void }
 type StoredMap = MapSnapshot;
 type Issue = 'not_collected' | 'storage' | 'limited' | 'failed';
 export class StoredMapError extends Error {
@@ -220,7 +221,7 @@ export function StoredMapScope({ kid, initialFocus, selectedUID: profileUID, onL
       {!filtered.length && <p className="text-sm text-muted">{snapshot.cities.length ? (locale === 'zh-TW' ? "沒有符合篩選條件的城鎮。選取全部即可重新顯示。" : en ? 'No cities match these filters. Select all to restore the cities.' : '필터에 맞는 도시가 없습니다. 전체 선택으로 도시를 다시 표시할 수 있습니다.') : (locale === 'zh-TW' ? "此地圖沒有可顯示的座標，並不代表王國內沒有城鎮。" : en ? 'This map contains no coordinates. It does not establish that the kingdom is empty.' : '이 지도에 표시할 좌표가 없습니다. 왕국에 도시가 없다는 뜻은 아닙니다.')}</p>}
       <KingdomMapCanvas cities={filtered} allCities={snapshot.cities} alliances={groups} bounds={snapshot.bounds}
         fitAllCities preserveCameraOnUpdate focus={focus} selected={selected}
-        onSelect={city => setSelectedUID(String(city.uid))} onClose={() => setSelectedUID(null)} onLookup={city => onLookup(String(city.uid))} />
+        onSelect={city => setSelectedUID(String(city.uid))} onClose={() => setSelectedUID(null)} onLookup={city => onLookup(String(city.uid), { city, kid, updated_at: snapshot.updated_at, source: snapshot.source })} />
       <details className="rounded-lg border border-border p-3">
         <summary className="cursor-pointer text-sm font-bold">{locale === 'zh-TW' ? "城鎮列表" : en ? 'City list' : '도시 목록'} ({count(filtered.length)})</summary>
         <ul className="mt-3 max-h-64 space-y-2 overflow-y-auto">
