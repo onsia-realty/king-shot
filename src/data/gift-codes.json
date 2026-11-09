@@ -1,5 +1,5 @@
 {
-  "lastChecked": "2026-11-08",
+  "lastChecked": "2026-11-09",
   "codes": [
     {
       "code": "KS0909",
@@ -955,6 +955,18 @@
       "code": "KS1104",
       "rewards": "",
       "addedAt": "2026-11-05",
+      "note": "출처: 공식 위키 kingshotwiki.com/ko/giftcode"
+    },
+    {
+      "code": "11OFFICIALSTORE08",
+      "rewards": "",
+      "addedAt": "2026-11-09",
+      "note": "출처: 공식 위키 kingshotwiki.com/ko/giftcode"
+    },
+    {
+      "code": "FORTHEKINGDOM",
+      "rewards": "",
+      "addedAt": "2026-11-09",
       "note": "출처: 공식 위키 kingshotwiki.com/ko/giftcode"
     }
   ]
