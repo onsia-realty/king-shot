@@ -1,5 +1,5 @@
 {
-  "lastChecked": "2026-11-26",
+  "lastChecked": "2026-11-27",
   "codes": [
     {
       "code": "KS0909",
@@ -979,6 +979,18 @@
       "code": "1T1G2D2",
       "rewards": "",
       "addedAt": "2026-11-23",
+      "note": "출처: 공식 위키 kingshotwiki.com/ko/giftcode"
+    },
+    {
+      "code": "KS27TGS",
+      "rewards": "",
+      "addedAt": "2026-11-27",
+      "note": "출처: 공식 위키 kingshotwiki.com/ko/giftcode"
+    },
+    {
+      "code": "GOBBLE",
+      "rewards": "",
+      "addedAt": "2026-11-27",
       "note": "출처: 공식 위키 kingshotwiki.com/ko/giftcode"
     }
   ]
